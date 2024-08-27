@@ -1,6 +1,6 @@
 # Camunda-SAP integration: outbound protocol connectors
 
-OData and RFC protocol connectors to r/w data from/to SAP S/4 and R/4.
+OData and RFC protocol connectors to r/w data from/to SAP S/4 and ECC.
 
 ## infrastructure prerequisites
 
