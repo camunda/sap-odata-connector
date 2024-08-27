@@ -1,0 +1,6 @@
+ID,dateOfBirth,name,dateOfDeath,placeOfBirth,placeOfDeath,createdAt,createdBy,modifiedAt,modifiedBy
+4919524,2022-02-24T23:00:00.000Z,Emily Brontë,2009-11-03,placeOfBirth-4919524,placeOfDeath-4919524,2007-12-17T23:00:00.000Z,createdBy.2xfxg@example.com,2001-11-01T23:00:00.000Z,modifiedBy.2xfxg@example.org
+4919525,2020-04-17T23:00:00.000Z,Charlotte Brontë,2000-09-10,placeOfBirth-4919525,placeOfDeath-4919525,2012-01-26T23:00:00.000Z,createdBy.2xfxh@example.net,2005-12-13T23:00:00.000Z,modifiedBy.2xfxh@example.net
+4919526,2015-10-07T23:00:00.000Z,Edgar Allen Poe,2009-06-13,placeOfBirth-4919526,placeOfDeath-4919526,2009-12-20T23:00:00.000Z,createdBy.2xfxi@example.com,2020-03-09T23:00:00.000Z,modifiedBy.2xfxi@example.com
+4919527,2015-10-09T23:00:00.000Z,Richard Carpenter,2023-12-25,placeOfBirth-4919527,placeOfDeath-4919527,2012-02-10T23:00:00.000Z,createdBy.2xfxj@example.net,2021-04-26T23:00:00.000Z,modifiedBy.2xfxj@example.org
+4919528,2014-08-11T23:00:00.000Z,James Lee Burke,2020-04-02,placeOfBirth-4919528,placeOfDeath-4919528,2015-05-28T23:00:00.000Z,createdBy.2xfxk@example.net,2021-10-03T23:00:00.000Z,modifiedBy.2xfxk@example.org

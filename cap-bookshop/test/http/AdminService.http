@@ -1,0 +1,230 @@
+@server = http://localhost:4004
+@auth = Authorization: Basic alice:
+
+
+### Authors
+# @name Authors_GET
+GET {{server}}/admin/Authors
+{{auth}}
+
+
+### Authors
+# @name Authors_POST
+POST {{server}}/admin/Authors
+Content-Type: application/json
+{{auth}}
+
+{
+  "ID": 1380218,
+  "name": "name-1380218",
+  "dateOfBirth": "2020-04-23",
+  "dateOfDeath": "2020-08-19",
+  "placeOfBirth": "placeOfBirth-1380218",
+  "placeOfDeath": "placeOfDeath-1380218",
+  "createdAt": "2015-09-26T23:00:00.000Z",
+  "createdBy": "createdBy.tkze@example.com",
+  "modifiedAt": "2009-09-13T23:00:00.000Z",
+  "modifiedBy": "modifiedBy.tkze@example.com"
+}
+
+
+### Authors
+# @name Authors_PATCH
+PATCH {{server}}/admin/Authors/1380218
+Content-Type: application/json
+{{auth}}
+
+{
+  "ID": 1380218,
+  "name": "name-1380218",
+  "dateOfBirth": "2020-04-23",
+  "dateOfDeath": "2020-08-19",
+  "placeOfBirth": "placeOfBirth-1380218",
+  "placeOfDeath": "placeOfDeath-1380218",
+  "createdAt": "2015-09-26T23:00:00.000Z",
+  "createdBy": "createdBy.tkze@example.com",
+  "modifiedAt": "2009-09-13T23:00:00.000Z",
+  "modifiedBy": "modifiedBy.tkze@example.com"
+}
+
+
+### Authors
+# @name Authors_DELETE
+DELETE {{server}}/admin/Authors/1380218
+Content-Type: application/json
+{{auth}}
+
+
+### AuthorsByMultKey
+# @name AuthorsByMultKey_GET
+GET {{server}}/admin/AuthorsByMultKey
+{{auth}}
+
+
+### AuthorsByMultKey
+# @name AuthorsByMultKey_POST
+POST {{server}}/admin/AuthorsByMultKey
+Content-Type: application/json
+{{auth}}
+
+{
+  "ID": 24371831,
+  "name": "AuthorsByMultKey-24371831",
+  "dateOfBirth": "2002-11-28",
+  "dateOfDeath": "2022-11-20",
+  "placeOfBirth": "placeOfBirth-24371831",
+  "placeOfDeath": "placeOfDeath-24371831",
+  "createdAt": "2001-02-11T23:00:00.000Z",
+  "createdBy": "createdBy.eidfb@example.net",
+  "modifiedAt": "2022-08-19T23:00:00.000Z",
+  "modifiedBy": "modifiedBy.eidfb@example.net"
+}
+
+
+### AuthorsByMultKey
+# @name AuthorsByMultKey_PATCH
+PUT {{server}}/admin/AuthorsByMultKey(ID=24371831,name='AuthorsByMultKey-24371831')
+Content-Type: application/json
+{{auth}}
+
+{
+  "ID": 24371831,
+  "name": "bla1",
+  "dateOfBirth": "2002-11-28",
+  "dateOfDeath": "2022-11-20",
+  "placeOfBirth": "placeOfBirth-24371831",
+  "placeOfDeath": "placeOfDeath-24371831",
+  "createdAt": "2001-02-11T23:00:00.000Z",
+  "createdBy": "createdBy.eidfb@example.net",
+  "modifiedAt": "2022-08-19T23:00:00.000Z",
+  "modifiedBy": "modifiedBy.eidfb@example.net"
+}
+
+
+### AuthorsByMultKey
+# @name AuthorsByMultKey_DELETE
+DELETE {{server}}/admin/AuthorsByMultKey(ID=24371831,name='AuthorsByMultKey-24371831')
+Content-Type: application/json
+{{auth}}
+
+
+### AuthorsByDateTimeKey
+# @name AuthorsByDateTimeKey_GET
+GET {{server}}/admin/AuthorsByDateTimeKey
+{{auth}}
+
+###
+GET {{server}}/admin/AuthorsByDateTimeKey(2001-01-24T23:00:00.000Z)
+{{auth}}
+
+###
+GET {{server}}/odata/v2/admin/AuthorsByDateTimeKey(2001-01-24T23:00:00.000Z)
+{{auth}}
+
+
+### AuthorsByDateTimeKey
+# @name AuthorsByDateTimeKey_POST
+POST {{server}}/admin/AuthorsByDateTimeKey
+Content-Type: application/json
+{{auth}}
+
+{
+  "dateOfBirth": "2013-07-29T23:00:00.000Z",
+  "name": "name-2159646",
+  "dateOfDeath": "2011-01-09",
+  "placeOfBirth": "placeOfBirth-2159646",
+  "placeOfDeath": "placeOfDeath-2159646",
+  "createdAt": "2001-03-24T23:00:00.000Z",
+  "createdBy": "createdBy.1aae6@example.com",
+  "modifiedAt": "2016-07-18T23:00:00.000Z",
+  "modifiedBy": "modifiedBy.1aae6@example.com"
+}
+
+
+### AuthorsByDateTimeKey
+# @name AuthorsByDateTimeKey_PATCH
+PATCH {{server}}/admin/AuthorsByDateTimeKey(2001-01-24T23:00:00Z)
+Content-Type: application/json
+{{auth}}
+
+{
+  "dateOfBirth": "2013-07-29T23:00:00.000Z",
+  "name": "name-2159646",
+  "dateOfDeath": "2011-01-09",
+  "placeOfBirth": "placeOfBirth-2159646",
+  "placeOfDeath": "placeOfDeath-2159646",
+  "createdAt": "2001-03-24T23:00:00.000Z",
+  "createdBy": "createdBy.1aae6@example.com",
+  "modifiedAt": "2016-07-18T23:00:00.000Z",
+  "modifiedBy": "modifiedBy.1aae6@example.com"
+}
+
+
+### AuthorsByDateTimeKey
+# @name AuthorsByDateTimeKey_DELETE
+DELETE {{server}}/admin/AuthorsByDateTimeKey/2013-07-29T23:00:00.000Z
+Content-Type: application/json
+{{auth}}
+
+
+### AuthorsByMultKeyDateTime
+# @name AuthorsByMultKeyDateTime_GET
+GET {{server}}/admin/AuthorsByMultKeyDateTime
+{{auth}}
+
+
+### AuthorsByMultKeyDateTime
+# @name AuthorsByMultKeyDateTime_POST
+POST {{server}}/admin/AuthorsByMultKeyDateTime
+Content-Type: application/json
+{{auth}}
+
+{
+  "ID": 27299133,
+  "dateOfBirth": "2012-03-15T23:00:00Z",
+  "name": "name-27299133",
+  "dateOfDeath": "2000-10-14",
+  "placeOfBirth": "placeOfBirth-27299133",
+  "placeOfDeath": "placeOfDeath-27299133",
+  "createdAt": "2012-04-18T23:00:00.000Z",
+  "createdBy": "createdBy.g9459@example.net",
+  "modifiedAt": "2015-09-02T23:00:00.000Z",
+  "modifiedBy": "modifiedBy.g9459@example.net"
+}
+
+
+### AuthorsByMultKeyDateTime
+# @name AuthorsByMultKeyDateTime_PATCH
+PATCH {{server}}/admin/AuthorsByMultKeyDateTime(ID=27299133,dateOfBirth=2012-03-15T23:00:00Z)
+Content-Type: application/json
+{{auth}}
+
+{
+  "ID": 27299133,
+  "dateOfBirth": "2012-03-15T23:00:00Z",
+  "name": "name-27299133",
+  "dateOfDeath": "2000-10-14",
+  "placeOfBirth": "placeOfBirth-27299133",
+  "placeOfDeath": "placeOfDeath-27299133",
+  "createdAt": "2012-04-18T23:00:00.000Z",
+  "createdBy": "createdBy.g9459@example.net",
+  "modifiedAt": "2015-09-02T23:00:00.000Z",
+  "modifiedBy": "modifiedBy.g9459@example.net"
+}
+
+### v2 AuthorsByMultKeyDateTime
+PATCH {{server}}/odata/v2/admin/AuthorsByMultKeyDateTime(ID=27299133,dateOfBirth=2012-03-15T23:00:00Z)
+Content-Type: application/json
+{{auth}}
+
+{
+  "name": "v2-name-27299133"
+}
+
+
+
+### AuthorsByMultKeyDateTime
+# @name AuthorsByMultKeyDateTime_DELETE
+DELETE {{server}}/admin/AuthorsByMultKeyDateTime(ID=27299133,dateOfBirth=2012-03-15T23:00:00.000Z)
+Content-Type: application/json
+{{auth}}

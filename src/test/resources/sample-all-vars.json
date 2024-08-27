@@ -1,0 +1,15 @@
+{
+    "top": null,
+    "skip": null,
+    "count": null,
+    "expand": null,
+    "filter": null,
+    "search": null,
+    "select": null,
+    "orderby": null,
+    "HttpMethod": "GET",
+    "ODataService": "/sap/opu/odata/bla",
+    "ODataVersion": "v4",
+    "BTPdestination": "dest2",
+    "EntityOrEntitySet": "Person(12)"
+}
