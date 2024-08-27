@@ -249,7 +249,7 @@
         <artifactId>element-template-generator-maven-plugin</artifactId>
         <configuration>
           <connectorClasses>
-            <connectorClass>io.camunda.sap_integration.SAPconnector</connectorClass>
+            <connectorClass>io.camunda.sap_integration.SAPConnector</connectorClass>
           </connectorClasses>
         </configuration>
       </plugin>

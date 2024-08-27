@@ -76,7 +76,7 @@ public class ODataStandardTest {
           .variables(input.toString())
           .build();
 
-      var function = new SAPconnector();
+      var function = new SAPConnector();
       // when
       var response = (Map) function.execute(context);
       // then
@@ -105,7 +105,7 @@ public class ODataStandardTest {
           .variables(input.toString())
           .build();
 
-      var function = new SAPconnector();
+      var function = new SAPConnector();
       // when
       var response = (Map) function.execute(context);
       // then
@@ -145,7 +145,7 @@ public class ODataStandardTest {
           .variables(input.toString())
           .build();
 
-      var function = new SAPconnector();
+      var function = new SAPConnector();
       var response = (Map) function.execute(context);
       assertThat(response).extracting("result").isNotEqualTo("NOK");
       assertThat(((Map) response.get("result")).get("name")).isEqualTo(name);
@@ -191,7 +191,7 @@ public class ODataStandardTest {
           .variables(input.toString())
           .build();
 
-      var function = new SAPconnector();
+      var function = new SAPConnector();
       var response = (Map) function.execute(context);
       assertThat(response).extracting("result").isNotEqualTo("NOK");
       assertThat(((Map) response.get("result")).get("name")).isEqualTo(name);
@@ -217,7 +217,7 @@ public class ODataStandardTest {
           .variables(input.toString())
           .build();
 
-      var function = new SAPconnector();
+      var function = new SAPConnector();
       var response = (Map) function.execute(context);
       assertThat(response).extracting("result").isNotEqualTo("NOK");
       assertThat(((Map) response.get("result")).get("name")).isEqualTo(name);
@@ -254,7 +254,7 @@ public class ODataStandardTest {
       var context = OutboundConnectorContextBuilder.create()
           .variables(input.toString())
           .build();
-      new SAPconnector().execute(context);
+      new SAPConnector().execute(context);
 
       // delete newly created entity
       input = new JSONObject()
@@ -266,7 +266,7 @@ public class ODataStandardTest {
       context = OutboundConnectorContextBuilder.create()
           .variables(input.toString())
           .build();
-      var function = new SAPconnector();
+      var function = new SAPConnector();
       var response = (Map) function.execute(context);
 
 
@@ -287,7 +287,7 @@ public class ODataStandardTest {
       OutboundConnectorContextBuilder.TestConnectorContext finalContext = context;
 
       Exception exception = assertThrows(Exception.class, () -> {
-        new SAPconnector().execute(finalContext);
+        new SAPConnector().execute(finalContext);
       });
       var msg = exception.getMessage();
 

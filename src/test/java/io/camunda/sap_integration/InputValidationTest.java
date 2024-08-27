@@ -50,7 +50,7 @@ public class InputValidationTest {
         .variables(input.toString())
         .build();
 
-    var function = new SAPconnector();
+    var function = new SAPConnector();
 
     assertDoesNotThrow(() -> function.validateInput(context));
   }
@@ -66,7 +66,7 @@ public class InputValidationTest {
         .variables(input.toString())
         .build();
 
-    var function = new SAPconnector();
+    var function = new SAPConnector();
 
     ConnectorException exception = assertThrowsExactly(ConnectorException.class, () -> function.validateInput(context));
     assertThat(exception.getMessage()).contains("invalid JSON payload");

@@ -43,9 +43,9 @@ import java.util.HashMap;
     "tpl_search"
 }, type = "io.camunda:sap:outbound:1")
 @ElementTemplate(id = "io.camunda.connector.SAP.outbound.v1", name = "SAP connector", version = 1, icon = "sap-connector-outbound.svg", documentationRef = "https://docs.camunda.io/xxx", inputDataClass = UserDefinedRequest.class)
-public class SAPconnector implements OutboundConnectorFunction {
+public class SAPConnector implements OutboundConnectorFunction {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(SAPconnector.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(SAPConnector.class);
 
   @Override
   public Object execute(OutboundConnectorContext context) throws ConnectorException {
