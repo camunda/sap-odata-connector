@@ -2,7 +2,10 @@ package io.camunda.sap_integration;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sap.cloud.sdk.cloudplatform.connectivity.exception.DestinationAccessException;
 import com.sap.cloud.sdk.datamodel.odata.client.ODataProtocol;
+import com.sap.cloud.sdk.datamodel.odata.client.exception.ODataRequestException;
+import com.sap.cloud.sdk.datamodel.odata.client.exception.ODataResponseException;
 import com.sap.cloud.sdk.datamodel.odata.client.expression.ODataResourcePath;
 import com.sap.cloud.sdk.datamodel.odata.client.request.UpdateStrategy;
 import io.camunda.connector.api.annotation.OutboundConnector;
@@ -12,6 +15,7 @@ import io.camunda.connector.api.json.ConnectorsObjectMapperSupplier;
 import io.camunda.connector.api.outbound.OutboundConnectorContext;
 import io.camunda.connector.api.outbound.OutboundConnectorFunction;
 import io.camunda.connector.generator.java.annotation.ElementTemplate;
+import io.camunda.sap_integration.model.ErrorCodes;
 import io.camunda.sap_integration.model.UserDefinedRequest;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -60,7 +64,7 @@ public class SAPconnector implements OutboundConnectorFunction {
       } catch (JsonProcessingException e) {
         throw new ConnectorExceptionBuilder()
             .message("invalid JSON payload: " + e.getMessage())
-            .errorCode("INVALID_PAYLOAD")
+            .errorCode(String.valueOf(ErrorCodes.INVALID_PAYLOAD))
             .build();
       }
     }
@@ -91,26 +95,68 @@ public class SAPconnector implements OutboundConnectorFunction {
       }
     });
 
-    ODataRequest OData = new ODataRequest(
-        json.getString("tpl_Destination"),
-        json.getString("tpl_ODataService"),
-        json.getString("tpl_EntityOrEntitySet"),
-        queryParams,
-        oDataVersion);
+    ODataRequest OData = null;
+    try {
+      OData = new ODataRequest(
+          json.getString("tpl_Destination"),
+          json.getString("tpl_ODataService"),
+          json.getString("tpl_EntityOrEntitySet"),
+          queryParams,
+          oDataVersion);
+    } catch (DestinationAccessException destinationAccessException) {
+      throw new ConnectorExceptionBuilder()
+          .message("Destination access error for destination '"
+              + destinationAccessException.getDestinationName()
+              + "': "
+              + destinationAccessException.getMessage())
+          .errorCode(String.valueOf(ErrorCodes.DESTINATION_ERROR))
+          .build();
+    } catch (RuntimeException e) {
+      throw new ConnectorExceptionBuilder()
+          .message("Destination build error: " + e.getMessage())
+          .errorCode(String.valueOf(ErrorCodes.GENERIC_ERROR))
+          .build();
+    }
 
     Object result = ODataRequest.defaultResponse;
 
-    result = switch (httpMethod.toLowerCase()) {
-      case "get" -> OData.get();
-      case "post" -> OData.post(json.get("tpl_Payload").toString());
-      case "put" -> handlePutOrPatch(OData, json, UpdateStrategy.REPLACE_WITH_PUT);
-      case "patch" -> handlePutOrPatch(OData, json, UpdateStrategy.MODIFY_WITH_PATCH);
-      case "delete" -> OData.delete();
-      default -> result;
-    };
+    try {
+      result = switch (httpMethod.toLowerCase()) {
+        case "get" -> OData.get();
+        case "post" -> OData.post(json.get("tpl_Payload").toString());
+        case "put" -> handlePutOrPatch(OData, json, UpdateStrategy.REPLACE_WITH_PUT);
+        case "patch" -> handlePutOrPatch(OData, json, UpdateStrategy.MODIFY_WITH_PATCH);
+        case "delete" -> OData.delete();
+        default -> result;
+      };
+    } catch (ODataResponseException responseError) {
+      throw new ConnectorExceptionBuilder()
+          .message(buildErrorMsg(responseError, "OData response error: "))
+          .cause(responseError.getCause())
+          .errorCode(String.valueOf(responseError.getHttpCode()))
+          .build();
+    } catch (ODataRequestException requestError) {
+      throw new ConnectorExceptionBuilder()
+          .message(buildErrorMsg(requestError, "OData request error: "))
+          .cause(requestError.getCause())
+          .errorCode(String.valueOf(ErrorCodes.REQUEST_ERROR))
+          .build();
+    } catch (RuntimeException e) {
+      throw new ConnectorExceptionBuilder()
+          .message(buildErrorMsg(e, "OData runtime error: "))
+          .cause(e.getCause())
+          .errorCode(String.valueOf(ErrorCodes.GENERIC_ERROR))
+          .build();
+    }
 
     return result;
 
+  }
+
+  private String buildErrorMsg(Exception e, String prefix) {
+    String msg = !prefix.isBlank() ? prefix + e.getMessage() : prefix;
+    msg += e.getCause() != null ? " caused by: " + e.getCause().getMessage() : "";
+    return msg;
   }
 
   private Object handlePutOrPatch(ODataRequest OData, JSONObject tplAsJson, UpdateStrategy strategy) {
