@@ -57,11 +57,11 @@ public class ErrorCodesTest {
     @Test
     void response_error() {
       var input = new JSONObject()
-          .put("tpl_Destination", "willalwaysresolve")
+          .put("tpl_Destination", "willResolveToLocalhost4004")
           .put("tpl_HttpMethod", "GET")
           .put("tpl_ODataService", "/will/cause")
           .put("tpl_EntityOrEntitySet", "fourohfour")
-          .put("tpl_ODataVersion", ODataProtocol.V4);
+          .put("tpl_ODataVersion", "V4");
 
       var context = OutboundConnectorContextBuilder.create()
           .variables(input.toString())
@@ -79,12 +79,13 @@ public class ErrorCodesTest {
       var destination = DefaultHttpDestination.builder("http://localhost:4005") //> :4004 is where the real mockserver listens
           .build();
       DestinationAccessor.prependDestinationLoader((name, options) -> Try.success(destination));
+
       var input = new JSONObject()
           .put("tpl_Destination", "resolvesToLocalhost4005")
           .put("tpl_HttpMethod", "GET")
           .put("tpl_ODataService", "/doesnt/matter")
           .put("tpl_EntityOrEntitySet", "entity")
-          .put("tpl_ODataVersion", ODataProtocol.V4);
+          .put("tpl_ODataVersion", "V4");
 
       var context = OutboundConnectorContextBuilder.create()
           .variables(input.toString())
