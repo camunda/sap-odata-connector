@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sap.cloud.sdk.cloudplatform.connectivity.exception.DestinationAccessException;
 import com.sap.cloud.sdk.datamodel.odata.client.ODataProtocol;
-import com.sap.cloud.sdk.datamodel.odata.client.exception.ODataException;
 import com.sap.cloud.sdk.datamodel.odata.client.exception.ODataRequestException;
 import com.sap.cloud.sdk.datamodel.odata.client.exception.ODataResponseException;
 import com.sap.cloud.sdk.datamodel.odata.client.expression.ODataResourcePath;
@@ -18,7 +17,6 @@ import io.camunda.connector.api.outbound.OutboundConnectorFunction;
 import io.camunda.connector.generator.java.annotation.ElementTemplate;
 import io.camunda.sap_integration.model.ErrorCodes;
 import io.camunda.sap_integration.model.UserDefinedRequest;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -133,23 +131,32 @@ public class SAPconnector implements OutboundConnectorFunction {
       };
     } catch (ODataResponseException responseError) {
       throw new ConnectorExceptionBuilder()
-          .message("OData response error: " + responseError.getMessage())
+          .message(buildErrorMsg(responseError, "OData response error: "))
+          .cause(responseError.getCause())
           .errorCode(String.valueOf(responseError.getHttpCode()))
           .build();
     } catch (ODataRequestException requestError) {
       throw new ConnectorExceptionBuilder()
-          .message("OData request error: " + requestError.getMessage())
+          .message(buildErrorMsg(requestError, "OData request error: "))
+          .cause(requestError.getCause())
           .errorCode(String.valueOf(ErrorCodes.REQUEST_ERROR))
           .build();
     } catch (RuntimeException e) {
       throw new ConnectorExceptionBuilder()
-          .message("OData error: " + e.getMessage())
+          .message(buildErrorMsg(e, "OData runtime error: "))
+          .cause(e.getCause())
           .errorCode(String.valueOf(ErrorCodes.GENERIC_ERROR))
           .build();
     }
 
     return result;
 
+  }
+
+  private String buildErrorMsg(Exception e, String prefix) {
+    String msg = !prefix.isBlank() ? prefix + e.getMessage() : prefix;
+    msg += e.getCause() != null ? " caused by: " + e.getCause().getMessage() : "";
+    return msg;
   }
 
   private Object handlePutOrPatch(ODataRequest OData, JSONObject tplAsJson, UpdateStrategy strategy) {
