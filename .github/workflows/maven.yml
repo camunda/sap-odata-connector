@@ -19,7 +19,7 @@ jobs:
     - name: install and run OData v2 + v4 mockserver
       run: |
         cd cap-bookshop
-        npm i
+        npm ci
         npm start
         
     - name: set up jdk 21
