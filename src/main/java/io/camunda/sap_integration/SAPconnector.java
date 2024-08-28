@@ -3,6 +3,9 @@ package io.camunda.sap_integration;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sap.cloud.sdk.datamodel.odata.client.ODataProtocol;
+import com.sap.cloud.sdk.datamodel.odata.client.exception.ODataException;
+import com.sap.cloud.sdk.datamodel.odata.client.exception.ODataRequestException;
+import com.sap.cloud.sdk.datamodel.odata.client.exception.ODataResponseException;
 import com.sap.cloud.sdk.datamodel.odata.client.expression.ODataResourcePath;
 import com.sap.cloud.sdk.datamodel.odata.client.request.UpdateStrategy;
 import io.camunda.connector.api.annotation.OutboundConnector;
@@ -12,6 +15,7 @@ import io.camunda.connector.api.json.ConnectorsObjectMapperSupplier;
 import io.camunda.connector.api.outbound.OutboundConnectorContext;
 import io.camunda.connector.api.outbound.OutboundConnectorFunction;
 import io.camunda.connector.generator.java.annotation.ElementTemplate;
+import io.camunda.sap_integration.model.ErrorCodes;
 import io.camunda.sap_integration.model.UserDefinedRequest;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -60,7 +64,7 @@ public class SAPconnector implements OutboundConnectorFunction {
       } catch (JsonProcessingException e) {
         throw new ConnectorExceptionBuilder()
             .message("invalid JSON payload: " + e.getMessage())
-            .errorCode("INVALID_PAYLOAD")
+            .errorCode(String.valueOf(ErrorCodes.INVALID_PAYLOAD))
             .build();
       }
     }
@@ -100,14 +104,31 @@ public class SAPconnector implements OutboundConnectorFunction {
 
     Object result = ODataRequest.defaultResponse;
 
-    result = switch (httpMethod.toLowerCase()) {
-      case "get" -> OData.get();
-      case "post" -> OData.post(json.get("tpl_Payload").toString());
-      case "put" -> handlePutOrPatch(OData, json, UpdateStrategy.REPLACE_WITH_PUT);
-      case "patch" -> handlePutOrPatch(OData, json, UpdateStrategy.MODIFY_WITH_PATCH);
-      case "delete" -> OData.delete();
-      default -> result;
-    };
+    try {
+      result = switch (httpMethod.toLowerCase()) {
+        case "get" -> OData.get();
+        case "post" -> OData.post(json.get("tpl_Payload").toString());
+        case "put" -> handlePutOrPatch(OData, json, UpdateStrategy.REPLACE_WITH_PUT);
+        case "patch" -> handlePutOrPatch(OData, json, UpdateStrategy.MODIFY_WITH_PATCH);
+        case "delete" -> OData.delete();
+        default -> result;
+      };
+    } catch (ODataResponseException responseError) {
+      throw new ConnectorExceptionBuilder()
+          .message("OData response error: " + responseError.getMessage())
+          .errorCode(String.valueOf(responseError.getHttpCode()))
+          .build();
+    } catch (ODataRequestException requestError) {
+      throw new ConnectorExceptionBuilder()
+          .message("OData request error: " + requestError.getMessage())
+          .errorCode(String.valueOf(ErrorCodes.REQUEST_ERROR))
+          .build();
+    } catch (ODataException e) {
+      throw new ConnectorExceptionBuilder()
+          .message("OData error: " + e.getMessage())
+          .errorCode(String.valueOf(ErrorCodes.GENERIC_ERROR))
+          .build();
+    }
 
     return result;
 
