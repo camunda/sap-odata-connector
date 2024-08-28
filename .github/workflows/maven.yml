@@ -23,7 +23,7 @@ jobs:
       run: |
         cd cap-bookshop
         npm i
-        npm start
+        npm start &
 
     - run: cd .. # back to java space...
 
