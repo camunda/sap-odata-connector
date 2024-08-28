@@ -55,7 +55,7 @@ public class ErrorCodesTest {
     }
 
     @Test
-    void request_error() {
+    void response_error() {
       var input = new JSONObject()
           .put("tpl_Destination", "willalwaysresolve")
           .put("tpl_HttpMethod", "GET")
@@ -71,6 +71,29 @@ public class ErrorCodesTest {
 
       ConnectorException exception = assertThrowsExactly(ConnectorException.class, () -> function.execute(context));
       assertThat(exception.getErrorCode()).isEqualTo(String.valueOf("404"));
+    }
+
+    @Test
+    void request_error() {
+      // construct an unreachable endpoint
+      var destination = DefaultHttpDestination.builder("http://localhost:4005") //> :4004 is where the real mockserver listens
+          .build();
+      DestinationAccessor.prependDestinationLoader((name, options) -> Try.success(destination));
+      var input = new JSONObject()
+          .put("tpl_Destination", "resolvesToLocalhost4005")
+          .put("tpl_HttpMethod", "GET")
+          .put("tpl_ODataService", "/doesnt/matter")
+          .put("tpl_EntityOrEntitySet", "entity")
+          .put("tpl_ODataVersion", ODataProtocol.V4);
+
+      var context = OutboundConnectorContextBuilder.create()
+          .variables(input.toString())
+          .build();
+
+      var function = new SAPconnector();
+
+      ConnectorException exception = assertThrowsExactly(ConnectorException.class, () -> function.execute(context));
+      assertThat(exception.getErrorCode()).isEqualTo(String.valueOf(ErrorCodes.REQUEST_ERROR));
     }
   }
 
