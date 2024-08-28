@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 public class ErrorCodesTest {
   @Test
-  void test_destination_error() {
+  void destination_error() {
     var input = new JSONObject()
         .put("tpl_Destination", "willthrow")
         .put("tpl_HttpMethod", "GET")
@@ -32,4 +32,7 @@ public class ErrorCodesTest {
     ConnectorException exception = assertThrowsExactly(ConnectorException.class, () -> function.execute(context));
     assertThat(exception.getErrorCode()).isEqualTo(String.valueOf(ErrorCodes.DESTINATION_ERROR));
   }
+
+//  @Test
+//  void
 }
