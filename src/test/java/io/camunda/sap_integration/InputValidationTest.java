@@ -2,6 +2,7 @@ package io.camunda.sap_integration;
 
 import io.camunda.connector.api.error.ConnectorException;
 import io.camunda.connector.test.outbound.OutboundConnectorContextBuilder;
+import io.camunda.sap_integration.model.ErrorCodes;
 import org.json.JSONObject;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -69,5 +70,7 @@ public class InputValidationTest {
 
     ConnectorException exception = assertThrowsExactly(ConnectorException.class, () -> function.validateInput(context));
     assertThat(exception.getMessage()).contains("invalid JSON payload");
+    assertThat(exception.getErrorCode()).isEqualTo("INVALID_PAYLOAD");
+    assertThat(exception.getErrorCode()).isEqualTo(String.valueOf(ErrorCodes.INVALID_PAYLOAD));
   }
 }
