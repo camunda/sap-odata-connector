@@ -105,7 +105,7 @@ public class ODataRequest {
     return result;
   }
 
-  private Map mapResponseToProtocol(ODataRequestResultGeneric result) {
+  private Map mapResponseToProtocol(ODataRequestResult result) {
     HttpResponse httpResponse = result.getHttpResponse();
     HttpEntity entity = httpResponse.getEntity();
     InputStream responseBody = null;
