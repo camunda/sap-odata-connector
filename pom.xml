@@ -16,7 +16,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
     <!-- connector SDK version -->
-    <version.connectors>8.6.0-alpha3</version.connectors>
+    <version.connectors>8.5.6</version.connectors>
 
     <!-- external libraries -->
     <version.assertj>3.25.3</version.assertj>
@@ -248,9 +248,11 @@
         <groupId>io.camunda.connector</groupId>
         <artifactId>element-template-generator-maven-plugin</artifactId>
         <configuration>
-          <connectorClasses>
-            <connectorClass>io.camunda.sap_integration.SAPConnector</connectorClass>
-          </connectorClasses>
+          <connectors>
+            <connector>
+              <connectorClass>io.camunda.sap_integration.SAPConnector</connectorClass>
+            </connector>
+          </connectors>
         </configuration>
       </plugin>
     </plugins>

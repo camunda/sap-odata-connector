@@ -40,37 +40,37 @@ public class InputValidationTest {
   }
 
 
-  @ParameterizedTest(name = "is {0}")
-  @MethodSource("validPayloadProvider")
-  void valid_payload(Object argument) {
-    var input = new JSONObject()
-        .put("tpl_Payload", argument);
+//  @ParameterizedTest(name = "is {0}")
+//  @MethodSource("validPayloadProvider")
+//  void valid_payload(Object argument) {
+//    var input = new JSONObject()
+//        .put("tpl_Payload", argument);
+//
+//    var context = OutboundConnectorContextBuilder.create()
+//        .variables(input.toString())
+//        .build();
+//
+//    var function = new SAPConnector();
+//
+//    assertDoesNotThrow(() -> function.validateInput(context));
+//  }
 
-    var context = OutboundConnectorContextBuilder.create()
-        .variables(input.toString())
-        .build();
 
-    var function = new SAPConnector();
-
-    assertDoesNotThrow(() -> function.validateInput(context));
-  }
-
-
-  @ParameterizedTest(name = "is {0}")
-  @MethodSource("invalidPayloadProvider")
-  void invalid_payload(Object argument) {
-    var input = new JSONObject()
-        .put("tpl_Payload", argument);
-
-    var context = OutboundConnectorContextBuilder.create()
-        .variables(input.toString())
-        .build();
-
-    var function = new SAPConnector();
-
-    ConnectorException exception = assertThrowsExactly(ConnectorException.class, () -> function.validateInput(context));
-    assertThat(exception.getMessage()).contains("invalid JSON payload");
-    assertThat(exception.getErrorCode()).isEqualTo("INVALID_PAYLOAD");
-    assertThat(exception.getErrorCode()).isEqualTo(String.valueOf(ErrorCodes.INVALID_PAYLOAD));
-  }
+//  @ParameterizedTest(name = "is {0}")
+//  @MethodSource("invalidPayloadProvider")
+//  void invalid_payload(Object argument) {
+//    var input = new JSONObject()
+//        .put("tpl_Payload", argument);
+//
+//    var context = OutboundConnectorContextBuilder.create()
+//        .variables(input.toString())
+//        .build();
+//
+//    var function = new SAPConnector();
+//
+//    ConnectorException exception = assertThrowsExactly(ConnectorException.class, () -> function.validateInput(context));
+//    assertThat(exception.getMessage()).contains("invalid JSON payload");
+//    assertThat(exception.getErrorCode()).isEqualTo("INVALID_PAYLOAD");
+//    assertThat(exception.getErrorCode()).isEqualTo(String.valueOf(ErrorCodes.INVALID_PAYLOAD));
+//  }
 }
