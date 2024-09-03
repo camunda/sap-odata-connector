@@ -33,6 +33,7 @@ import io.camunda.sap_integration.model.SAPConnectorRequest.HttpMethod.Patch;
 import io.camunda.sap_integration.model.SAPConnectorRequest.HttpMethod.Post;
 import io.camunda.sap_integration.model.SAPConnectorRequest.HttpMethod.Put;
 import io.camunda.sap_integration.model.SAPConnectorRequest.ODataVersion;
+import io.camunda.sap_integration.model.SAPConnectorRequestAccessor;
 import io.camunda.sap_integration.model.SAPConnectorResponse;
 import java.io.IOException;
 import java.io.InputStream;

@@ -1,6 +1,5 @@
-package io.camunda.sap_integration;
+package io.camunda.sap_integration.model;
 
-import io.camunda.sap_integration.model.SAPConnectorRequest;
 import io.camunda.sap_integration.model.SAPConnectorRequest.HttpMethod.Delete;
 import io.camunda.sap_integration.model.SAPConnectorRequest.HttpMethod.Get;
 import io.camunda.sap_integration.model.SAPConnectorRequest.HttpMethod.Get.ODataVersionGet.V2;
