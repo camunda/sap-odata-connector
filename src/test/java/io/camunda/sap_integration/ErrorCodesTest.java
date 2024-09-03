@@ -92,7 +92,7 @@ public class ErrorCodesTest {
       // construct an unreachable endpoint
       var destination =
           DefaultHttpDestination.builder(
-                  "http://localhost:4005") // > :4004 is where the real mockserver listens
+                  "http://localhost:4005") //> :4004 is where the real mockserver listens
               .build();
       DestinationAccessor.prependDestinationLoader((name, options) -> Try.success(destination));
       var input =

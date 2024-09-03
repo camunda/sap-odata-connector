@@ -35,7 +35,7 @@ import org.junit.jupiter.params.provider.FieldSource;
 public class ODataStandardTest {
 
   String tpl_Destination =
-      "localMockServer"; // > just there for completeness sake, destination resolution is wired in
+      "localMockServer"; //> just there for completeness sake, destination resolution is wired in
 
   // statically (see above @link mockDestination)
 
@@ -135,7 +135,7 @@ public class ODataStandardTest {
       // when
       var response = (SAPConnectorResponse) function.execute(context);
       // then
-      // > REVISIT: no sig for 2nd param to "extracting" for a type cast
+      //> REVISIT: no sig for 2nd param to "extracting" for a type cast
       assertThat(response).extracting("result").isNotEqualTo("NOK");
       assertThat(response.result().get("name").asText()).isEqualTo(expected);
     }
@@ -157,7 +157,7 @@ public class ODataStandardTest {
       // when
       var response = (SAPConnectorResponse) function.execute(context);
       // then
-      // > REVISIT: no sig for 2nd param to "extracting" for a type cast
+      //> REVISIT: no sig for 2nd param to "extracting" for a type cast
       assertThat(response).extracting("result").isNotEqualTo("NOK");
       assertThat(response.result().size()).isEqualTo(5);
       assertThat(response.result().get(0).get("title").asText()).isEqualTo("Wuthering Heights");

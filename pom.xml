@@ -258,6 +258,11 @@
             </formats>
             <java>
               <googleJavaFormat />
+              <replace>
+                <name>keepCoolSrcComment</name>
+                <search>// ></search>
+                <replacement>//></replacement>
+              </replace>
             </java>
             <pom />
           </configuration>
