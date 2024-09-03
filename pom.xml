@@ -16,7 +16,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
     <!-- connector SDK version -->
-    <version.connectors>8.6.0-alpha3</version.connectors>
+    <version.connectors>8.5.6</version.connectors>
 
     <!-- external libraries -->
     <version.assertj>3.25.3</version.assertj>
@@ -34,6 +34,7 @@
     <plugin.version.maven-resources-plugin>3.3.1</plugin.version.maven-resources-plugin>
     <plugin.version.maven-shade-plugin>3.5.2</plugin.version.maven-shade-plugin>
     <plugin.version.maven-surefire-plugin>3.2.5</plugin.version.maven-surefire-plugin>
+    <plugin.version.spotless-maven-plugin>2.43.0</plugin.version.spotless-maven-plugin>
   </properties>
 
   <dependencies>
@@ -236,6 +237,36 @@
           <artifactId>maven-surefire-plugin</artifactId>
           <version>${plugin.version.maven-surefire-plugin}</version>
         </plugin>
+        <plugin>
+          <groupId>com.diffplug.spotless</groupId>
+          <artifactId>spotless-maven-plugin</artifactId>
+          <version>${plugin.version.spotless-maven-plugin}</version>
+          <configuration>
+            <formats>
+              <format>
+                <includes>
+                  <include>*.md</include>
+                  <include>.gitignore</include>
+                </includes>
+                <trimTrailingWhitespace />
+                <endWithNewline />
+                <indent>
+                  <spaces>true</spaces>
+                  <spacesPerTab>2</spacesPerTab>
+                </indent>
+              </format>
+            </formats>
+            <java>
+              <googleJavaFormat />
+              <replace>
+                <name>keepCoolSrcComment</name>
+                <search>// ></search>
+                <replacement>//></replacement>
+              </replace>
+            </java>
+            <pom />
+          </configuration>
+        </plugin>
       </plugins>
     </pluginManagement>
 
@@ -248,13 +279,68 @@
         <groupId>io.camunda.connector</groupId>
         <artifactId>element-template-generator-maven-plugin</artifactId>
         <configuration>
-          <connectorClasses>
-            <connectorClass>io.camunda.sap_integration.SAPconnector</connectorClass>
-          </connectorClasses>
+          <connectors>
+            <connector>
+              <connectorClass>io.camunda.sap_integration.SAPConnector</connectorClass>
+            </connector>
+          </connectors>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>com.diffplug.spotless</groupId>
+        <artifactId>spotless-maven-plugin</artifactId>
       </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <!-- profile to auto format -->
+    <profile>
+      <id>autoFormat</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>com.diffplug.spotless</groupId>
+            <artifactId>spotless-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>spotless-format</id>
+                <goals>
+                  <goal>apply</goal>
+                </goals>
+                <phase>process-sources</phase>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <!-- profile to perform strict validation checks -->
+    <profile>
+      <id>checkFormat</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>com.diffplug.spotless</groupId>
+            <artifactId>spotless-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>spotless-check</id>
+                <goals>
+                  <goal>check</goal>
+                </goals>
+                <phase>validate</phase>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 
   <repositories>
     <repository>
@@ -315,5 +401,7 @@
       </snapshots>
     </pluginRepository>
   </pluginRepositories>
+
+
 
 </project>

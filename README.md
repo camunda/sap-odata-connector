@@ -5,11 +5,11 @@ OData and RFC protocol connectors to r/w data from/to SAP S/4 and ECC.
 ## infrastructure prerequisites
 
 - BTP subaccount w/ cf environment activated
-- BTP Destination Service instance pointing to the SAP system,  
+- BTP Destination Service instance pointing to the SAP system,
     with authorization via a technical user (no principal propagation support yet)
 - (optional) in case of on-premise SAP system
   - cloud connector setup and connected to above BTP subaccount
-  - BTP Connectivity Service instance 
+  - BTP Connectivity Service instance
 
 ## setup
 
@@ -17,16 +17,16 @@ OData and RFC protocol connectors to r/w data from/to SAP S/4 and ECC.
 
 ### OData sample backend
 
-There's a Node.js-based OData v2 + v4 backend located in `/cap-bookshop`.  
-It is intended for dev-time and mandatory for running the unit tests.  
+There's a Node.js-based OData v2 + v4 backend located in `/cap-bookshop`.
+It is intended for dev-time and mandatory for running the unit tests.
 
-First, get yourself [Node.js >= 20](https://nodejs.org/en/download/package-manager/current).  
+First, get yourself [Node.js >= 20](https://nodejs.org/en/download/package-manager/current).
 Then get going via
 
 ```shell
 $> cd cap-bookshop
 # deps of the mockserver backend
-$> npm i 
+$> npm i
 # global install of cds-dk is required for the cds run command
 $> npm i -g @sap/cds-dk
 $> cds run
