@@ -9,7 +9,6 @@ import io.camunda.sap_integration.model.SAPConnectorRequest.HttpMethod.Patch;
 import io.camunda.sap_integration.model.SAPConnectorRequest.HttpMethod.Post;
 import io.camunda.sap_integration.model.SAPConnectorRequest.HttpMethod.Put;
 import io.camunda.sap_integration.model.SAPConnectorRequest.ODataVersion;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -24,16 +23,16 @@ public class SAPConnectorRequestAccessor {
     putIfPresent(params, "$expand", get.expand());
     putIfPresent(params, "$select", get.select());
     switch (get.oDataVersionGet()) {
-    case V2 ignored -> {
-      if(get.count()){
-        putIfPresent(params,"$inlinecount","allpages");
+      case V2 ignored -> {
+        if (get.count() != null && get.count()) {
+          putIfPresent(params, "$inlinecount", "allpages");
+        }
       }
-    }
-    case V4 v4 -> {
-      putIfPresent(params, "$inlinecount", v4.inlinecount(), String::valueOf);
-      putIfPresent(params, "$count", get.count(), String::valueOf);
-      putIfPresent(params, "$search", v4.search());
-    }
+      case V4 v4 -> {
+        putIfPresent(params, "$inlinecount", v4.inlinecount(), String::valueOf);
+        putIfPresent(params, "$count", get.count(), String::valueOf);
+        putIfPresent(params, "$search", v4.search());
+      }
     }
     return params;
   }
@@ -45,8 +44,7 @@ public class SAPConnectorRequestAccessor {
   }
 
   private static void putIfPresent(
-      Map<String, String> params, String key, Object value, Function<Object, String> mapper
-  ) {
+      Map<String, String> params, String key, Object value, Function<Object, String> mapper) {
     if (value != null) {
       putIfPresent(params, key, mapper.apply(value));
     }
@@ -54,10 +52,11 @@ public class SAPConnectorRequestAccessor {
 
   public static ODataVersion oDataVersion(SAPConnectorRequest request) {
     return switch (request.httpMethod()) {
-      case Get get -> switch (get.oDataVersionGet()) {
-        case V2 ignored -> ODataVersion.V2;
-        case V4 ignored -> ODataVersion.V4;
-      };
+      case Get get ->
+          switch (get.oDataVersionGet()) {
+            case V2 ignored -> ODataVersion.V2;
+            case V4 ignored -> ODataVersion.V4;
+          };
       case Delete delete -> delete.oDataVersionDelete();
       case Patch patch -> patch.oDataVersionPatch();
       case Post post -> post.oDataVersionPost();

@@ -8,16 +8,15 @@ import com.sap.cloud.sdk.datamodel.odata.client.ODataProtocol;
 import com.sap.cloud.sdk.datamodel.odata.client.expression.ODataResourcePath;
 import com.sap.cloud.sdk.datamodel.odata.client.request.*;
 import io.camunda.connector.api.json.ConnectorsObjectMapperSupplier;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ODataRequest {
 
@@ -34,7 +33,12 @@ public class ODataRequest {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ODataRequest.class);
 
-  public ODataRequest(String destination, String servicePath, String entityOrEntitySet, HashMap<String, String> queryParameter, ODataProtocol version) {
+  public ODataRequest(
+      String destination,
+      String servicePath,
+      String entityOrEntitySet,
+      HashMap<String, String> queryParameter,
+      ODataProtocol version) {
 
     this.destination = destination;
     this.servicePath = servicePath;
@@ -52,11 +56,12 @@ public class ODataRequest {
   }
 
   Object get() {
-    ODataRequestRead request = new ODataRequestRead(
-        this.servicePath,
-        this.entityOrEntitySet,
-        "", // encodedQuery
-        this.oDataVersion);
+    ODataRequestRead request =
+        new ODataRequestRead(
+            this.servicePath,
+            this.entityOrEntitySet,
+            "", // encodedQuery
+            this.oDataVersion);
     this.queryParameter.forEach(request::addQueryParameter);
 
     ODataRequestResultGeneric _result = request.execute(this.client);
@@ -66,14 +71,10 @@ public class ODataRequest {
     return result;
   }
 
-
-
   Object post(String payload) {
-    ODataRequestCreate request = new ODataRequestCreate(
-        this.servicePath,
-        this.entityOrEntitySet,
-        payload,
-        this.oDataVersion);
+    ODataRequestCreate request =
+        new ODataRequestCreate(
+            this.servicePath, this.entityOrEntitySet, payload, this.oDataVersion);
 
     ODataRequestResultGeneric _result = request.execute(this.client);
     Map result = mapResponseToProtocol(_result);
@@ -82,8 +83,10 @@ public class ODataRequest {
     return result;
   }
 
- Object putOrPatch(UpdateStrategy putOrPatch, ODataResourcePath resourcePath, String payload) {
-    ODataRequestUpdate request = new ODataRequestUpdate(this.servicePath, resourcePath, payload, putOrPatch, null, this.oDataVersion);
+  Object putOrPatch(UpdateStrategy putOrPatch, ODataResourcePath resourcePath, String payload) {
+    ODataRequestUpdate request =
+        new ODataRequestUpdate(
+            this.servicePath, resourcePath, payload, putOrPatch, null, this.oDataVersion);
     ODataRequestResultGeneric _result = request.execute(this.client);
 
     var result = mapResponseToProtocol(_result);
@@ -94,12 +97,17 @@ public class ODataRequest {
 
   Object delete() {
     ODataResourcePath path = ODataResourcePath.of(this.entityOrEntitySet);
-    ODataRequestDelete request = new ODataRequestDelete(this.servicePath, path, null, this.oDataVersion);
+    ODataRequestDelete request =
+        new ODataRequestDelete(this.servicePath, path, null, this.oDataVersion);
     ODataRequestResultGeneric _result = request.execute(this.client);
 
-
     int statusCode = _result.getHttpResponse().getStatusLine().getStatusCode();
-    var result = Map.of("result", /* response body of http delete is always empty */ "{}", "statusCode", statusCode);
+    var result =
+        Map.of(
+            "result", /* response body of http delete is always empty */
+            "{}",
+            "statusCode",
+            statusCode);
     LOGGER.debug("//> response {}", result);
 
     return result;
@@ -122,13 +130,16 @@ public class ODataRequest {
     int statusCode = httpResponse.getStatusLine().getStatusCode();
     if (this.oDataVersion.equals(ODataProtocol.V2)) {
       Map d = (Map) jsonResponse.get("d");
-      mappedResult = d.containsKey("results") ? //> entityset
-          Map.of("result", d.get("results"), "statusCode", statusCode) :
-          Map.of("result", d, "statusCode", statusCode); //> entity
+      mappedResult =
+          d.containsKey("results")
+              ? // > entityset
+              Map.of("result", d.get("results"), "statusCode", statusCode)
+              : Map.of("result", d, "statusCode", statusCode); // > entity
     } else if (this.oDataVersion.equals(ODataProtocol.V4) && jsonResponse.containsKey("value")) {
-      mappedResult = Map.of("result", jsonResponse.get("value"), "statusCode", statusCode); //> entityset
+      mappedResult =
+          Map.of("result", jsonResponse.get("value"), "statusCode", statusCode); // > entityset
     } else {
-      mappedResult = Map.of("result", jsonResponse, "statusCode", statusCode); //> entity
+      mappedResult = Map.of("result", jsonResponse, "statusCode", statusCode); // > entity
     }
     return mappedResult;
   }

@@ -78,7 +78,7 @@
     "constraints" : {
       "notEmpty" : true,
       "pattern" : {
-        "value" : "^(\\|=).*",
+        "value" : "^([/=]).*",
         "message" : "oDataService must start with a '/'"
       }
     },
