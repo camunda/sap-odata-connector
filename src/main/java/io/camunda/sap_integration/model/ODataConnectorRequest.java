@@ -8,19 +8,19 @@ import io.camunda.connector.generator.dsl.Property.FeelMode;
 import io.camunda.connector.generator.java.annotation.TemplateDiscriminatorProperty;
 import io.camunda.connector.generator.java.annotation.TemplateProperty;
 import io.camunda.connector.generator.java.annotation.TemplateSubType;
-import io.camunda.sap_integration.model.SAPConnectorRequest.HttpMethod.Delete;
-import io.camunda.sap_integration.model.SAPConnectorRequest.HttpMethod.Get;
-import io.camunda.sap_integration.model.SAPConnectorRequest.HttpMethod.Get.ODataVersionGet.V2;
-import io.camunda.sap_integration.model.SAPConnectorRequest.HttpMethod.Get.ODataVersionGet.V4;
-import io.camunda.sap_integration.model.SAPConnectorRequest.HttpMethod.Patch;
-import io.camunda.sap_integration.model.SAPConnectorRequest.HttpMethod.Post;
-import io.camunda.sap_integration.model.SAPConnectorRequest.HttpMethod.Put;
+import io.camunda.sap_integration.model.ODataConnectorRequest.HttpMethod.Delete;
+import io.camunda.sap_integration.model.ODataConnectorRequest.HttpMethod.Get;
+import io.camunda.sap_integration.model.ODataConnectorRequest.HttpMethod.Get.ODataVersionGet.V2;
+import io.camunda.sap_integration.model.ODataConnectorRequest.HttpMethod.Get.ODataVersionGet.V4;
+import io.camunda.sap_integration.model.ODataConnectorRequest.HttpMethod.Patch;
+import io.camunda.sap_integration.model.ODataConnectorRequest.HttpMethod.Post;
+import io.camunda.sap_integration.model.ODataConnectorRequest.HttpMethod.Put;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import java.util.Map;
 
-public record SAPConnectorRequest(
+public record ODataConnectorRequest(
     @TemplateProperty(
             group = "sap",
             label = "BTP destination name",
