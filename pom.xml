@@ -23,7 +23,8 @@
     <version.junit-jupiter>5.11.0</version.junit-jupiter>
     <version.mockito>5.11.0</version.mockito>
     <version.slf4j>2.0.12</version.slf4j>
-    <version.cloud-sdk>5.10.0</version.cloud-sdk>
+    <version.cloud-sdk>5.12.0</version.cloud-sdk>
+    <version.sap-jo>3.1.10</version.sap-jo>
 
     <!-- maven plugins -->
     <plugin.version.maven-clean-plugin>3.3.2</plugin.version.maven-clean-plugin>
