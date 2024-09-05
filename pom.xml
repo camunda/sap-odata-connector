@@ -37,11 +37,35 @@
     <plugin.version.spotless-maven-plugin>2.43.0</plugin.version.spotless-maven-plugin>
   </properties>
 
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>com.sap.cloud.sdk</groupId>
+        <artifactId>sdk-bom</artifactId>
+        <version>${version.cloud-sdk}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
   <dependencies>
     <!-- connector-specific -->
     <dependency>
       <groupId>com.sap.cloud.sdk</groupId>
       <artifactId>sdk-core</artifactId>
+      <version>${version.cloud-sdk}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.sap.cloud.sdk.s4hana</groupId>
+      <artifactId>s4hana-connectivity</artifactId>
+      <version>${version.cloud-sdk}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.sap.cloud.sdk.s4hana</groupId>
+      <artifactId>rfc</artifactId>
       <version>${version.cloud-sdk}</version>
     </dependency>
 
