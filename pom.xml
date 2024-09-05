@@ -53,6 +53,13 @@
   <dependencies>
     <!-- connector-specific -->
     <dependency>
+      <groupId>com.sap.conn.jco</groupId>
+      <artifactId>com.sap.conn.jco.sapjco3</artifactId>
+      <version>${version.sap-jo}</version>
+      <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
       <groupId>com.sap.cloud.sdk</groupId>
       <artifactId>sdk-core</artifactId>
       <version>${version.cloud-sdk}</version>
@@ -152,7 +159,6 @@
         </exclusion>
       </exclusions>
     </dependency>
-
   </dependencies>
 
   <build>
