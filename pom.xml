@@ -281,7 +281,7 @@
         <configuration>
           <connectors>
             <connector>
-              <connectorClass>io.camunda.sap_integration.SAPConnector</connectorClass>
+              <connectorClass>io.camunda.sap_integration.ODataConnector</connectorClass>
             </connector>
           </connectors>
         </configuration>

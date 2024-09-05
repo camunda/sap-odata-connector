@@ -9,17 +9,17 @@ import com.sap.cloud.sdk.cloudplatform.connectivity.AuthenticationType;
 import com.sap.cloud.sdk.cloudplatform.connectivity.DefaultHttpDestination;
 import com.sap.cloud.sdk.cloudplatform.connectivity.DestinationAccessor;
 import io.camunda.connector.test.outbound.OutboundConnectorContextBuilder;
-import io.camunda.sap_integration.model.SAPConnectorRequest;
-import io.camunda.sap_integration.model.SAPConnectorRequest.HttpMethod.Delete;
-import io.camunda.sap_integration.model.SAPConnectorRequest.HttpMethod.Get;
-import io.camunda.sap_integration.model.SAPConnectorRequest.HttpMethod.Get.ODataVersionGet;
-import io.camunda.sap_integration.model.SAPConnectorRequest.HttpMethod.Get.ODataVersionGet.V2;
-import io.camunda.sap_integration.model.SAPConnectorRequest.HttpMethod.Get.ODataVersionGet.V4;
-import io.camunda.sap_integration.model.SAPConnectorRequest.HttpMethod.Patch;
-import io.camunda.sap_integration.model.SAPConnectorRequest.HttpMethod.Post;
-import io.camunda.sap_integration.model.SAPConnectorRequest.HttpMethod.Put;
-import io.camunda.sap_integration.model.SAPConnectorRequest.ODataVersion;
-import io.camunda.sap_integration.model.SAPConnectorResponse;
+import io.camunda.sap_integration.model.ODataConnectorRequest;
+import io.camunda.sap_integration.model.ODataConnectorRequest.HttpMethod.Delete;
+import io.camunda.sap_integration.model.ODataConnectorRequest.HttpMethod.Get;
+import io.camunda.sap_integration.model.ODataConnectorRequest.HttpMethod.Get.ODataVersionGet;
+import io.camunda.sap_integration.model.ODataConnectorRequest.HttpMethod.Get.ODataVersionGet.V2;
+import io.camunda.sap_integration.model.ODataConnectorRequest.HttpMethod.Get.ODataVersionGet.V4;
+import io.camunda.sap_integration.model.ODataConnectorRequest.HttpMethod.Patch;
+import io.camunda.sap_integration.model.ODataConnectorRequest.HttpMethod.Post;
+import io.camunda.sap_integration.model.ODataConnectorRequest.HttpMethod.Put;
+import io.camunda.sap_integration.model.ODataConnectorRequest.ODataVersion;
+import io.camunda.sap_integration.model.ODataConnectorResponse;
 import io.vavr.control.Try;
 import java.util.Arrays;
 import java.util.List;
@@ -123,7 +123,7 @@ public class ODataStandardTest {
     void entity(String path, String entity, String protocol, String expected) {
 
       var input =
-          new SAPConnectorRequest(
+          new ODataConnectorRequest(
               tpl_Destination,
               path,
               entity,
@@ -131,9 +131,9 @@ public class ODataStandardTest {
 
       var context = OutboundConnectorContextBuilder.create().variables(input).build();
 
-      var function = new SAPConnector();
+      var function = new ODataConnector();
       // when
-      var response = (SAPConnectorResponse) function.execute(context);
+      var response = (ODataConnectorResponse) function.execute(context);
       // then
       //> REVISIT: no sig for 2nd param to "extracting" for a type cast
       assertThat(response).extracting("result").isNotEqualTo("NOK");
@@ -145,7 +145,7 @@ public class ODataStandardTest {
     @FieldSource("get_set")
     void entity_set(String protocol, String path) {
       var input =
-          new SAPConnectorRequest(
+          new ODataConnectorRequest(
               tpl_Destination,
               path,
               "Books",
@@ -153,9 +153,9 @@ public class ODataStandardTest {
 
       var context = OutboundConnectorContextBuilder.create().variables(input).build();
 
-      var function = new SAPConnector();
+      var function = new ODataConnector();
       // when
-      var response = (SAPConnectorResponse) function.execute(context);
+      var response = (ODataConnectorResponse) function.execute(context);
       // then
       //> REVISIT: no sig for 2nd param to "extracting" for a type cast
       assertThat(response).extracting("result").isNotEqualTo("NOK");
@@ -177,7 +177,7 @@ public class ODataStandardTest {
       String name = randomString();
       int id = randomId();
       var input =
-          new SAPConnectorRequest(
+          new ODataConnectorRequest(
               tpl_Destination,
               path,
               "Authors",
@@ -186,8 +186,8 @@ public class ODataStandardTest {
 
       var context = OutboundConnectorContextBuilder.create().variables(input).build();
 
-      var function = new SAPConnector();
-      var response = (SAPConnectorResponse) function.execute(context);
+      var function = new ODataConnector();
+      var response = (ODataConnectorResponse) function.execute(context);
       assertThat(response).extracting("result").isNotEqualTo("NOK");
       assertThat(response.result().get("name").asText()).isEqualTo(name);
       assertThat(response).extracting("statusCode").isEqualTo(201);
@@ -224,7 +224,7 @@ public class ODataStandardTest {
     void replace(String entity, String protocol, String path) {
       String name = randomString();
       var input =
-          new SAPConnectorRequest(
+          new ODataConnectorRequest(
               tpl_Destination,
               path,
               entity,
@@ -232,8 +232,8 @@ public class ODataStandardTest {
 
       var context = OutboundConnectorContextBuilder.create().variables(input).build();
 
-      var function = new SAPConnector();
-      var response = (SAPConnectorResponse) function.execute(context);
+      var function = new ODataConnector();
+      var response = (ODataConnectorResponse) function.execute(context);
       assertThat(response).extracting("result").isNotEqualTo("NOK");
       assertThat(response.result().get("name").asText()).isEqualTo(name);
       assertThat(response).extracting("statusCode").isEqualTo(200);
@@ -245,7 +245,7 @@ public class ODataStandardTest {
     void update(String entity, String protocol, String path) {
       String name = randomString();
       var input =
-          new SAPConnectorRequest(
+          new ODataConnectorRequest(
               tpl_Destination,
               path,
               entity,
@@ -253,8 +253,8 @@ public class ODataStandardTest {
 
       var context = OutboundConnectorContextBuilder.create().variables(input).build();
 
-      var function = new SAPConnector();
-      var response = (SAPConnectorResponse) function.execute(context);
+      var function = new ODataConnector();
+      var response = (ODataConnectorResponse) function.execute(context);
       assertThat(response).extracting("result").isNotEqualTo("NOK");
       assertThat(response.result().get("name").asText()).isEqualTo(name);
       assertThat(response).extracting("statusCode").isEqualTo(200);
@@ -275,7 +275,7 @@ public class ODataStandardTest {
       String name = randomString();
       int id = randomId();
       var input =
-          new SAPConnectorRequest(
+          new ODataConnectorRequest(
               tpl_Destination,
               path,
               "Authors",
@@ -283,18 +283,18 @@ public class ODataStandardTest {
                   ODataVersion.valueOf(protocol), ofEntries(entry("ID", id), entry("name", name))));
 
       var context = OutboundConnectorContextBuilder.create().variables(input).build();
-      new SAPConnector().execute(context);
+      new ODataConnector().execute(context);
 
       // delete newly created entity
       input =
-          new SAPConnectorRequest(
+          new ODataConnectorRequest(
               tpl_Destination,
               path,
               "Authors(" + id + ")",
               new Delete(ODataVersion.valueOf(protocol)));
       context = OutboundConnectorContextBuilder.create().variables(input).build();
-      var function = new SAPConnector();
-      var response = (SAPConnectorResponse) function.execute(context);
+      var function = new ODataConnector();
+      var response = (ODataConnectorResponse) function.execute(context);
 
       assertThat(response).extracting("result").isNotEqualTo("NOK");
       assertThat(response.result()).isEmpty();
@@ -302,7 +302,7 @@ public class ODataStandardTest {
 
       // make sure it's not there anymore
       input =
-          new SAPConnectorRequest(
+          new ODataConnectorRequest(
               tpl_Destination,
               path,
               "Authors(" + id + ")",
@@ -315,7 +315,7 @@ public class ODataStandardTest {
           assertThrows(
               Exception.class,
               () -> {
-                new SAPConnector().execute(finalContext);
+                new ODataConnector().execute(finalContext);
               });
       var msg = exception.getMessage();
 
