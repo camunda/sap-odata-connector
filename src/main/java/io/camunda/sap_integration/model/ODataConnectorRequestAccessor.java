@@ -1,18 +1,18 @@
 package io.camunda.sap_integration.model;
 
-import io.camunda.sap_integration.model.SAPConnectorRequest.HttpMethod.Delete;
-import io.camunda.sap_integration.model.SAPConnectorRequest.HttpMethod.Get;
-import io.camunda.sap_integration.model.SAPConnectorRequest.HttpMethod.Get.ODataVersionGet.V2;
-import io.camunda.sap_integration.model.SAPConnectorRequest.HttpMethod.Get.ODataVersionGet.V4;
-import io.camunda.sap_integration.model.SAPConnectorRequest.HttpMethod.Patch;
-import io.camunda.sap_integration.model.SAPConnectorRequest.HttpMethod.Post;
-import io.camunda.sap_integration.model.SAPConnectorRequest.HttpMethod.Put;
-import io.camunda.sap_integration.model.SAPConnectorRequest.ODataVersion;
+import io.camunda.sap_integration.model.ODataConnectorRequest.HttpMethod.Delete;
+import io.camunda.sap_integration.model.ODataConnectorRequest.HttpMethod.Get;
+import io.camunda.sap_integration.model.ODataConnectorRequest.HttpMethod.Get.ODataVersionGet.V2;
+import io.camunda.sap_integration.model.ODataConnectorRequest.HttpMethod.Get.ODataVersionGet.V4;
+import io.camunda.sap_integration.model.ODataConnectorRequest.HttpMethod.Patch;
+import io.camunda.sap_integration.model.ODataConnectorRequest.HttpMethod.Post;
+import io.camunda.sap_integration.model.ODataConnectorRequest.HttpMethod.Put;
+import io.camunda.sap_integration.model.ODataConnectorRequest.ODataVersion;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-public class SAPConnectorRequestAccessor {
+public class ODataConnectorRequestAccessor {
   public static Map<String, String> queryParams(Get get) {
     Map<String, String> params = new HashMap<>();
     putIfPresent(params, "$top", get.top(), String::valueOf);
@@ -49,7 +49,7 @@ public class SAPConnectorRequestAccessor {
     }
   }
 
-  public static ODataVersion oDataVersion(SAPConnectorRequest request) {
+  public static ODataVersion oDataVersion(ODataConnectorRequest request) {
     return switch (request.httpMethod()) {
       case Get get ->
           switch (get.oDataVersionGet()) {
