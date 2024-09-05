@@ -15,6 +15,28 @@ OData and RFC protocol connectors to r/w data from/to SAP S/4 and ECC.
 
 ## development
 
+### RFC protocol outbound connector
+
+- explicitly add `maven` dependencies to `pom.xml` for
+  - `s4hana-connectivity`   
+    ```xml
+    <dependency>
+      <groupId>com.sap.cloud.sdk.s4hana</groupId>
+      <artifactId>s4hana-connectivity</artifactId>
+      <version>${version.cloud-sdk}</version>
+    </dependency>
+    ```
+  - `rfc`
+     ```xml
+    <dependency>
+      <groupId>com.sap.cloud.sdk.s4hana</groupId>
+      <artifactId>rfc</artifactId>
+      <version>${version.cloud-sdk}</version>
+    </dependency>
+    ```
+- `<dest-name>.jcoDestination` in `/` for mocking destination resolution
+- `sapjco3.jar` and `libsapjco3.dylib` in `/` for having the JCo library available at runtime
+
 ### OData sample backend
 
 There's a Node.js-based OData v2 + v4 backend located in `/cap-bookshop`.
