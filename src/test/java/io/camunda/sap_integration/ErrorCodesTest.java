@@ -9,10 +9,10 @@ import com.sap.cloud.sdk.cloudplatform.connectivity.DestinationAccessor;
 import io.camunda.connector.api.error.ConnectorException;
 import io.camunda.connector.test.outbound.OutboundConnectorContextBuilder;
 import io.camunda.sap_integration.model.ErrorCodes;
-import io.camunda.sap_integration.model.SAPConnectorRequest;
-import io.camunda.sap_integration.model.SAPConnectorRequest.HttpMethod.Get;
-import io.camunda.sap_integration.model.SAPConnectorRequest.HttpMethod.Get.ODataVersionGet.V2;
-import io.camunda.sap_integration.model.SAPConnectorRequest.HttpMethod.Get.ODataVersionGet.V4;
+import io.camunda.sap_integration.model.ODataConnectorRequest;
+import io.camunda.sap_integration.model.ODataConnectorRequest.HttpMethod.Get;
+import io.camunda.sap_integration.model.ODataConnectorRequest.HttpMethod.Get.ODataVersionGet.V2;
+import io.camunda.sap_integration.model.ODataConnectorRequest.HttpMethod.Get.ODataVersionGet.V4;
 import io.vavr.control.Try;
 import org.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
@@ -27,7 +27,7 @@ public class ErrorCodesTest {
   @Test
   void destination_error() {
     var input =
-        new SAPConnectorRequest(
+        new ODataConnectorRequest(
             "willthrow",
             "/not/important",
             "whocares",
@@ -35,7 +35,7 @@ public class ErrorCodesTest {
 
     var context = OutboundConnectorContextBuilder.create().variables(input).build();
 
-    var function = new SAPConnector();
+    var function = new ODataConnector();
 
     ConnectorException exception =
         assertThrowsExactly(ConnectorException.class, () -> function.execute(context));
@@ -65,7 +65,7 @@ public class ErrorCodesTest {
     @Test
     void response_error() {
       var input =
-          new SAPConnectorRequest(
+          new ODataConnectorRequest(
               "willResolveToLocalhost4004",
               "/will/cause",
               "fourohfour",
@@ -80,7 +80,7 @@ public class ErrorCodesTest {
 
       var context = OutboundConnectorContextBuilder.create().variables(input).build();
 
-      var function = new SAPConnector();
+      var function = new ODataConnector();
 
       ConnectorException exception =
           assertThrowsExactly(ConnectorException.class, () -> function.execute(context));
@@ -96,7 +96,7 @@ public class ErrorCodesTest {
               .build();
       DestinationAccessor.prependDestinationLoader((name, options) -> Try.success(destination));
       var input =
-          new SAPConnectorRequest(
+          new ODataConnectorRequest(
               "resolvesToLocalhost4005",
               "/doesnt/matter",
               "entity",
@@ -104,7 +104,7 @@ public class ErrorCodesTest {
 
       var context = OutboundConnectorContextBuilder.create().variables(input).build();
 
-      var function = new SAPConnector();
+      var function = new ODataConnector();
 
       ConnectorException exception =
           assertThrowsExactly(ConnectorException.class, () -> function.execute(context));

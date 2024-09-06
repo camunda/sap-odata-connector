@@ -1,7 +1,7 @@
 {
   "$schema" : "https://unpkg.com/@camunda/zeebe-element-templates-json-schema/resources/schema.json",
-  "name" : "SAP connector",
-  "id" : "io.camunda.connector.SAP.outbound.v1",
+  "name" : "OData protocol outbound connector",
+  "id" : "io.camunda.connector.OData.outbound.v1",
   "documentationRef" : "https://docs.camunda.io/xxx",
   "version" : 1,
   "category" : {
@@ -32,7 +32,7 @@
     "label" : "Retries"
   } ],
   "properties" : [ {
-    "value" : "io.camunda:sap:outbound:1",
+    "value" : "io.camunda:odata:outbound:",
     "binding" : {
       "property" : "type",
       "type" : "zeebe:taskDefinition"
