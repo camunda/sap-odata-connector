@@ -8,6 +8,7 @@
     <module>odata</module>
     <module>rfc</module>
     <module>common</module>
+    <module>spring-boot-starter-odata</module>
   </modules>
   <groupId>io.camunda.connector.sap</groupId>
   <artifactId>parent</artifactId>
@@ -62,6 +63,11 @@
       <dependency>
         <groupId>io.camunda.connector.sap</groupId>
         <artifactId>common</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.camunda.connector.sap</groupId>
+        <artifactId>odata</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>

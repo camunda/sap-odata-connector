@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+io.camunda.connector.sap.odata.spring.ODataConnectorAutoConfiguration

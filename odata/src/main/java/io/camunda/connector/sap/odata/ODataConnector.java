@@ -57,6 +57,15 @@ import org.slf4j.LoggerFactory;
     inputDataClass = ODataConnectorRequest.class)
 public class ODataConnector implements OutboundConnectorFunction {
 
+  public ODataConnector(ODataConnectorConfiguration configuration){
+    // do nothing atm
+  }
+
+  public ODataConnector(){
+    // by default, use static instance
+    this(ODataConnectorConfiguration.getInstance());
+  }
+
   private static final Logger LOGGER = LoggerFactory.getLogger(ODataConnector.class);
 
   @Override
