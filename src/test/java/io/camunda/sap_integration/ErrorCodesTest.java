@@ -31,7 +31,7 @@ public class ErrorCodesTest {
             "willthrow",
             "/not/important",
             "whocares",
-            new Get(null, null, null, null, null, null, null, new V2()));
+            new Get(null, null, null, null, null, null, new V2(null)));
 
     var context = OutboundConnectorContextBuilder.create().variables(input).build();
 
@@ -69,7 +69,7 @@ public class ErrorCodesTest {
               "willResolveToLocalhost4004",
               "/will/cause",
               "fourohfour",
-              new Get(null, null, null, null, null, null, null, new V4(null, null)));
+              new Get(null, null, null, null, null, null, new V4(null, null)));
 
       new JSONObject()
           .put("tpl_Destination", "willResolveToLocalhost4004")
@@ -100,7 +100,7 @@ public class ErrorCodesTest {
               "resolvesToLocalhost4005",
               "/doesnt/matter",
               "entity",
-              new Get(null, null, null, null, null, null, null, new V4(null, null)));
+              new Get(null, null, null, null, null, null, new V4(null, null)));
 
       var context = OutboundConnectorContextBuilder.create().variables(input).build();
 

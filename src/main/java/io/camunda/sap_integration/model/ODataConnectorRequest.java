@@ -109,12 +109,6 @@ public record ODataConnectorRequest(
                 description = "only select $select properties of an Entity/-Set",
                 optional = true)
             String select,
-        @TemplateProperty(
-                group = "advanced",
-                label = "$count",
-                description = "$count of EntitySet",
-                optional = true)
-            Boolean count,
         @Valid ODataVersionGet oDataVersionGet)
         implements HttpMethod {
 
@@ -128,22 +122,29 @@ public record ODataConnectorRequest(
       public sealed interface ODataVersionGet {
 
         @TemplateSubType(id = "V2", label = "V2")
-        record V2() implements ODataVersionGet {}
-
-        @TemplateSubType(id = "V4", label = "V4")
-        record V4(
+        record V2(
             @TemplateProperty(
                     group = "advanced",
                     label = "$inlinecount",
                     description = "$inlinecount result in EntitySet",
                     optional = true)
-                Boolean inlinecount,
+                Boolean inlinecount)
+            implements ODataVersionGet {}
+
+        @TemplateSubType(id = "V4", label = "V4")
+        record V4(
             @TemplateProperty(
                     group = "advanced",
                     label = "$search",
                     description = "search for $search in EntitySet",
                     optional = true)
-                String search)
+                String search,
+            @TemplateProperty(
+                    group = "advanced",
+                    label = "$count",
+                    description = "$count of EntitySet",
+                    optional = true)
+                Boolean count)
             implements ODataVersionGet {}
       }
     }

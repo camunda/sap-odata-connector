@@ -55,7 +55,7 @@ public class ODataStandardTest {
 
   static ODataVersionGet oDataVersionGet(String protocol) {
     if (protocol.equals("V2")) {
-      return new V2();
+      return new V2(null);
     } else if (protocol.equals("V4")) {
       return new V4(null, null);
     } else {
@@ -127,7 +127,7 @@ public class ODataStandardTest {
               tpl_Destination,
               path,
               entity,
-              new Get(null, null, null, null, null, null, null, oDataVersionGet(protocol)));
+              new Get(null, null, null, null, null, null, oDataVersionGet(protocol)));
 
       var context = OutboundConnectorContextBuilder.create().variables(input).build();
 
@@ -149,7 +149,7 @@ public class ODataStandardTest {
               tpl_Destination,
               path,
               "Books",
-              new Get(null, null, null, null, null, null, null, oDataVersionGet(protocol)));
+              new Get(null, null, null, null, null, null, oDataVersionGet(protocol)));
 
       var context = OutboundConnectorContextBuilder.create().variables(input).build();
 
@@ -306,7 +306,7 @@ public class ODataStandardTest {
               tpl_Destination,
               path,
               "Authors(" + id + ")",
-              new Get(null, null, null, null, null, null, null, oDataVersionGet(protocol)));
+              new Get(null, null, null, null, null, null, oDataVersionGet(protocol)));
 
       context = OutboundConnectorContextBuilder.create().variables(input).build();
       OutboundConnectorContextBuilder.TestConnectorContext finalContext = context;

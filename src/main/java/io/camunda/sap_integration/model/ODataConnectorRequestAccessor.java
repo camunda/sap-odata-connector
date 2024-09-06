@@ -22,14 +22,13 @@ public class ODataConnectorRequestAccessor {
     putIfPresent(params, "$expand", get.expand());
     putIfPresent(params, "$select", get.select());
     switch (get.oDataVersionGet()) {
-      case V2 ignored -> {
-        if (get.count() != null && get.count()) {
-          putIfPresent(params, "$inlinecount", "allpages");
+      case V2 v2 -> {
+        if (v2.inlinecount() != null && v2.inlinecount()) {
+          putIfPresent(params, "$inlinecount", v2.inlinecount(), (ignored) -> "allpages");
         }
       }
       case V4 v4 -> {
-        putIfPresent(params, "$inlinecount", v4.inlinecount(), String::valueOf);
-        putIfPresent(params, "$count", get.count(), String::valueOf);
+        putIfPresent(params, "$count", v4.count(), String::valueOf);
         putIfPresent(params, "$search", v4.search());
       }
     }
