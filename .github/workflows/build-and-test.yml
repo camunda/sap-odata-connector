@@ -1,4 +1,4 @@
-name: test PRs
+name: test-pr
 
 on:
   pull_request:
