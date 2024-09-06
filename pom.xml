@@ -3,10 +3,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <name>sap-connector</name>
-  <description>Camunda SAP Connector</description>
+  <name>odata-connector</name>
+  <description>Camunda OData protocol outbound Connector</description>
   <groupId>io.camunda.sap_integration</groupId>
-  <artifactId>sap_connector</artifactId>
+  <artifactId>odata_connector</artifactId>
   <packaging>jar</packaging>
   <version>0.1.0</version>
 
