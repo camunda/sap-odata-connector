@@ -3,11 +3,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <name>sap-connector</name>
-  <description>Camunda SAP Connector</description>
-  <groupId>io.camunda.sap_integration</groupId>
-  <artifactId>sap_connector</artifactId>
-  <packaging>jar</packaging>
+  <name>Camunda SAP Connector Parent</name>
+  <modules>
+    <module>odata</module>
+    <module>rfc</module>
+    <module>common</module>
+  </modules>
+  <groupId>io.camunda.connector.sap</groupId>
+  <artifactId>parent</artifactId>
+  <packaging>pom</packaging>
   <version>0.1.0</version>
 
   <properties>
@@ -25,6 +29,7 @@
     <version.slf4j>2.0.12</version.slf4j>
     <version.cloud-sdk>5.12.0</version.cloud-sdk>
     <version.sap-jo>3.1.10</version.sap-jo>
+    <version.spring-boot>3.3.3</version.spring-boot>
 
     <!-- maven plugins -->
     <plugin.version.maven-clean-plugin>3.3.2</plugin.version.maven-clean-plugin>
@@ -41,126 +46,51 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <version>${version.spring-boot}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
         <groupId>com.sap.cloud.sdk</groupId>
         <artifactId>sdk-bom</artifactId>
         <version>${version.cloud-sdk}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
+      <dependency>
+        <groupId>io.camunda.connector.sap</groupId>
+        <artifactId>common</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.sap.conn.jco</groupId>
+        <artifactId>com.sap.conn.jco.sapjco3</artifactId>
+        <version>${version.sap-jo}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.camunda.connector</groupId>
+        <artifactId>connector-core</artifactId>
+        <version>${version.connectors}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.camunda.connector</groupId>
+        <artifactId>element-template-generator-core</artifactId>
+        <version>${version.connectors}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.camunda.connector</groupId>
+        <artifactId>connector-test</artifactId>
+        <version>${version.connectors}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.camunda.connector</groupId>
+        <artifactId>spring-boot-starter-camunda-connectors</artifactId>
+        <version>${version.connectors}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
-
-  <dependencies>
-    <!-- connector-specific -->
-    <dependency>
-      <groupId>com.sap.conn.jco</groupId>
-      <artifactId>com.sap.conn.jco.sapjco3</artifactId>
-      <version>${version.sap-jo}</version>
-      <scope>runtime</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>com.sap.cloud.sdk</groupId>
-      <artifactId>sdk-core</artifactId>
-      <version>${version.cloud-sdk}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>com.sap.cloud.sdk.s4hana</groupId>
-      <artifactId>s4hana-connectivity</artifactId>
-      <version>${version.cloud-sdk}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>com.sap.cloud.sdk.s4hana</groupId>
-      <artifactId>rfc</artifactId>
-      <version>${version.cloud-sdk}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>com.sap.cloud.sdk.datamodel</groupId>
-      <artifactId>odata-generator</artifactId>
-      <version>${version.cloud-sdk}</version> <!-- uniform versioning w/ cloud sdk -->
-    </dependency>
-
-    <!-- connector base -->
-    <dependency>
-      <groupId>io.camunda.connector</groupId>
-      <artifactId>connector-core</artifactId>
-      <version>${version.connectors}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.camunda.connector</groupId>
-      <artifactId>connector-validation</artifactId>
-      <version>${version.connectors}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-      <version>${version.slf4j}</version>
-    </dependency>
-
-    <!-- Element template generator annotations (compile-time only) -->
-    <dependency>
-      <groupId>io.camunda.connector</groupId>
-      <artifactId>element-template-generator-core</artifactId>
-      <version>${version.connectors}</version>
-      <optional>true</optional>
-    </dependency>
-
-    <!-- test dependencies -->
-    <dependency>
-      <groupId>io.camunda.connector</groupId>
-      <artifactId>connector-test</artifactId>
-      <version>${version.connectors}</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter</artifactId>
-      <version>${version.junit-jupiter}</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-junit-jupiter</artifactId>
-      <version>${version.mockito}</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.assertj</groupId>
-      <artifactId>assertj-core</artifactId>
-      <version>${version.assertj}</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-jdk14</artifactId>
-      <version>${version.slf4j}</version>
-      <scope>test</scope>
-    </dependency>
-
-    <!-- for testing connectors locally in bundle with runtime -->
-    <dependency>
-      <groupId>io.camunda.connector</groupId>
-      <artifactId>spring-boot-starter-camunda-connectors</artifactId>
-      <version>${version.connectors}</version>
-      <scope>test</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>ch.qos.logback</groupId>
-          <artifactId>logback-classic</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-  </dependencies>
-
   <build>
     <pluginManagement>
       <plugins>
@@ -302,21 +232,6 @@
     </pluginManagement>
 
     <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-shade-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>io.camunda.connector</groupId>
-        <artifactId>element-template-generator-maven-plugin</artifactId>
-        <configuration>
-          <connectors>
-            <connector>
-              <connectorClass>io.camunda.sap_integration.ODataConnector</connectorClass>
-            </connector>
-          </connectors>
-        </configuration>
-      </plugin>
       <plugin>
         <groupId>com.diffplug.spotless</groupId>
         <artifactId>spotless-maven-plugin</artifactId>
