@@ -18,7 +18,7 @@ OData and RFC protocol connectors to r/w data from/to SAP S/4 and ECC.
 ### RFC protocol outbound connector
 
 - explicitly add `maven` dependencies to `pom.xml` for
-  - `s4hana-connectivity`   
+  - `s4hana-connectivity`
     ```xml
     <dependency>
       <groupId>com.sap.cloud.sdk.s4hana</groupId>
