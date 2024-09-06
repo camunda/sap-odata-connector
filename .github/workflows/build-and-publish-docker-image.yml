@@ -60,6 +60,8 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
+          build-args: |
+            CAMUNDA_CONNECTORS_VERSION=8.5.7
           push: true
           tags: |
             camunda/odata-connector:${{ env.VERSION }}
