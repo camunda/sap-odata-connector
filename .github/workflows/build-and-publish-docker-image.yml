@@ -7,7 +7,11 @@ on:
 
 jobs:
   build-and-test:
-    uses: ./.github/workflows/build-and-test.yml
+    uses: ./.github/workflows/reusable-build-and-test.yml
+    with:
+      java-version: '21'
+      distribution: 'temurin'
+      maven-options: '-PcheckFormat package'
 
   build-and-publish:
     needs: build-and-test
