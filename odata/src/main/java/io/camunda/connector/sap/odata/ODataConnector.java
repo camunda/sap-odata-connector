@@ -55,7 +55,10 @@ import org.slf4j.LoggerFactory;
     icon = "sap-connector-outbound.svg",
     documentationRef = "https://docs.camunda.io/xxx",
     inputDataClass = ODataConnectorRequest.class,
-    propertyGroups = {@ElementTemplate.PropertyGroup(id = "sap", label = "SAP")})
+    propertyGroups = {
+      @ElementTemplate.PropertyGroup(id = "sap", label = "SAP"),
+      @ElementTemplate.PropertyGroup(id = "advanced", label = "Advanced")
+    })
 public class ODataConnector implements OutboundConnectorFunction {
 
   public ODataConnector(ODataConnectorConfiguration configuration) {
