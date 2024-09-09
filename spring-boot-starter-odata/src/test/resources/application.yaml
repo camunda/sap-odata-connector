@@ -1,5 +1,8 @@
 server:
   port: 9898
 camunda:
+  connector:
+    polling:
+      enabled: false
   client:
     mode: simple
