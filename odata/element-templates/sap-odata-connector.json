@@ -1,6 +1,6 @@
 {
   "$schema" : "https://unpkg.com/@camunda/zeebe-element-templates-json-schema/resources/schema.json",
-  "name" : "SAP oData Connector",
+  "name" : "SAP OData Connector",
   "id" : "io.camunda.connector.OData.outbound.v1",
   "documentationRef" : "https://docs.camunda.io/xxx",
   "version" : 1,
