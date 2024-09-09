@@ -90,7 +90,7 @@
     "type" : "String"
   }, {
     "id" : "httpMethod.httpMethod",
-    "label" : "Http method",
+    "label" : "HTTP method",
     "description" : "read, write, update or delete operation",
     "group" : "sap",
     "binding" : {
@@ -99,25 +99,26 @@
     },
     "type" : "Dropdown",
     "choices" : [ {
-      "name" : "Get",
+      "name" : "GET",
       "value" : "get"
     }, {
-      "name" : "Post",
+      "name" : "POST",
       "value" : "post"
     }, {
-      "name" : "Put",
+      "name" : "PUT",
       "value" : "put"
     }, {
-      "name" : "Patch",
+      "name" : "PATCH",
       "value" : "patch"
     }, {
-      "name" : "Delete",
+      "name" : "DELETE",
       "value" : "delete"
     } ]
   }, {
     "id" : "httpMethod.oDataVersionGet.oDataVersionGet",
     "label" : "OData version",
     "description" : "what version of the OData protocol the above service uses",
+    "value" : "V2",
     "group" : "sap",
     "binding" : {
       "name" : "httpMethod.oDataVersionGet.oDataVersionGet",

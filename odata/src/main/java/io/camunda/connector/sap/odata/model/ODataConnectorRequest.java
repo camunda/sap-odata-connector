@@ -66,12 +66,12 @@ public record ODataConnectorRequest(
   })
   @TemplateDiscriminatorProperty(
       name = "httpMethod",
-      label = "Http method",
+      label = "HTTP method",
       description = "read, write, update or delete operation",
       group = "sap")
   public sealed interface HttpMethod {
 
-    @TemplateSubType(id = "get", label = "Get")
+    @TemplateSubType(id = "get", label = "GET")
     record Get(
         @TemplateProperty(
                 group = "advanced",
@@ -118,7 +118,8 @@ public record ODataConnectorRequest(
           group = "sap",
           label = "OData version",
           description = "what version of the OData protocol the above service uses",
-          name = "oDataVersionGet")
+          name = "oDataVersionGet",
+          defaultValue = "V2")
       public sealed interface ODataVersionGet {
 
         @TemplateSubType(id = "V2", label = "V2")
@@ -149,7 +150,7 @@ public record ODataConnectorRequest(
       }
     }
 
-    @TemplateSubType(id = "post", label = "Post")
+    @TemplateSubType(id = "post", label = "POST")
     record Post(
         @TemplateProperty(
                 group = "sap",
@@ -160,7 +161,7 @@ public record ODataConnectorRequest(
             Map<String, Object> payloadPost)
         implements HttpMethod {}
 
-    @TemplateSubType(id = "put", label = "Put")
+    @TemplateSubType(id = "put", label = "PUT")
     record Put(
         @TemplateProperty(
                 group = "sap",
@@ -171,7 +172,7 @@ public record ODataConnectorRequest(
             Map<String, Object> payloadPut)
         implements HttpMethod {}
 
-    @TemplateSubType(id = "patch", label = "Patch")
+    @TemplateSubType(id = "patch", label = "PATCH")
     record Patch(
         @TemplateProperty(
                 group = "sap",
@@ -182,7 +183,7 @@ public record ODataConnectorRequest(
             Map<String, Object> payloadPatch)
         implements HttpMethod {}
 
-    @TemplateSubType(id = "delete", label = "Delete")
+    @TemplateSubType(id = "delete", label = "DELETE")
     record Delete(
         @TemplateProperty(
                 group = "sap",
