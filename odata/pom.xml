@@ -54,11 +54,6 @@
       <artifactId>connector-test</artifactId>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>io.camunda.connector</groupId>
-      <artifactId>spring-boot-starter-camunda-connectors</artifactId>
-      <scope>test</scope>
-    </dependency>
   </dependencies>
 
   <build>

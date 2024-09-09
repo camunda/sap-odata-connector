@@ -16,7 +16,8 @@ public class ODataConnectorAutoConfiguration {
   }
 
   @Bean
-  public ODataConnectorConfiguration oDataConnectorConfiguration(ODataConnectorProperties properties) {
+  public ODataConnectorConfiguration oDataConnectorConfiguration(
+      ODataConnectorProperties properties) {
     return new ODataConnectorConfiguration(properties.trustAllCertificates());
   }
 }
