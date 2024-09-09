@@ -13,14 +13,8 @@
     "value" : "bpmn:ServiceTask"
   },
   "groups" : [ {
-    "id" : "select",
-    "label" : "Select"
-  }, {
     "id" : "sap",
-    "label" : "Sap"
-  }, {
-    "id" : "advanced",
-    "label" : "Advanced"
+    "label" : "SAP"
   }, {
     "id" : "output",
     "label" : "Output mapping"
