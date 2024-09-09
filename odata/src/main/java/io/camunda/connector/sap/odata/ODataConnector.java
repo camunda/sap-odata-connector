@@ -50,7 +50,7 @@ import org.slf4j.LoggerFactory;
     type = "io.camunda:odata:outbound:")
 @ElementTemplate(
     id = "io.camunda.connector.OData.outbound.v1",
-    name = "SAP oData Connector",
+    name = "SAP OData Connector",
     version = 1,
     icon = "sap-connector-outbound.svg",
     documentationRef = "https://docs.camunda.io/xxx",

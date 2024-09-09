@@ -8,7 +8,7 @@
     <artifactId>parent</artifactId>
     <version>0.1.0</version>
   </parent>
-  <name>Camunda SAP Connector oData</name>
+  <name>Camunda OData protocol outbound Connector</name>
   <artifactId>odata</artifactId>
 
   <dependencies>

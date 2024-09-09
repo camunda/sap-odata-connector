@@ -8,7 +8,7 @@
     <artifactId>parent</artifactId>
     <version>0.1.0</version>
   </parent>
-  <name>Camunda SAP Connector RFC</name>
+  <name>Camunda RFC protocol outbound Connector</name>
   <artifactId>rfc</artifactId>
 
   <dependencies>
