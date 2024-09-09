@@ -104,7 +104,7 @@ public record ODataConnectorRequest(
                 optional = true)
             String expand,
         @TemplateProperty(
-                group = "select",
+                group = "advanced",
                 label = "$select",
                 description = "only select $select properties of an Entity/-Set",
                 optional = true)
