@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.camunda.connector.sap</groupId>
     <artifactId>parent</artifactId>
-    <version>0.1.0</version>
+    <version>0.1.1</version>
   </parent>
   <name>Camunda RFC protocol outbound Connector</name>
   <artifactId>rfc</artifactId>
