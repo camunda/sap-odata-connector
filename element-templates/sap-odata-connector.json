@@ -92,6 +92,7 @@
     "id" : "httpMethod.httpMethod",
     "label" : "HTTP method",
     "description" : "read, write, update or delete operation",
+    "value" : "get",
     "group" : "sap",
     "binding" : {
       "name" : "httpMethod.httpMethod",
@@ -142,6 +143,7 @@
     "label" : "OData version",
     "description" : "what version of the OData protocol the above service uses",
     "optional" : false,
+    "value" : "V2",
     "group" : "sap",
     "binding" : {
       "name" : "httpMethod.oDataVersionPost",
@@ -161,30 +163,11 @@
       "value" : "V4"
     } ]
   }, {
-    "id" : "httpMethod.payloadPost",
-    "label" : "Request body",
-    "optional" : false,
-    "value" : "={}",
-    "constraints" : {
-      "notEmpty" : true
-    },
-    "feel" : "optional",
-    "group" : "sap",
-    "binding" : {
-      "name" : "httpMethod.payloadPost",
-      "type" : "zeebe:input"
-    },
-    "condition" : {
-      "property" : "httpMethod.httpMethod",
-      "equals" : "post",
-      "type" : "simple"
-    },
-    "type" : "String"
-  }, {
     "id" : "httpMethod.oDataVersionPut",
     "label" : "OData version",
     "description" : "what version of the OData protocol the above service uses",
     "optional" : false,
+    "value" : "V2",
     "group" : "sap",
     "binding" : {
       "name" : "httpMethod.oDataVersionPut",
@@ -204,30 +187,11 @@
       "value" : "V4"
     } ]
   }, {
-    "id" : "httpMethod.payloadPut",
-    "label" : "Request body",
-    "optional" : false,
-    "value" : "={}",
-    "constraints" : {
-      "notEmpty" : true
-    },
-    "feel" : "optional",
-    "group" : "sap",
-    "binding" : {
-      "name" : "httpMethod.payloadPut",
-      "type" : "zeebe:input"
-    },
-    "condition" : {
-      "property" : "httpMethod.httpMethod",
-      "equals" : "put",
-      "type" : "simple"
-    },
-    "type" : "String"
-  }, {
     "id" : "httpMethod.oDataVersionPatch",
     "label" : "OData version",
     "description" : "what version of the OData protocol the above service uses",
     "optional" : false,
+    "value" : "V2",
     "group" : "sap",
     "binding" : {
       "name" : "httpMethod.oDataVersionPatch",
@@ -247,30 +211,11 @@
       "value" : "V4"
     } ]
   }, {
-    "id" : "httpMethod.payloadPatch",
-    "label" : "Request body",
-    "optional" : false,
-    "value" : "={}",
-    "constraints" : {
-      "notEmpty" : true
-    },
-    "feel" : "optional",
-    "group" : "sap",
-    "binding" : {
-      "name" : "httpMethod.payloadPatch",
-      "type" : "zeebe:input"
-    },
-    "condition" : {
-      "property" : "httpMethod.httpMethod",
-      "equals" : "patch",
-      "type" : "simple"
-    },
-    "type" : "String"
-  }, {
     "id" : "httpMethod.oDataVersionDelete",
     "label" : "OData version",
     "description" : "what version of the OData protocol the above service uses",
     "optional" : false,
+    "value" : "V2",
     "group" : "sap",
     "binding" : {
       "name" : "httpMethod.oDataVersionDelete",
@@ -289,6 +234,24 @@
       "name" : "V4",
       "value" : "V4"
     } ]
+  }, {
+    "id" : "payload",
+    "label" : "Request body",
+    "description" : "Payload to send with the request",
+    "optional" : true,
+    "value" : "={}",
+    "feel" : "optional",
+    "group" : "sap",
+    "binding" : {
+      "name" : "payload",
+      "type" : "zeebe:input"
+    },
+    "condition" : {
+      "property" : "httpMethod.httpMethod",
+      "oneOf" : [ "post", "put", "patch" ],
+      "type" : "simple"
+    },
+    "type" : "String"
   }, {
     "id" : "httpMethod.filter",
     "label" : "$filter",

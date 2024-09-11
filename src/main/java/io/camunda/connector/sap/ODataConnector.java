@@ -132,7 +132,7 @@ public class ODataConnector implements OutboundConnectorFunction {
         return read;
       }
       case Post post -> {
-        String serializedEntity = createSerializedEntity(post.payloadPost());
+        String serializedEntity = createSerializedEntity(request.payload());
         return new ODataRequestCreate(
             request.oDataService(), request.entityOrEntitySet(), serializedEntity, protocol);
       }
@@ -140,7 +140,7 @@ public class ODataConnector implements OutboundConnectorFunction {
         return new ODataRequestDelete(request.oDataService(), path, null, protocol);
       }
       case Put put -> {
-        String serializedEntity = createSerializedEntity(put.payloadPut());
+        String serializedEntity = createSerializedEntity(request.payload());
         return new ODataRequestUpdate(
             request.oDataService(),
             path,
@@ -150,7 +150,7 @@ public class ODataConnector implements OutboundConnectorFunction {
             protocol);
       }
       case Patch patch -> {
-        String serializedEntity = createSerializedEntity(patch.payloadPatch());
+        String serializedEntity = createSerializedEntity(request.payload());
         return new ODataRequestUpdate(
             request.oDataService(),
             path,

@@ -38,7 +38,21 @@ public record ODataConnectorRequest(
         @Pattern(regexp = "^[^/].*$", message = "entityOrEntitySet must not start with a '/'")
         @NotEmpty
         String entityOrEntitySet,
-    @Valid HttpMethod httpMethod) {
+    @Valid HttpMethod httpMethod,
+    @TemplateProperty(
+            label = "Request body",
+            description = "Payload to send with the request",
+            feel = FeelMode.optional,
+            group = "sap",
+            //        type = TemplateProperty.PropertyType.Text,
+            optional = true,
+            defaultValue = "={}",
+            condition =
+                @TemplateProperty.PropertyCondition(
+                    property = "httpMethod.httpMethod",
+                    oneOf = {"post", "put", "patch"}))
+        Map<String, Object> payload) {
+
   @TemplateDiscriminatorProperty(
       group = "sap",
       label = "OData version",
@@ -61,7 +75,8 @@ public record ODataConnectorRequest(
       name = "httpMethod",
       label = "HTTP method",
       description = "read, write, update or delete operation",
-      group = "sap")
+      group = "sap",
+      defaultValue = "get")
   public sealed interface HttpMethod {
 
     @TemplateSubType(id = "get", label = "GET")
@@ -151,10 +166,9 @@ public record ODataConnectorRequest(
         @TemplateProperty(
                 group = "sap",
                 label = "OData version",
-                description = "what version of the OData protocol the above service uses")
-            ODataVersion oDataVersionPost,
-        @TemplateProperty(group = "sap", label = "Request body", defaultValue = "={}") @NotEmpty
-            Map<String, Object> payloadPost)
+                description = "what version of the OData protocol the above service uses",
+                defaultValue = "V2")
+            ODataVersion oDataVersionPost)
         implements HttpMethod {}
 
     @TemplateSubType(id = "put", label = "PUT")
@@ -162,10 +176,9 @@ public record ODataConnectorRequest(
         @TemplateProperty(
                 group = "sap",
                 label = "OData version",
-                description = "what version of the OData protocol the above service uses")
-            ODataVersion oDataVersionPut,
-        @TemplateProperty(group = "sap", label = "Request body", defaultValue = "={}") @NotEmpty
-            Map<String, Object> payloadPut)
+                description = "what version of the OData protocol the above service uses",
+                defaultValue = "V2")
+            ODataVersion oDataVersionPut)
         implements HttpMethod {}
 
     @TemplateSubType(id = "patch", label = "PATCH")
@@ -173,10 +186,9 @@ public record ODataConnectorRequest(
         @TemplateProperty(
                 group = "sap",
                 label = "OData version",
-                description = "what version of the OData protocol the above service uses")
-            ODataVersion oDataVersionPatch,
-        @TemplateProperty(group = "sap", label = "Request body", defaultValue = "={}") @NotEmpty
-            Map<String, Object> payloadPatch)
+                description = "what version of the OData protocol the above service uses",
+                defaultValue = "V2")
+            ODataVersion oDataVersionPatch)
         implements HttpMethod {}
 
     @TemplateSubType(id = "delete", label = "DELETE")
@@ -184,7 +196,8 @@ public record ODataConnectorRequest(
         @TemplateProperty(
                 group = "sap",
                 label = "OData version",
-                description = "what version of the OData protocol the above service uses")
+                description = "what version of the OData protocol the above service uses",
+                defaultValue = "V2")
             ODataVersion oDataVersionDelete)
         implements HttpMethod {}
   }

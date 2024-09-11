@@ -28,7 +28,8 @@ public class ErrorCodesTest {
             "willthrow",
             "/not/important",
             "whocares",
-            new Get(null, null, null, null, null, null, new Get.ODataVersionGet.V2(false)));
+            new Get(null, null, null, null, null, null, new Get.ODataVersionGet.V2(false)),
+            null);
 
     var context = OutboundConnectorContextBuilder.create().variables(input).build();
 
@@ -66,7 +67,8 @@ public class ErrorCodesTest {
               "willResolveToLocalhost4004",
               "/will/cause",
               "fourohfour",
-              new Get(null, null, null, null, null, null, new Get.ODataVersionGet.V4(null, null)));
+              new Get(null, null, null, null, null, null, new Get.ODataVersionGet.V4(null, null)),
+              null);
 
       var context = OutboundConnectorContextBuilder.create().variables(input).build();
 
@@ -90,7 +92,8 @@ public class ErrorCodesTest {
               "resolvesToLocalhost4005",
               "/doesnt/matter",
               "entity",
-              new Get(null, null, null, null, null, null, new Get.ODataVersionGet.V4(null, null)));
+              new Get(null, null, null, null, null, null, new Get.ODataVersionGet.V4(null, null)),
+              null);
 
       var context = OutboundConnectorContextBuilder.create().variables(input).build();
 

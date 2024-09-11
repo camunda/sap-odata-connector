@@ -132,7 +132,8 @@ public class ODataStandardTest {
               tpl_Destination,
               path,
               entity,
-              new Get(null, null, null, null, null, null, oDataVersionGet(protocol)));
+              new Get(null, null, null, null, null, null, oDataVersionGet(protocol)),
+              null);
 
       var context = OutboundConnectorContextBuilder.create().variables(input).build();
 
@@ -161,7 +162,8 @@ public class ODataStandardTest {
                   null,
                   null,
                   null,
-                  protocol.equals("V2") ? new V2(true) : new V4(null, true)));
+                  protocol.equals("V2") ? new V2(true) : new V4(null, true)),
+              null);
       var contextWithCount =
           OutboundConnectorContextBuilder.create().variables(inputWithCount).build();
 
@@ -177,7 +179,8 @@ public class ODataStandardTest {
                   null,
                   null,
                   null,
-                  protocol.equals("V2") ? new V2(false) : new V4(null, false)));
+                  protocol.equals("V2") ? new V2(false) : new V4(null, false)),
+              null);
       var context = OutboundConnectorContextBuilder.create().variables(input).build();
 
       var function = new ODataConnector();
@@ -211,7 +214,8 @@ public class ODataStandardTest {
               tpl_Destination,
               path,
               "Books",
-              new Get(null, null, null, null, null, null, oDataVersionGet(protocol)));
+              new Get(null, null, null, null, null, null, oDataVersionGet(protocol)),
+              null);
 
       var context = OutboundConnectorContextBuilder.create().variables(input).build();
 
@@ -244,8 +248,8 @@ public class ODataStandardTest {
               tpl_Destination,
               path,
               "Authors",
-              new Post(
-                  ODataVersion.valueOf(protocol), ofEntries(entry("ID", id), entry("name", name))));
+              new Post(ODataVersion.valueOf(protocol)),
+              ofEntries(entry("ID", id), entry("name", name)));
 
       var context = OutboundConnectorContextBuilder.create().variables(input).build();
 
@@ -291,7 +295,11 @@ public class ODataStandardTest {
               tpl_Destination,
               path,
               entity,
-              new Put(ODataVersion.valueOf(protocol), ofEntries(entry("name", name))));
+              new Put(ODataVersion.valueOf(protocol)),
+              ofEntries(entry("name", name))
+              //              new Put(ODataVersion.valueOf(protocol), ofEntries(entry("name",
+              // name)))
+              );
 
       var context = OutboundConnectorContextBuilder.create().variables(input).build();
 
@@ -312,7 +320,8 @@ public class ODataStandardTest {
               tpl_Destination,
               path,
               entity,
-              new Patch(ODataVersion.valueOf(protocol), ofEntries(entry("name", name))));
+              new Patch(ODataVersion.valueOf(protocol)),
+              ofEntries(entry("name", name)));
 
       var context = OutboundConnectorContextBuilder.create().variables(input).build();
 
@@ -342,8 +351,8 @@ public class ODataStandardTest {
               tpl_Destination,
               path,
               "Authors",
-              new Post(
-                  ODataVersion.valueOf(protocol), ofEntries(entry("ID", id), entry("name", name))));
+              new Post(ODataVersion.valueOf(protocol)),
+              ofEntries(entry("ID", id), entry("name", name)));
 
       var context = OutboundConnectorContextBuilder.create().variables(input).build();
       new ODataConnector().execute(context);
@@ -354,7 +363,8 @@ public class ODataStandardTest {
               tpl_Destination,
               path,
               "Authors(" + id + ")",
-              new Delete(ODataVersion.valueOf(protocol)));
+              new Delete(ODataVersion.valueOf(protocol)),
+              null);
       context = OutboundConnectorContextBuilder.create().variables(input).build();
       var function = new ODataConnector();
       var response = (ODataConnectorResponse) function.execute(context);
@@ -369,7 +379,8 @@ public class ODataStandardTest {
               tpl_Destination,
               path,
               "Authors(" + id + ")",
-              new Get(null, null, null, null, null, null, oDataVersionGet(protocol)));
+              new Get(null, null, null, null, null, null, oDataVersionGet(protocol)),
+              null);
 
       context = OutboundConnectorContextBuilder.create().variables(input).build();
       OutboundConnectorContextBuilder.TestConnectorContext finalContext = context;
