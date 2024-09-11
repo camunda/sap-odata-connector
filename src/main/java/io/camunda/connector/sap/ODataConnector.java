@@ -108,7 +108,8 @@ public class ODataConnector implements OutboundConnectorFunction {
       JsonNode responseBody, int statusCode, Optional<Long> countOrInlineCount) {
     JsonNode value = responseBody.has("value") ? responseBody.get("value") : responseBody;
     return countOrInlineCount.isPresent()
-        ? new ODataConnectorResponseWithCount(value, statusCode, countOrInlineCount)
+        ? new ODataConnectorResponseWithCount(
+            value, statusCode, countOrInlineCount.get().intValue())
         : new ODataConnectorResponse(value, statusCode);
   }
 
@@ -117,7 +118,8 @@ public class ODataConnector implements OutboundConnectorFunction {
     JsonNode d = responseBody.get("d");
     JsonNode results = d.has("results") ? d.get("results") : d;
     return countOrInlineCount.isPresent()
-        ? new ODataConnectorResponseWithCount(results, statusCode, countOrInlineCount)
+        ? new ODataConnectorResponseWithCount(
+            results, statusCode, countOrInlineCount.get().intValue())
         : new ODataConnectorResponse(results, statusCode);
   }
 

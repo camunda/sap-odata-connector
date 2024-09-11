@@ -192,12 +192,8 @@ public class ODataStandardTest {
       assertThat(responseWithCount).extracting("result").isNotEqualTo("NOK");
       assertThat(((ODataConnectorResponseWithCount) responseWithCount).result().size())
           .isEqualTo(5);
-      assertThat(
-              ((ODataConnectorResponseWithCount) responseWithCount)
-                  .countOrInlineCount()
-                  .get()
-                  .toString())
-          .isEqualTo("5");
+      assertThat(((ODataConnectorResponseWithCount) responseWithCount).countOrInlineCount())
+          .isEqualTo(5);
 
       assertThat(
               Arrays.stream(response.getClass().getDeclaredMethods())
