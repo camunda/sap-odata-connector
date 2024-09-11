@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1q1i44i" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.25.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.5.0">
+  <bpmn:process id="Process_0vnlypl" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_0k6ab0j</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_0k6ab0j" sourceRef="StartEvent_1" targetRef="Activity_0mgbp8a" />
+    <bpmn:endEvent id="Event_13ajusw">
+      <bpmn:incoming>Flow_0zg6szu</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0drc5ny" sourceRef="Activity_0mgbp8a" targetRef="Activity_03lutj1" />
+    <bpmn:serviceTask id="Activity_0mgbp8a" name="v4 get + inlinecount" zeebe:modelerTemplate="io.camunda.connector.sap.odata.outbound.v1" zeebe:modelerTemplateVersion="1">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="io.camunda:sap:odata:outbound:" retries="3" />
+        <zeebe:ioMapping>
+          <zeebe:input source="localMockServer" target="destination" />
+          <zeebe:input source="/admin" target="oDataService" />
+          <zeebe:input source="Books" target="entityOrEntitySet" />
+          <zeebe:input source="get" target="httpMethod.httpMethod" />
+          <zeebe:input source="V4" target="httpMethod.oDataVersionGet.oDataVersionGet" />
+          <zeebe:input source="=true" target="httpMethod.oDataVersionGet.count" />
+        </zeebe:ioMapping>
+        <zeebe:taskHeaders>
+          <zeebe:header key="resultVariable" value="result_v4_get_inlinecount" />
+          <zeebe:header key="resultExpression" value="={result_v4_get_inlinecount_expr:result}" />
+          <zeebe:header key="retryBackoff" value="PT0S" />
+        </zeebe:taskHeaders>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0k6ab0j</bpmn:incoming>
+      <bpmn:outgoing>Flow_0drc5ny</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_0ldvq1g" sourceRef="Activity_03lutj1" targetRef="Activity_10kaeya" />
+    <bpmn:serviceTask id="Activity_03lutj1" name="v2 get + inlinecount" zeebe:modelerTemplate="io.camunda.connector.sap.odata.outbound.v1" zeebe:modelerTemplateVersion="1">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="io.camunda:sap:odata:outbound:" retries="3" />
+        <zeebe:ioMapping>
+          <zeebe:input source="localMockServer" target="destination" />
+          <zeebe:input source="/odata/v2/admin" target="oDataService" />
+          <zeebe:input source="Books" target="entityOrEntitySet" />
+          <zeebe:input source="get" target="httpMethod.httpMethod" />
+          <zeebe:input source="V2" target="httpMethod.oDataVersionGet.oDataVersionGet" />
+          <zeebe:input source="=true" target="httpMethod.oDataVersionGet.inlinecount" />
+        </zeebe:ioMapping>
+        <zeebe:taskHeaders>
+          <zeebe:header key="resultVariable" value="result_v2_get_inlinecount" />
+          <zeebe:header key="resultExpression" value="={result_v2_get_inlinecount_expr:result}" />
+          <zeebe:header key="retryBackoff" value="PT0S" />
+        </zeebe:taskHeaders>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0drc5ny</bpmn:incoming>
+      <bpmn:outgoing>Flow_0ldvq1g</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_0zg6szu" sourceRef="Activity_1mkl99x" targetRef="Event_13ajusw" />
+    <bpmn:serviceTask id="Activity_1mkl99x" name="v2 get" zeebe:modelerTemplate="io.camunda.connector.sap.odata.outbound.v1" zeebe:modelerTemplateVersion="1">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="io.camunda:sap:odata:outbound:" retries="3" />
+        <zeebe:ioMapping>
+          <zeebe:input source="localMockServer" target="destination" />
+          <zeebe:input source="/odata/v2/browse" target="oDataService" />
+          <zeebe:input source="ListOfBooks" target="entityOrEntitySet" />
+          <zeebe:input source="get" target="httpMethod.httpMethod" />
+          <zeebe:input source="V2" target="httpMethod.oDataVersionGet.oDataVersionGet" />
+        </zeebe:ioMapping>
+        <zeebe:taskHeaders>
+          <zeebe:header key="retryBackoff" value="PT0S" />
+        </zeebe:taskHeaders>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_169j4g1</bpmn:incoming>
+      <bpmn:outgoing>Flow_0zg6szu</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_169j4g1" sourceRef="Activity_10kaeya" targetRef="Activity_1mkl99x" />
+    <bpmn:serviceTask id="Activity_10kaeya" name="v4 get" zeebe:modelerTemplate="io.camunda.connector.sap.odata.outbound.v1" zeebe:modelerTemplateVersion="1">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="io.camunda:sap:odata:outbound:" retries="3" />
+        <zeebe:ioMapping>
+          <zeebe:input source="localMockServer" target="destination" />
+          <zeebe:input source="/browse" target="oDataService" />
+          <zeebe:input source="ListOfBooks" target="entityOrEntitySet" />
+          <zeebe:input source="get" target="httpMethod.httpMethod" />
+          <zeebe:input source="V4" target="httpMethod.oDataVersionGet.oDataVersionGet" />
+        </zeebe:ioMapping>
+        <zeebe:taskHeaders>
+          <zeebe:header key="retryBackoff" value="PT0S" />
+        </zeebe:taskHeaders>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0ldvq1g</bpmn:incoming>
+      <bpmn:outgoing>Flow_169j4g1</bpmn:outgoing>
+    </bpmn:serviceTask>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_0vnlypl">
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="179" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1x8c5hu_di" bpmnElement="Activity_0mgbp8a">
+        <dc:Bounds x="270" y="77" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0kkz0i8_di" bpmnElement="Activity_03lutj1">
+        <dc:Bounds x="390" y="77" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_13ajusw_di" bpmnElement="Event_13ajusw">
+        <dc:Bounds x="972" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0li1unz_di" bpmnElement="Activity_1mkl99x">
+        <dc:Bounds x="770" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0dxnbem_di" bpmnElement="Activity_10kaeya">
+        <dc:Bounds x="630" y="77" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0k6ab0j_di" bpmnElement="Flow_0k6ab0j">
+        <di:waypoint x="215" y="117" />
+        <di:waypoint x="270" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0drc5ny_di" bpmnElement="Flow_0drc5ny">
+        <di:waypoint x="370" y="117" />
+        <di:waypoint x="390" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ldvq1g_di" bpmnElement="Flow_0ldvq1g">
+        <di:waypoint x="490" y="117" />
+        <di:waypoint x="630" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0zg6szu_di" bpmnElement="Flow_0zg6szu">
+        <di:waypoint x="870" y="117" />
+        <di:waypoint x="972" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_169j4g1_di" bpmnElement="Flow_169j4g1">
+        <di:waypoint x="730" y="117" />
+        <di:waypoint x="770" y="117" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
