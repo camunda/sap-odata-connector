@@ -1,0 +1,50 @@
+@proto = https
+@host = vhcala4hci
+@port = 50001
+
+
+###
+##### Get x-csrf token
+# @name metadata
+Head {{proto}}://{{host}}:{{port}}/sap/opu/odata/dmo/api_travel_u_v2/$metadata
+x-csrf-token: fetch 
+Authorization: Basic {{$dotenv sapUsr}}:{{$dotenv sapPwd}}
+
+@csrfToken = {{metadata.response.headers.x-csrf-token}} 
+
+### 
+POST {{proto}}://{{host}}:{{port}}/sap/opu/odata/dmo/api_travel_u_v2/Passenger
+x-csrf-token: {{csrfToken}}
+Content-Type: application/json
+Authorization: Basic {{$dotenv sapUsr}}:{{$dotenv sapPwd}}
+Accept: application/json
+
+{
+    "CustomerID": "4711",
+    "FirstName": "John",
+    "LastName": "Doe"
+}
+
+###
+POST {{proto}}://{{host}}:{{port}}/sap/opu/odata/dmo/api_travel_u_v2/Travel
+x-csrf-token: {{csrfToken}}
+Content-Type: application/json
+Authorization: Basic {{$dotenv sapUsr}}:{{$dotenv sapPwd}}
+Accept: application/json
+
+{
+"TravelID": "4711",
+"AgencyID": "70041",
+"AgencyName": "Maxitrip",
+"CustomerID": "594",
+"CustomerName": "Ryan",
+"BeginDate": "/Date(1705104000000)/",
+"EndDate": "/Date(1731196800000)/",
+"BookingFee": "40.00",
+"TotalPrice": "1889.00",
+"CurrencyCode": "USD",
+"Memo": "Vacation",
+"Status": "P",
+"StatusText": "Planned",
+"LastChangedAt": "/Date(1703879288000+0000)/"
+}
