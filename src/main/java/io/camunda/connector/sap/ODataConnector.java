@@ -94,7 +94,7 @@ public class ODataConnector implements OutboundConnectorFunction {
     int statusCode = oDataResponse.getHttpResponse().getStatusLine().getStatusCode();
 
     LOGGER.debug("OData response status code: {}", statusCode);
-    LOGGER.debug("OData response headers: {}", oDataResponse.getAllHeaderValues().toString());
+    LOGGER.debug("OData response headers: {}", oDataResponse.getAllHeaderValues());
 
     Optional<Long> countOrInlineCount = Optional.empty();
     try {
