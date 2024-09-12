@@ -22,6 +22,8 @@ import io.camunda.connector.sap.model.ODataConnectorRequest.HttpMethod.*;
 import io.camunda.connector.sap.model.ODataConnectorRequest.ODataVersion;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Optional;
 import org.apache.http.client.HttpClient;
@@ -55,21 +57,44 @@ public class ODataConnector implements OutboundConnectorFunction {
 
   private Record executeRequest(ODataConnectorRequest request) {
     Destination destination = buildDestination(request.destination());
+    LOGGER.debug("Destination: {}", destination.toString());
     HttpClient httpClient = HttpClientAccessor.getHttpClient(destination);
+
     ODataRequestExecutable oDataRequest = buildRequest(request);
+    LOGGER.debug(
+        "OData request: {}",
+        ((ODataRequestGeneric) oDataRequest).getProtocol()
+            + " - "
+            + ((ODataRequestGeneric) oDataRequest).getRelativeUri()
+            + " - "
+            + ((ODataRequestGeneric) oDataRequest).getRequestQuery());
     try {
+      LOGGER.debug(
+          "OData request start at: "
+              + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss:SSS")));
       ODataRequestResult oDataResponse = oDataRequest.execute(httpClient);
+      LOGGER.debug(
+          "OData request finished at: "
+              + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss:SSS")));
       return buildResponse(oDataResponse, ODataConnectorRequestAccessor.oDataVersion(request));
     } catch (ODataRequestException e) {
-      throw new ConnectorException(ErrorCodes.REQUEST_ERROR.name(), e.getMessage(), e);
+      throw new ConnectorException(
+          ErrorCodes.REQUEST_ERROR.name(), buildErrorMsg(e, "OData request error: "), e);
     } catch (ODataResponseException e) {
-      throw new ConnectorException(String.valueOf(e.getHttpCode()), e.getMessage(), e);
+      throw new ConnectorException(
+          String.valueOf(e.getHttpCode()), buildErrorMsg(e, "OData request error: "), e);
+    } catch (RuntimeException e) {
+      throw new ConnectorException(
+          ErrorCodes.GENERIC_ERROR.name(), buildErrorMsg(e, "OData runtime error: "), e);
     }
   }
 
   private Record buildResponse(ODataRequestResult oDataResponse, ODataVersion oDataVersion) {
     JsonNode responseBody = readResponseBody(oDataResponse);
     int statusCode = oDataResponse.getHttpResponse().getStatusLine().getStatusCode();
+
+    LOGGER.debug("OData response status code: {}", statusCode);
+    LOGGER.debug("OData response headers: {}", oDataResponse.getAllHeaderValues().toString());
 
     Optional<Long> countOrInlineCount = Optional.empty();
     try {
@@ -183,5 +208,11 @@ public class ODataConnector implements OutboundConnectorFunction {
       return ODataProtocol.V4;
     }
     throw new IllegalStateException("Unknown protocol " + oDataVersion);
+  }
+
+  private static String buildErrorMsg(Exception e, String prefix) {
+    String msg = !prefix.isBlank() ? prefix + e.getMessage() : prefix;
+    msg += e.getCause() != null ? " caused by: " + e.getCause().getMessage() : "";
+    return msg;
   }
 }
