@@ -56,7 +56,7 @@ jobs:
         id: extract_version
         run: echo "VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
 
-      - name: odataconnector - build and push docker image tag ${{ env.VERSION }}
+      - name: sap-odata-connector - build and push docker image tag ${{ env.VERSION }}
         uses: docker/build-push-action@v6
         with:
           context: .
@@ -64,7 +64,7 @@ jobs:
             CAMUNDA_CONNECTORS_VERSION=8.5.7
           push: true
           tags: |
-            camunda/odata-connector:${{ env.VERSION }}
-            camunda/odata-connector:latest
+            amunda/sap-odata-connector:${{ env.VERSION }}
+            amunda/sap-odata-connector:latest
           platforms: linux/amd64
           provenance: false
