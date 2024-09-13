@@ -215,6 +215,9 @@ public class ODataConnector implements OutboundConnectorFunction {
   private static String buildErrorMsg(Exception e, String prefix) {
     String msg = !prefix.isBlank() ? prefix + e.getMessage() : prefix;
     msg += e.getCause() != null ? " caused by: " + e.getCause().getMessage() : "";
+    if (e instanceof ODataServiceErrorException oerr) {
+      msg += " caused by: " + oerr.getOdataError();
+    }
     return msg;
   }
 }
