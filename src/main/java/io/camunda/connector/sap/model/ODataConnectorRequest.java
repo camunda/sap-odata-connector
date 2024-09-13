@@ -44,7 +44,6 @@ public record ODataConnectorRequest(
             description = "Payload to send with the request",
             feel = FeelMode.optional,
             group = "sap",
-            //        type = TemplateProperty.PropertyType.Text,
             optional = true,
             defaultValue = "={}",
             condition =
@@ -116,6 +115,7 @@ public record ODataConnectorRequest(
                 label = "$select",
                 description = "only select $select properties of an Entity/-Set",
                 optional = true)
+            @Pattern(regexp = "^\\S*$", message = "must not contain any whitespace!")
             String select,
         @Valid ODataVersionGet oDataVersionGet)
         implements HttpMethod {
