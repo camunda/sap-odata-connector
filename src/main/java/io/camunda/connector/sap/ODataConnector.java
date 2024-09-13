@@ -20,15 +20,16 @@ import io.camunda.connector.generator.java.annotation.ElementTemplate;
 import io.camunda.connector.sap.model.*;
 import io.camunda.connector.sap.model.ODataConnectorRequest.HttpMethod.*;
 import io.camunda.connector.sap.model.ODataConnectorRequest.ODataVersion;
+import org.apache.http.client.HttpClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Optional;
-import org.apache.http.client.HttpClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @OutboundConnector(
     name = "SAPOUTBOUNDCONNECTOR",
