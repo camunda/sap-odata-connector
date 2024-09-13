@@ -24,7 +24,7 @@ public class ODataConnectorRequestAccessor {
     switch (get.oDataVersionGet()) {
       case V2 v2 -> {
         if (v2.inlinecount() != null && v2.inlinecount()) {
-          putIfPresent(params, "$inlinecount", v2.inlinecount(), (ignored) -> "allpages");
+          putIfPresent(params, "$inlinecount", true, (ignored) -> "allpages");
         }
       }
       case V4 v4 -> {
