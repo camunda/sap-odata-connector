@@ -1,17 +1,16 @@
 package io.camunda.connector.sap.model;
 
+import static java.net.URLEncoder.encode;
+
 import io.camunda.connector.sap.model.ODataConnectorRequest.HttpMethod.*;
 import io.camunda.connector.sap.model.ODataConnectorRequest.HttpMethod.Get.ODataVersionGet.V2;
 import io.camunda.connector.sap.model.ODataConnectorRequest.HttpMethod.Get.ODataVersionGet.V4;
 import io.camunda.connector.sap.model.ODataConnectorRequest.ODataVersion;
-
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
-
-import static java.net.URLEncoder.encode;
 
 public class ODataConnectorRequestAccessor {
   public static Map<String, String> queryParams(Get get) {
@@ -54,10 +53,11 @@ public class ODataConnectorRequestAccessor {
 
   public static ODataConnectorRequest.ODataVersion oDataVersion(ODataConnectorRequest request) {
     return switch (request.httpMethod()) {
-      case Get get -> switch (get.oDataVersionGet()) {
-        case V2 ignored -> ODataVersion.V2;
-        case V4 ignored -> ODataVersion.V4;
-      };
+      case Get get ->
+          switch (get.oDataVersionGet()) {
+            case V2 ignored -> ODataVersion.V2;
+            case V4 ignored -> ODataVersion.V4;
+          };
       case Delete delete -> delete.oDataVersionDelete();
       case Patch patch -> patch.oDataVersionPatch();
       case Post post -> post.oDataVersionPost();
