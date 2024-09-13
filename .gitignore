@@ -60,6 +60,7 @@ build/
 
 # environment
 .env
+mtad.yaml
 request*.json
 
 # node test artifacts
