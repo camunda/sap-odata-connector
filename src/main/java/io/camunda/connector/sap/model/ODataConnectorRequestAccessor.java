@@ -1,16 +1,17 @@
 package io.camunda.connector.sap.model;
 
-import io.camunda.connector.sap.model.ODataConnectorRequest.HttpMethod.Delete;
-import io.camunda.connector.sap.model.ODataConnectorRequest.HttpMethod.Get;
+import io.camunda.connector.sap.model.ODataConnectorRequest.HttpMethod.*;
 import io.camunda.connector.sap.model.ODataConnectorRequest.HttpMethod.Get.ODataVersionGet.V2;
 import io.camunda.connector.sap.model.ODataConnectorRequest.HttpMethod.Get.ODataVersionGet.V4;
-import io.camunda.connector.sap.model.ODataConnectorRequest.HttpMethod.Patch;
-import io.camunda.connector.sap.model.ODataConnectorRequest.HttpMethod.Post;
-import io.camunda.connector.sap.model.ODataConnectorRequest.HttpMethod.Put;
 import io.camunda.connector.sap.model.ODataConnectorRequest.ODataVersion;
+
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
+
+import static java.net.URLEncoder.encode;
 
 public class ODataConnectorRequestAccessor {
   public static Map<String, String> queryParams(Get get) {
@@ -37,6 +38,9 @@ public class ODataConnectorRequestAccessor {
 
   private static void putIfPresent(Map<String, String> params, String key, String value) {
     if (value != null && !value.isEmpty()) {
+      if (Set.of("$filter", "$orderBy", "$expand", "$select", "$search").contains(key)) {
+        value = encode(value, StandardCharsets.UTF_8);
+      }
       params.put(key, value);
     }
   }
@@ -50,11 +54,10 @@ public class ODataConnectorRequestAccessor {
 
   public static ODataConnectorRequest.ODataVersion oDataVersion(ODataConnectorRequest request) {
     return switch (request.httpMethod()) {
-      case Get get ->
-          switch (get.oDataVersionGet()) {
-            case V2 ignored -> ODataVersion.V2;
-            case V4 ignored -> ODataVersion.V4;
-          };
+      case Get get -> switch (get.oDataVersionGet()) {
+        case V2 ignored -> ODataVersion.V2;
+        case V4 ignored -> ODataVersion.V4;
+      };
       case Delete delete -> delete.oDataVersionDelete();
       case Patch patch -> patch.oDataVersionPatch();
       case Post post -> post.oDataVersionPost();

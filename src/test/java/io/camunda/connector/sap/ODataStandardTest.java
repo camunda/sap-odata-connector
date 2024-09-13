@@ -22,9 +22,11 @@ import io.camunda.connector.sap.model.ODataConnectorResponse;
 import io.camunda.connector.sap.model.ODataConnectorResponseWithCount;
 import io.camunda.connector.test.outbound.OutboundConnectorContextBuilder;
 import io.vavr.control.Try;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.parallel.ResourceLock;
@@ -65,7 +67,7 @@ public class ODataStandardTest {
   }
 
   @BeforeEach
-  // enable static destination resolution independent of the env var
+    // enable static destination resolution independent of the env var
   void mockDestination() {
     DestinationAccessor.setLoader(null);
     var destination =
@@ -99,7 +101,7 @@ public class ODataStandardTest {
                 "AuthorsByMultKeyDateTime(ID=4919528,dateOfBirth=2014-08-11T23:00:00Z)",
                 "V2",
                 "James Lee Burke") // 2014-08-11T23:00:00.000Z doesn't work!
-            );
+        );
     static List<Arguments> v4_get =
         Arrays.asList(
             arguments("/admin", "Authors(150)", "V4", "Edgar Allen Poe"),
@@ -114,7 +116,7 @@ public class ODataStandardTest {
                 "AuthorsByMultKeyDateTime(ID=4919528,dateOfBirth=2014-08-11T23:00:00Z)",
                 "V4",
                 "James Lee Burke") // 2014-08-11T23:00:00.000Z doesn't work!
-            );
+        );
 
     static List<Arguments> get_with_count =
         Arrays.asList(arguments("V2", "/odata/v2/admin"), arguments("V4", "/admin"));
@@ -144,6 +146,27 @@ public class ODataStandardTest {
       assertThat(response).extracting("result").isNotEqualTo("NOK");
       assertThat(((ODataConnectorResponse) response).result().get("name").asText())
           .isEqualTo(expected);
+    }
+
+    @Test
+    @DisplayName("validate URL-safe encoding of $filter")
+    void validate_encoded_filter() {
+      var input =
+          new ODataConnectorRequest(
+              tpl_Destination,
+              "/odata/v2/admin",
+              "Authors",
+              new Get("name eq 'Edgar Allen Poe'", null, null, null, null, null, new V2(false)), null);
+
+      var context = OutboundConnectorContextBuilder.create().variables(input).build();
+
+      var function = new ODataConnector();
+      var response = function.execute(context);
+
+      //> REVISIT: no sig for 2nd param to "extracting" for a type cast
+      assertThat(response).extracting("result").isNotEqualTo("NOK");
+      assertThat(((ODataConnectorResponse) response).result().get(0).get("name").asText())
+          .isEqualTo("Edgar Allen Poe");
     }
 
     @DisplayName("test for presence of $count (v4) and $inlinecount=allpages (v2)")
@@ -196,8 +219,8 @@ public class ODataStandardTest {
           .isEqualTo(5);
 
       assertThat(
-              Arrays.stream(response.getClass().getDeclaredMethods())
-                  .noneMatch(method -> method.getName().contains("countOrInlineCount")))
+          Arrays.stream(response.getClass().getDeclaredMethods())
+              .noneMatch(method -> method.getName().contains("countOrInlineCount")))
           .isTrue();
     }
 
@@ -257,7 +280,8 @@ public class ODataStandardTest {
     }
 
     @Disabled
-    void deepCreate() {}
+    void deepCreate() {
+    }
   }
 
   @Nested
@@ -295,7 +319,7 @@ public class ODataStandardTest {
               ofEntries(entry("name", name))
               //              new Put(ODataVersion.valueOf(protocol), ofEntries(entry("name",
               // name)))
-              );
+          );
 
       var context = OutboundConnectorContextBuilder.create().variables(input).build();
 
