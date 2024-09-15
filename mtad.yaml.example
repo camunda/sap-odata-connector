@@ -12,7 +12,6 @@ modules:
     ZEEBE_CLIENT_CLOUD_REGION: <your-cluster-region>
     CAMUNDA_OPERATE_CLIENT_URL: https://<region>.operate.camunda.io/<cluster-id>'
     LOGGING_LEVEL_ROOT: WARN # any of TRACE, DEBUG, INFO, WARN, ERROR, OFF
-    LOGGING_LEVEL_COM_SAP_CLOUD_SDK: DEBUG # any of TRACE, DEBUG, INFO, WARN, ERROR, OFF
     LOGGING_LEVEL_IO_CAMUNDA_CONNECTOR_SAP: DEBUG # any of TRACE, DEBUG, INFO, WARN, ERROR, OFF
   requires:
   - name: destination-instance
