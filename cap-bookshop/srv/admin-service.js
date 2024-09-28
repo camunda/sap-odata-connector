@@ -3,6 +3,7 @@ const cds = require('@sap/cds')
 module.exports = class AdminService extends cds.ApplicationService { init(){
   this.before (['NEW','CREATE'],'Authors', genid)
   this.before (['NEW','CREATE'],'Books', genid)
+  this.on ('SetStatusReject', 'Books', async req => "works")
   return super.init()
 }}
 
