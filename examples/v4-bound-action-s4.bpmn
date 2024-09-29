@@ -15,7 +15,7 @@
         <zeebe:ioMapping>
           <zeebe:input source="s4" target="destination" />
           <zeebe:input source="/sap/opu/odata4/sap/api_warrantyclaim/srvd_a2x/sap/warrantyclaim/0001" target="oDataService" />
-          <zeebe:input source="WarrantyClaim/01234567-89ab-cdef-0123-456789abcdef /SAP__self.ProcessSupplierClaim" target="entityOrEntitySet" />
+          <zeebe:input source="WarrantyClaim/01234567-89ab-cdef-0123-456789abcdef/SAP__self.ProcessSupplierClaim" target="entityOrEntitySet" />
           <zeebe:input source="post" target="httpMethod.httpMethod" />
           <zeebe:input source="V4" target="httpMethod.oDataVersionPost" />
           <zeebe:input source="={&#10;  some: &#34;key&#34;&#10;}" target="payload" />
