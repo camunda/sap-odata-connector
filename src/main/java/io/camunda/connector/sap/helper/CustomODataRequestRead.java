@@ -1,15 +1,13 @@
 package io.camunda.connector.sap.helper;
 
-
-import java.net.URI;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.sap.cloud.sdk.datamodel.odata.client.ODataProtocol;
 import com.sap.cloud.sdk.datamodel.odata.client.expression.ODataResourcePath;
 import com.sap.cloud.sdk.datamodel.odata.client.query.StructuredQuery;
 import com.sap.cloud.sdk.datamodel.odata.client.request.ODataRequestRead;
 import com.sap.cloud.sdk.datamodel.odata.client.request.UriEncodingStrategy;
+import java.net.URI;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class CustomODataRequestRead extends ODataRequestRead {
 

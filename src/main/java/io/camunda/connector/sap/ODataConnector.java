@@ -25,16 +25,15 @@ import io.camunda.connector.sap.helper.CustomODataRequestUpdate;
 import io.camunda.connector.sap.model.*;
 import io.camunda.connector.sap.model.ODataConnectorRequest.HttpMethod.*;
 import io.camunda.connector.sap.model.ODataConnectorRequest.ODataVersion;
-import org.apache.http.client.HttpClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Optional;
+import org.apache.http.client.HttpClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @OutboundConnector(
     name = "SAPOUTBOUNDCONNECTOR",
@@ -48,8 +47,8 @@ import java.util.Optional;
     documentationRef = "https://docs.camunda.io/xxx",
     inputDataClass = ODataConnectorRequest.class,
     propertyGroups = {
-        @ElementTemplate.PropertyGroup(id = "sap", label = "SAP"),
-        @ElementTemplate.PropertyGroup(id = "advanced", label = "Advanced")
+      @ElementTemplate.PropertyGroup(id = "sap", label = "SAP"),
+      @ElementTemplate.PropertyGroup(id = "advanced", label = "Advanced")
     })
 public class ODataConnector implements OutboundConnectorFunction {
 
@@ -141,7 +140,7 @@ public class ODataConnector implements OutboundConnectorFunction {
     JsonNode value = responseBody.has("value") ? responseBody.get("value") : responseBody;
     return countOrInlineCount.isPresent()
         ? new ODataConnectorResponseWithCount(
-        value, statusCode, countOrInlineCount.get().intValue())
+            value, statusCode, countOrInlineCount.get().intValue())
         : new ODataConnectorResponse(value, statusCode);
   }
 
@@ -151,7 +150,7 @@ public class ODataConnector implements OutboundConnectorFunction {
     JsonNode results = d.has("results") ? d.get("results") : d;
     return countOrInlineCount.isPresent()
         ? new ODataConnectorResponseWithCount(
-        results, statusCode, countOrInlineCount.get().intValue())
+            results, statusCode, countOrInlineCount.get().intValue())
         : new ODataConnectorResponse(results, statusCode);
   }
 
@@ -161,7 +160,8 @@ public class ODataConnector implements OutboundConnectorFunction {
     switch (request.httpMethod()) {
       case Get get -> {
         ODataRequestRead read =
-            new CustomODataRequestRead(request.oDataService(), request.entityOrEntitySet(), "", protocol);
+            new CustomODataRequestRead(
+                request.oDataService(), request.entityOrEntitySet(), "", protocol);
         ODataConnectorRequestAccessor.queryParams(get).forEach(read::addQueryParameter);
         return read;
       }
