@@ -9,6 +9,7 @@ import com.sap.cloud.sdk.cloudplatform.connectivity.HttpClientAccessor;
 import com.sap.cloud.sdk.datamodel.odata.client.ODataProtocol;
 import com.sap.cloud.sdk.datamodel.odata.client.exception.ODataRequestException;
 import com.sap.cloud.sdk.datamodel.odata.client.exception.ODataResponseException;
+import com.sap.cloud.sdk.datamodel.odata.client.exception.ODataServiceErrorException;
 import com.sap.cloud.sdk.datamodel.odata.client.expression.ODataResourcePath;
 import com.sap.cloud.sdk.datamodel.odata.client.request.*;
 import io.camunda.connector.api.annotation.OutboundConnector;
@@ -17,6 +18,10 @@ import io.camunda.connector.api.json.ConnectorsObjectMapperSupplier;
 import io.camunda.connector.api.outbound.OutboundConnectorContext;
 import io.camunda.connector.api.outbound.OutboundConnectorFunction;
 import io.camunda.connector.generator.java.annotation.ElementTemplate;
+import io.camunda.connector.sap.helper.CustomODataRequestCreate;
+import io.camunda.connector.sap.helper.CustomODataRequestDelete;
+import io.camunda.connector.sap.helper.CustomODataRequestRead;
+import io.camunda.connector.sap.helper.CustomODataRequestUpdate;
 import io.camunda.connector.sap.model.*;
 import io.camunda.connector.sap.model.ODataConnectorRequest.HttpMethod.*;
 import io.camunda.connector.sap.model.ODataConnectorRequest.ODataVersion;
@@ -61,6 +66,7 @@ public class ODataConnector implements OutboundConnectorFunction {
     HttpClient httpClient = HttpClientAccessor.getHttpClient(destination);
 
     ODataRequestExecutable oDataRequest = buildRequest(request);
+
     LOGGER.debug(
         "OData request: {}",
         ((ODataRequestGeneric) oDataRequest).getProtocol()
@@ -154,21 +160,22 @@ public class ODataConnector implements OutboundConnectorFunction {
     switch (request.httpMethod()) {
       case Get get -> {
         ODataRequestRead read =
-            new ODataRequestRead(request.oDataService(), request.entityOrEntitySet(), "", protocol);
+            new CustomODataRequestRead(
+                request.oDataService(), request.entityOrEntitySet(), "", protocol);
         ODataConnectorRequestAccessor.queryParams(get).forEach(read::addQueryParameter);
         return read;
       }
       case Post ignore -> {
         String serializedEntity = createSerializedEntity(request.payload());
-        return new ODataRequestCreate(
-            request.oDataService(), request.entityOrEntitySet(), serializedEntity, protocol);
+        return new CustomODataRequestCreate(
+            request.oDataService(), path, serializedEntity, protocol);
       }
       case Delete ignored -> {
-        return new ODataRequestDelete(request.oDataService(), path, null, protocol);
+        return new CustomODataRequestDelete(request.oDataService(), path, null, protocol);
       }
       case Put ignore -> {
         String serializedEntity = createSerializedEntity(request.payload());
-        return new ODataRequestUpdate(
+        return new CustomODataRequestUpdate(
             request.oDataService(),
             path,
             serializedEntity,
@@ -178,7 +185,7 @@ public class ODataConnector implements OutboundConnectorFunction {
       }
       case Patch ignore -> {
         String serializedEntity = createSerializedEntity(request.payload());
-        return new ODataRequestUpdate(
+        return new CustomODataRequestUpdate(
             request.oDataService(),
             path,
             serializedEntity,
@@ -213,6 +220,9 @@ public class ODataConnector implements OutboundConnectorFunction {
   private static String buildErrorMsg(Exception e, String prefix) {
     String msg = !prefix.isBlank() ? prefix + e.getMessage() : prefix;
     msg += e.getCause() != null ? " caused by: " + e.getCause().getMessage() : "";
+    if (e instanceof ODataServiceErrorException oerr) {
+      msg += " caused by: " + oerr.getOdataError();
+    }
     return msg;
   }
 }

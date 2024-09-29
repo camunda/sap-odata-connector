@@ -278,6 +278,22 @@ public class ODataStandardTest {
       assertThat(response).extracting("statusCode").isEqualTo(201);
     }
 
+    @Test
+    void v4_bound_action() {
+      var input =
+          new ODataConnectorRequest(
+              tpl_Destination,
+              "/admin",
+              "Books(201)/SetStatusReject",
+              new Post(ODataVersion.valueOf("V4")),
+              null);
+      var context = OutboundConnectorContextBuilder.create().variables(input).build();
+
+      var function = new ODataConnector();
+      var response = function.execute(context);
+      assertThat(((ODataConnectorResponse) response).result().asText()).isEqualTo("works");
+    }
+
     @Disabled
     void deepCreate() {}
   }
