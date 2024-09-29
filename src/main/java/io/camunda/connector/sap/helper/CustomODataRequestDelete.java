@@ -18,6 +18,7 @@ public class CustomODataRequestDelete extends ODataRequestDelete {
     super(servicePath, entityPath, versionIdentifier, protocol);
   }
 
+  @SuppressWarnings("UnstableApiUsage")
   @Nonnull
   @Override
   public URI getRelativeUri(@Nonnull final UriEncodingStrategy strategy) {

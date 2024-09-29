@@ -17,6 +17,7 @@ public class CustomODataRequestCreate extends ODataRequestCreate {
     super(servicePath, entityPath, serializedEntity, protocol);
   }
 
+  @SuppressWarnings("UnstableApiUsage")
   @Nonnull
   @Override
   public URI getRelativeUri(@Nonnull final UriEncodingStrategy strategy) {

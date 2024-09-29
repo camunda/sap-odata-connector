@@ -21,6 +21,7 @@ public class CustomODataRequestUpdate extends ODataRequestUpdate {
     super(servicePath, entityPath, serializedEntity, updateStrategy, versionIdentifier, protocol);
   }
 
+  @SuppressWarnings("UnstableApiUsage")
   @Nonnull
   @Override
   public URI getRelativeUri(@Nonnull final UriEncodingStrategy strategy) {
