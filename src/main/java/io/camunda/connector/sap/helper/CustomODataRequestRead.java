@@ -23,7 +23,7 @@ public class CustomODataRequestRead extends ODataRequestRead {
   public URI getRelativeUri(@Nonnull final UriEncodingStrategy strategy) {
     if (this.getResourcePath().toString().contains("/") && getProtocol() == ODataProtocol.V4) {
       URI intermed = super.getRelativeUri(strategy);
-      return Mangler.revert(intermed.getPath());
+      return Mangler.revert(intermed.toString());
     } else {
       return super.getRelativeUri(strategy);
     }
