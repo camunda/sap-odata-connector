@@ -31,6 +31,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Optional;
+import lombok.Getter;
 import org.apache.http.client.HttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,6 +55,8 @@ public class ODataConnector implements OutboundConnectorFunction {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ODataConnector.class);
 
+  @Getter private ODataRequestExecutable oDataRequest;
+
   @Override
   public Object execute(OutboundConnectorContext context) {
     ODataConnectorRequest request = context.bindVariables(ODataConnectorRequest.class);
@@ -65,7 +68,7 @@ public class ODataConnector implements OutboundConnectorFunction {
     LOGGER.debug("Destination: {}", destination.toString());
     HttpClient httpClient = HttpClientAccessor.getHttpClient(destination);
 
-    ODataRequestExecutable oDataRequest = buildRequest(request);
+    this.oDataRequest = buildRequest(request);
 
     LOGGER.debug(
         "OData request: {}",
@@ -154,7 +157,7 @@ public class ODataConnector implements OutboundConnectorFunction {
         : new ODataConnectorResponse(results, statusCode);
   }
 
-  private ODataRequestExecutable buildRequest(ODataConnectorRequest request) {
+  public ODataRequestExecutable buildRequest(ODataConnectorRequest request) {
     ODataProtocol protocol = determineProtocol(ODataConnectorRequestAccessor.oDataVersion(request));
     ODataResourcePath path = ODataResourcePath.of(request.entityOrEntitySet());
     switch (request.httpMethod()) {

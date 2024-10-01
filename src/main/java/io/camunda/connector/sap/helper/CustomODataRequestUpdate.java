@@ -26,7 +26,8 @@ public class CustomODataRequestUpdate extends ODataRequestUpdate {
   @Override
   public URI getRelativeUri(@Nonnull final UriEncodingStrategy strategy) {
     if (getResourcePath().toString().contains("/") && getProtocol() == ODataProtocol.V4) {
-      return super.getRelativeUri(UriEncodingStrategy.NONE);
+      URI intermed = super.getRelativeUri(strategy);
+      return Mangler.revert(intermed.getPath());
     } else {
       return super.getRelativeUri(strategy);
     }
