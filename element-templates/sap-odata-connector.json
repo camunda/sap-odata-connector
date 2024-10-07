@@ -304,14 +304,14 @@
     },
     "type" : "String"
   }, {
-    "id" : "httpMethod.orderBy",
-    "label" : "$orderBy",
+    "id" : "httpMethod.orderby",
+    "label" : "$orderby",
     "description" : "order the EntitySet by one or more properties",
     "optional" : true,
     "feel" : "optional",
     "group" : "advanced",
     "binding" : {
-      "name" : "httpMethod.orderBy",
+      "name" : "httpMethod.orderby",
       "type" : "zeebe:input"
     },
     "condition" : {
