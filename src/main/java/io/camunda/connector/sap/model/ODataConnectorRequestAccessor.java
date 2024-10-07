@@ -1,17 +1,16 @@
 package io.camunda.connector.sap.model;
 
+import static java.net.URLEncoder.encode;
+
 import io.camunda.connector.sap.model.ODataConnectorRequest.HttpMethod.*;
 import io.camunda.connector.sap.model.ODataConnectorRequest.HttpMethod.Get.ODataVersionGet.V2;
 import io.camunda.connector.sap.model.ODataConnectorRequest.HttpMethod.Get.ODataVersionGet.V4;
 import io.camunda.connector.sap.model.ODataConnectorRequest.ODataVersion;
-
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
-
-import static java.net.URLEncoder.encode;
 
 public class ODataConnectorRequestAccessor {
   public static Map<String, String> queryParams(Get get) {

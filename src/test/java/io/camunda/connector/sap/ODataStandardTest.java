@@ -1,5 +1,11 @@
 package io.camunda.connector.sap;
 
+import static java.util.Map.entry;
+import static java.util.Map.ofEntries;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
+
 import com.sap.cloud.sdk.cloudplatform.connectivity.AuthenticationType;
 import com.sap.cloud.sdk.cloudplatform.connectivity.DefaultHttpDestination;
 import com.sap.cloud.sdk.cloudplatform.connectivity.DestinationAccessor;
@@ -13,6 +19,9 @@ import io.camunda.connector.sap.model.ODataConnectorResponse;
 import io.camunda.connector.sap.model.ODataConnectorResponseWithCount;
 import io.camunda.connector.test.outbound.OutboundConnectorContextBuilder;
 import io.vavr.control.Try;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.parallel.ResourceLock;
@@ -20,21 +29,13 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.FieldSource;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
-
-import static java.util.Map.entry;
-import static java.util.Map.ofEntries;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.params.provider.Arguments.arguments;
-
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 public class ODataStandardTest {
 
   String tpl_Destination =
-      "localMockServer"; //> just there for completness sake, destination resolution is wired in statically (see above @link mockDestination)
+      "localMockServer"; //> just there for completness sake, destination resolution is wired in
+
+  // statically (see above @link mockDestination)
 
   private static int randomId() {
     int id = ThreadLocalRandom.current().nextInt(200, Integer.MAX_VALUE);
@@ -61,7 +62,7 @@ public class ODataStandardTest {
   }
 
   @BeforeEach
-    // enable static destination resolution independent of the env var
+  // enable static destination resolution independent of the env var
   void mockDestination() {
     DestinationAccessor.setLoader(null);
     var destination =
@@ -95,7 +96,7 @@ public class ODataStandardTest {
                 "AuthorsByMultKeyDateTime(ID=4919528,dateOfBirth=2014-08-11T23:00:00Z)",
                 "V2",
                 "James Lee Burke") // 2014-08-11T23:00:00.000Z doesn't work!
-        );
+            );
     static List<Arguments> v4_get =
         Arrays.asList(
             arguments("/admin", "Authors(150)", "V4", "Edgar Allen Poe"),
@@ -110,7 +111,7 @@ public class ODataStandardTest {
                 "AuthorsByMultKeyDateTime(ID=4919528,dateOfBirth=2014-08-11T23:00:00Z)",
                 "V4",
                 "James Lee Burke") // 2014-08-11T23:00:00.000Z doesn't work!
-        );
+            );
 
     static List<Arguments> get_with_count =
         Arrays.asList(arguments("V2", "/odata/v2/admin"), arguments("V4", "/admin"));
@@ -123,9 +124,7 @@ public class ODataStandardTest {
             arguments("V2", "/odata/v2/admin", "Books"),
             arguments("V2", "/odata/v2/admin", "Books"),
             arguments("V4", "/admin", "Books"),
-            arguments("V4", "/admin", "Books")
-        );
-
+            arguments("V4", "/admin", "Books"));
 
     @DisplayName("a single entity")
     @ParameterizedTest(name = "{2} GET {1}")
@@ -223,8 +222,8 @@ public class ODataStandardTest {
           .isEqualTo(5);
 
       assertThat(
-          Arrays.stream(response.getClass().getDeclaredMethods())
-              .noneMatch(method -> method.getName().contains("countOrInlineCount")))
+              Arrays.stream(response.getClass().getDeclaredMethods())
+                  .noneMatch(method -> method.getName().contains("countOrInlineCount")))
           .isTrue();
     }
 
@@ -272,8 +271,10 @@ public class ODataStandardTest {
               new Get(null, null, null, "title desc", null, "title", oDataVersionGet(protocol)),
               null);
 
-      var context_sort_asc = OutboundConnectorContextBuilder.create().variables(input_sort_asc).build();
-      var context_sort_desc = OutboundConnectorContextBuilder.create().variables(input_sort_desc).build();
+      var context_sort_asc =
+          OutboundConnectorContextBuilder.create().variables(input_sort_asc).build();
+      var context_sort_desc =
+          OutboundConnectorContextBuilder.create().variables(input_sort_desc).build();
 
       var function = new ODataConnector();
       var response_sort_asc = function.execute(context_sort_asc);
@@ -281,16 +282,11 @@ public class ODataStandardTest {
 
       assertThat(((ODataConnectorResponse) response_sort_asc).result())
           .extracting(node -> node.get("title").asText())
-          .containsExactly(
-              "Catweazle", "Eleonora", "Jane Eyre", "The Raven", "Wuthering Heights"
-          );
+          .containsExactly("Catweazle", "Eleonora", "Jane Eyre", "The Raven", "Wuthering Heights");
 
       assertThat(((ODataConnectorResponse) response_sort_desc).result())
           .extracting(node -> node.get("title").asText())
-          .containsExactly(
-              "Wuthering Heights", "The Raven", "Jane Eyre", "Eleonora", "Catweazle"
-          );
-
+          .containsExactly("Wuthering Heights", "The Raven", "Jane Eyre", "Eleonora", "Catweazle");
     }
   }
 
@@ -340,8 +336,7 @@ public class ODataStandardTest {
     }
 
     @Disabled
-    void deepCreate() {
-    }
+    void deepCreate() {}
   }
 
   @Nested
@@ -379,7 +374,7 @@ public class ODataStandardTest {
               ofEntries(entry("name", name))
               //              new Put(ODataVersion.valueOf(protocol), ofEntries(entry("name",
               // name)))
-          );
+              );
 
       var context = OutboundConnectorContextBuilder.create().variables(input).build();
 

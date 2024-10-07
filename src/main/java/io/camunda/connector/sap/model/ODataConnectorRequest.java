@@ -11,7 +11,6 @@ import io.camunda.connector.generator.java.annotation.TemplateSubType;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
-
 import java.util.Map;
 
 public record ODataConnectorRequest(
