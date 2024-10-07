@@ -18,7 +18,7 @@ public class ODataConnectorRequestAccessor {
     putIfPresent(params, "$top", get.top(), String::valueOf);
     putIfPresent(params, "$filter", get.filter());
     putIfPresent(params, "$skip", get.skip(), String::valueOf);
-    putIfPresent(params, "$orderBy", get.orderBy());
+    putIfPresent(params, "$orderby", get.orderby());
     putIfPresent(params, "$expand", get.expand());
     putIfPresent(params, "$select", get.select());
     switch (get.oDataVersionGet()) {
@@ -37,8 +37,11 @@ public class ODataConnectorRequestAccessor {
 
   private static void putIfPresent(Map<String, String> params, String key, String value) {
     if (value != null && !value.isEmpty()) {
-      if (Set.of("$filter", "$orderBy", "$expand", "$select", "$search").contains(key)) {
+      if (Set.of("$filter", "$expand", "$select", "$search").contains(key)) {
         value = encode(value, StandardCharsets.UTF_8);
+      } else if (key.equals("$orderby")) {
+        //> special handling: .encode does " " -> "+", in the orderby clause, we need "%20"
+        value = encode(value, StandardCharsets.UTF_8).replaceAll("\\+", "%20");
       }
       params.put(key, value);
     }

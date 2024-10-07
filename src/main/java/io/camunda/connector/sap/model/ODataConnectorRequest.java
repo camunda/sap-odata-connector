@@ -100,10 +100,10 @@ public record ODataConnectorRequest(
             Long skip,
         @TemplateProperty(
                 group = "advanced",
-                label = "$orderBy",
+                label = "$orderby",
                 description = "order the EntitySet by one or more properties",
                 optional = true)
-            String orderBy,
+            String orderby,
         @TemplateProperty(
                 group = "advanced",
                 label = "$expand",
