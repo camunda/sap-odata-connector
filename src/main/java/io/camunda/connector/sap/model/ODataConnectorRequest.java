@@ -11,6 +11,7 @@ import io.camunda.connector.generator.java.annotation.TemplateSubType;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
+
 import java.util.Map;
 
 public record ODataConnectorRequest(
@@ -100,10 +101,10 @@ public record ODataConnectorRequest(
             Long skip,
         @TemplateProperty(
                 group = "advanced",
-                label = "$orderBy",
+                label = "$orderby",
                 description = "order the EntitySet by one or more properties",
                 optional = true)
-            String orderBy,
+            String orderby,
         @TemplateProperty(
                 group = "advanced",
                 label = "$expand",
