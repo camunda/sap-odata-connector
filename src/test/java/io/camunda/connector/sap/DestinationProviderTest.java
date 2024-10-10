@@ -73,9 +73,7 @@ public class DestinationProviderTest {
       ConnectorException exception =
           assertThrows(
               ConnectorException.class,
-              () -> {
-                DestinationProvider.getDestination("invalidDestination", DestinationType.HTTP);
-              });
+              () -> DestinationProvider.getDestination("invalidDestination", DestinationType.HTTP));
 
       assertEquals(ErrorCodes.DESTINATION_ERROR.name(), exception.getErrorCode());
       mockedDestinationAccessor.verify(
