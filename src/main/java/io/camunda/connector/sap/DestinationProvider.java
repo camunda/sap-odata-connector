@@ -15,8 +15,7 @@ public class DestinationProvider {
   private static final int MAX_RETRIES = 10;
   private static final long RETRY_DELAY_MS = 500;
 
-  private DestinationProvider() {
-  }
+  private DestinationProvider() {}
 
   public static Destination getDestination(String destination, DestinationType destinationType) {
     int attempt = 0;
@@ -40,10 +39,13 @@ public class DestinationProvider {
           Thread.sleep(RETRY_DELAY_MS);
         } catch (InterruptedException ie) {
           Thread.currentThread().interrupt();
-          throw new ConnectorException(ErrorCodes.DESTINATION_ERROR.name(), "Retry interrupted", ie);
+          throw new ConnectorException(
+              ErrorCodes.DESTINATION_ERROR.name(), "Retry interrupted", ie);
         }
       }
     }
-    throw new ConnectorException(ErrorCodes.DESTINATION_ERROR.name(), "Finally failed to get destination after " + MAX_RETRIES + " retries");
+    throw new ConnectorException(
+        ErrorCodes.DESTINATION_ERROR.name(),
+        "Finally failed to get destination after " + MAX_RETRIES + " retries");
   }
 }
