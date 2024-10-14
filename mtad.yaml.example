@@ -1,6 +1,6 @@
 _schema-version: 3.3.0
 ID: sap-odata-connector
-version: 1.0.0-alpha.3
+version: 1.0.0-alpha.5
 modules:
 - name: sap-odata-connector
   type: application
@@ -19,7 +19,7 @@ modules:
   parameters:
     disk-quota: 512M
     docker:
-      image: camunda/sap-odata-connector:1.0.0-alpha.3
+      image: camunda/sap-odata-connector:1.0.0-alpha.5
     enable-ssh: true
     health-check-type: process
     instances: 1
