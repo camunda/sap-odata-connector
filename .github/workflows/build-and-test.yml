@@ -11,3 +11,4 @@ jobs:
       java-version: '21'
       distribution: 'temurin'
       maven-options: '-PcheckFormat package'
+    secrets: inherit
