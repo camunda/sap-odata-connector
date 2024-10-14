@@ -28,7 +28,9 @@ public class ODataConnectorRequestAccessor {
         }
       }
       case V4 v4 -> {
-        putIfPresent(params, "$count", v4.count(), String::valueOf);
+        if (v4.count() != null && v4.count()) {
+          putIfPresent(params, "$count", true, (ignored) -> "true");
+        }
         putIfPresent(params, "$search", v4.search());
       }
     }
@@ -49,8 +51,7 @@ public class ODataConnectorRequestAccessor {
 
   private static void putIfPresent(
       Map<String, String> params, String key, Object value, Function<Object, String> mapper) {
-    //> don't add $count=false to as query parameter
-    if (value != null && !(key.equals("$count") && Boolean.FALSE.equals(value))) {
+    if (value != null) {
       putIfPresent(params, key, mapper.apply(value));
     }
   }
