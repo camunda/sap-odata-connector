@@ -9,6 +9,8 @@ import io.camunda.connector.sap.helper.CustomODataRequestDelete;
 import io.camunda.connector.sap.helper.CustomODataRequestRead;
 import io.camunda.connector.sap.helper.CustomODataRequestUpdate;
 import io.camunda.connector.sap.model.ODataConnectorRequest;
+import io.camunda.connector.sap.model.ODataConnectorResponse;
+import io.camunda.connector.sap.model.ODataConnectorResponseWithCount;
 import io.camunda.connector.test.outbound.OutboundConnectorContextBuilder;
 import java.util.Arrays;
 import java.util.List;
@@ -47,6 +49,98 @@ public class ODataS4Test {
 
     @Test
     void GET_validate_DELETE() {}
+  }
+
+  @Nested
+  class count_in_v4 {
+    static String oDataService =
+        "/sap/opu/odata4/sap/api_materialserialnumber/srvd_a2x/sap/materialserialnumber/0001/";
+    static String entity = "MaterialSerialNumber(Material='2261',SerialNumber='10002973')";
+    static String entitySet = "MaterialSerialNumber";
+
+    @Test
+    void count_not_for_entity_in_v4() {
+      var input =
+          new ODataConnectorRequest(
+              "s4",
+              oDataService,
+              entity,
+              new ODataConnectorRequest.HttpMethod.Get(
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  new ODataConnectorRequest.HttpMethod.Get.ODataVersionGet.V4(null, false)),
+              null);
+      var context = OutboundConnectorContextBuilder.create().variables(input).build();
+
+      var function = new ODataConnector();
+      var req =
+          (CustomODataRequestRead)
+              function.buildRequest(context.bindVariables((ODataConnectorRequest.class)));
+      var response = function.execute(context);
+
+      assertThat(req.getRelativeUri().toString()).isEqualTo(oDataService + entity);
+      assertThat(((ODataConnectorResponse) response).result().get("Material").asText())
+          .isEqualTo("2261");
+      assertThat(((ODataConnectorResponse) response).result().get("SerialNumber").asText())
+          .isEqualTo("10002973");
+      assertThat(((ODataConnectorResponse) response).result().get("Equipment").asText())
+          .isEqualTo("10002973");
+      assertThat(((ODataConnectorResponse) response).result().get("EquipmentCategory").asText())
+          .isEqualTo("P");
+    }
+
+    @Test
+    void allow_count_in_entitysets_v4() {
+      var input =
+          new ODataConnectorRequest(
+              "s4",
+              oDataService,
+              entitySet,
+              new ODataConnectorRequest.HttpMethod.Get(
+                  null,
+                  5L,
+                  null,
+                  null,
+                  null,
+                  null,
+                  new ODataConnectorRequest.HttpMethod.Get.ODataVersionGet.V4(null, true)),
+              null);
+      var inputWithoutCount =
+          new ODataConnectorRequest(
+              "s4",
+              oDataService,
+              entitySet,
+              new ODataConnectorRequest.HttpMethod.Get(
+                  null,
+                  5L,
+                  null,
+                  null,
+                  null,
+                  null,
+                  new ODataConnectorRequest.HttpMethod.Get.ODataVersionGet.V4(null, false)),
+              null);
+      var context = OutboundConnectorContextBuilder.create().variables(input).build();
+      var contextWithoutCount =
+          OutboundConnectorContextBuilder.create().variables(inputWithoutCount).build();
+
+      var function = new ODataConnector();
+      var response = function.execute(context);
+      var responseWithoutCount = function.execute(contextWithoutCount);
+
+      assertThat(((ODataConnectorResponseWithCount) response).countOrInlineCount())
+          .isGreaterThanOrEqualTo(5);
+      assertThat(((ODataConnectorResponseWithCount) response).result().size()).isEqualTo(5);
+
+      assertThat(((ODataConnectorResponse) responseWithoutCount).result().size()).isEqualTo(5);
+      assertThat(
+              Arrays.stream(responseWithoutCount.getClass().getDeclaredMethods())
+                  .noneMatch(method -> method.getName().contains("countOrInlineCount")))
+          .isTrue();
+    }
   }
 
   @Nested
