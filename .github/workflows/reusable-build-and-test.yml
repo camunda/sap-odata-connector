@@ -43,4 +43,6 @@ jobs:
           cache: maven
 
       - name: build and test with maven
+        env:
+          destinations: ${{ secrets.DESTINATIONS }}
         run: mvn -B ${{ inputs.maven-options }} --file pom.xml
