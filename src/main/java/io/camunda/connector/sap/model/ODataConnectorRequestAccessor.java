@@ -49,7 +49,8 @@ public class ODataConnectorRequestAccessor {
 
   private static void putIfPresent(
       Map<String, String> params, String key, Object value, Function<Object, String> mapper) {
-    if (value != null) {
+    //> don't add $count=false to as query parameter
+    if (value != null && !(key.equals("$count") && Boolean.FALSE.equals(value))) {
       putIfPresent(params, key, mapper.apply(value));
     }
   }
