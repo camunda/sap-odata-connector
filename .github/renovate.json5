@@ -12,7 +12,7 @@
     },
     {
       "description": "skip any release actions on main for auto-dep merges",
-      "matchBaseBranches": ["/main/"],
+      "matchBaseBranches": ["/main/", "/^release/.*/"],
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
       "commitBody": "[skip ci]"
     },
