@@ -1,6 +1,9 @@
 {
   "extends": [
-    "config:base"
+    "config:base",
+    // we build docker images from camunda/connectors base docker image
+    // in gh action build-and-publish-docker-image.yml
+    "docker:disable"
   ],
   "labels": ["dependencies", "no milestone"],
   "packageRules": [
