@@ -19,7 +19,7 @@
       "enabled": false
     },
     {
-      "matchPackagePrefixes": ["io.camunda.connector"],
+      "matchPackagePrefixes": ["io.camunda.connector.sap"],
       "enabled": false
     },
     {
