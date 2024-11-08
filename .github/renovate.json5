@@ -1,0 +1,35 @@
+{
+  "extends": [
+    "config:base"
+  ],
+  "labels": ["dependencies", "no milestone"],
+  "packageRules": [
+    {
+      "matchManagers": ["maven"],
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "automerge": false
+    },
+    {
+      "matchManagers": ["github-actions"],
+      "automerge": false
+    },
+    {
+      "matchBaseBranches": ["/^release/.*/"],
+      "matchUpdateTypes": ["major", "minor"],
+      "enabled": false
+    },
+    {
+      "matchPackagePrefixes": ["io.camunda.connector.sap"],
+      "enabled": false
+    },
+    {
+      "matchManagers": [
+        "maven"
+      ],
+      "description" : "Exclude SNAPSHOT versions, renovate may suggest them for pre-release values.",
+      "matchPackagePatterns": [".*"],
+      "allowedVersions": "!/-SNAPSHOT$/"
+    }
+  ],
+  "baseBranches": ["main"]
+}
