@@ -44,29 +44,35 @@ jobs:
         with:
           repository: camunda/sap-odata-connector
           ref: ${{ needs.extract-version.outputs.camunda_release }}
+          path: yaml
           sparse-checkout:
             - mtad.yaml.example
       - name: check
-        run: ls -al
+        run: ls -al yaml
       - name: fill in target cluster credentials
         run: |
+          cd yaml
           sed -e "s/ZEEBE_CLIENT_CLOUD_CLUSTER-ID/ZEEBE_CLIENT_CLOUD_CLUSTER-ID: ${{ inputs.cluster_id }}/g" \
            -e "s/ZEEBE_CLIENT_CLOUD_CLIENT-ID/ZEEBE_CLIENT_CLOUD_CLIENT-ID: ${{ inputs.client_id }}/g" \
            -e "s/ZEEBE_CLIENT_CLOUD_CLIENT-SECRET/ZEEBE_CLIENT_CLOUD_CLIENT-SECRET: ${{ inputs.client_secret }}/g" \
            -e "s/ZEEBE_CLIENT_CLOUD_REGION/ZEEBE_CLIENT_CLOUD_REGION: ${{ inputs.region }}/g" mtad.yaml.example
           mv mtad.yaml.example mtad.yaml
+          cd ..
       - name: check substitution result
-        run: cat mtad.yaml
+        run: cat yaml/mtad.yaml
 
   deploy:
     runs-on: ubuntu-latest
     container:
       image: cloudfoundry/cli:latest
+      volumes:
+        - ./yaml:/tmp/yaml
       env:
         connector_version: ${{ inputs.connector_version }}
 
     steps:
       - name: deploy ${{env.connector_version}} to BTP
         run: |
+          cd /tmp/yaml
           cf login -a ${{ secrets.CF_API_ENDPOINT }} -u ${{ secrets.CF_USER }} -p ${{ secrets.CF_PASSWORD }} -o ${{ secrets.CF_ORG }} -s ${{ secrets.CF_SPACE }}
           cf deploy ./ -f
