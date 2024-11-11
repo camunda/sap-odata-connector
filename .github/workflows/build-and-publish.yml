@@ -90,6 +90,7 @@ jobs:
 
 
   deploy-to-btp:
+    needs: build-and-publish
     uses: ./.github/workflows/reusable-deploy.yml
     with:
       connector_version: ${{ env.VERSION }}
