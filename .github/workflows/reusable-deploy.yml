@@ -1,0 +1,72 @@
+name: reusable-build-and-test
+
+on:
+  workflow_call:
+    inputs:
+      connector_version: # fex: 8.5.7 - 8.5 for Camunda release, 7 for connector version
+        required: true
+        type: string
+      cluster_id:
+        required: true
+        type: string
+      client_id:
+        required: true
+        type: string
+      client_secret:
+        required: true
+        type: string
+      region:
+        required: true
+        type: string
+
+# cf login
+# cf deploy
+# run e2e tests with this connector
+
+jobs:
+  extract-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: extract release branch # first two digits of connector_version
+        id: extract-version
+        run: echo "::set-output name=camunda_release::$(echo ${{ inputs.connector_version }} | cut -d'.' -f1-2)"
+
+      - name: extract connector version for release # last digit of connector_version
+        id: extract-connector-version
+        run: echo "::set-output name=connector_version::$(echo ${{ inputs.connector_version }} | cut -d'.' -f3)"
+
+  mtad-yaml: # get the mtad.yaml.example from the release branch via sparse checkout
+    runs-on: ubuntu-latest
+    needs: extract-version
+    steps:
+      - name: checkout mtad.yaml.example
+        uses: actions/checkout@v4
+        with:
+          repository: camunda/sap-odata-connector
+          ref: ${{ needs.extract-version.outputs.camunda_release }}
+          sparse-checkout:
+            - mtad.yaml.example
+      - name: check
+        run: ls -al
+      - name: fill in target cluster credentials
+        run: |
+          sed -e "s/ZEEBE_CLIENT_CLOUD_CLUSTER-ID/ZEEBE_CLIENT_CLOUD_CLUSTER-ID: ${{ inputs.cluster_id }}/g" \
+           -e "s/ZEEBE_CLIENT_CLOUD_CLIENT-ID/ZEEBE_CLIENT_CLOUD_CLIENT-ID: ${{ inputs.client_id }}/g" \
+           -e "s/ZEEBE_CLIENT_CLOUD_CLIENT-SECRET/ZEEBE_CLIENT_CLOUD_CLIENT-SECRET: ${{ inputs.client_secret }}/g" \
+           -e "s/ZEEBE_CLIENT_CLOUD_REGION/ZEEBE_CLIENT_CLOUD_REGION: ${{ inputs.region }}/g" mtad.yaml.example
+          mv mtad.yaml.example mtad.yaml
+      - name: check substitution result
+        run: cat mtad.yaml
+
+  deploy:
+    runs-on: ubuntu-latest
+    container:
+      image: cloudfoundry/cli:latest
+      env:
+        connector_version: ${{ inputs.connector_version }}
+
+    steps:
+      - name: deploy ${{env.connector_version}} to BTP
+        run: |
+          cf login -a ${{ secrets.CF_API_ENDPOINT }} -u ${{ secrets.CF_USER }} -p ${{ secrets.CF_PASSWORD }} -o ${{ secrets.CF_ORG }} -s ${{ secrets.CF_SPACE }}
+          cf deploy ./ -f
