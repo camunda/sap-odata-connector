@@ -24,8 +24,8 @@ modules:
     health-check-type: process
     instances: 1
     memory: 2G
-    routes:
-    - route: ${org}-${space}-${app-name}.${domain}
+#    routes:
+#    - route: ${org}-${space}-${app-name}.${domain}
 resources:
 - name: destination-instance
   type: org.cloudfoundry.managed-service
