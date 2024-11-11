@@ -39,5 +39,5 @@
       "allowedVersions": "!/-SNAPSHOT$/"
     }
   ],
-  "baseBranches": ["main", "release/8.5", "release/8.6", "release/8.7"]
+  "baseBranches": ["main"]
 }
