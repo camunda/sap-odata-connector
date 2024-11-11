@@ -8,14 +8,14 @@ on:
       - release/8.5
     paths:
       # relevant
-      - github/**
+      - .github/**
       - element-templates/**
       - src/**
       - Dockerfile
       - pom.xml
       # irrelevant
-#      - "!github/**"
-      - "!idea/**"
+#      - "!.github/**"
+      - "!.idea/**"
       - "!cap-bookshop/**"
       - "!examples/**"
       - "!*.java-version"
