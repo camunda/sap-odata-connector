@@ -75,7 +75,9 @@ jobs:
           cd ..
 
       - name: check substitution result
-        run: ls -al yaml/mtad.yaml
+        run: |
+          ls -al .
+          ls -al yaml/mtad.yaml
 
   deploy:
     needs: mtad-yaml
@@ -92,5 +94,6 @@ jobs:
         run: |
           cf install-plugin multiapps -f
           cd /tmp/yaml
+          ls -al /tmp/yaml
           cf login -a ${{ inputs.cf_api_endpoint }} -u ${{ secrets.cf_user }} -p ${{ secrets.cf_password }} -o ${{ inputs.cf_org }} -s ${{ inputs.cf_space }}
           cf deploy ./ -f
