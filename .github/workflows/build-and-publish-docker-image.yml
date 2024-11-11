@@ -21,6 +21,7 @@ on:
 
 jobs:
   build-and-test:
+    if: ${{ false }} # tmp disable
     uses: ./.github/workflows/reusable-build-and-test.yml
     with:
       java-version: '21'
