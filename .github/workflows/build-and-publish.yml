@@ -1,4 +1,6 @@
-name: build-and-publish-docker-image
+name: build-and-publish
+# - docker-image
+# - deployment to BTP
 
 on:
   push:
@@ -84,3 +86,19 @@ jobs:
 #            camunda/sap-odata-connector:latest
           platforms: linux/amd64
           provenance: false
+
+
+  deploy-to-btp:
+    uses: ./.github/workflows/reusable-deploy.yml
+    with:
+      connector_version: '8.5.0'
+      region: 'bru-2'
+      cf_api_endpoint: 'https://api.cf.eu10-004.hana.ondemand.com'
+      cf_org: camunda-dev
+      cf_space: sap-integration
+    secrets:
+      cluster_id: ${{ secrets.C85_CLUSTER_ID }}
+      client_id: ${{ secrets.C85_CLIENT_ID }}
+      client_secret: ${{ secrets.C85_CLIENT_SECRET }}
+      cf_user: ${{ secrets.CF_USER }}
+      cf_password: ${{ secrets.CF_PASSWORD }}
