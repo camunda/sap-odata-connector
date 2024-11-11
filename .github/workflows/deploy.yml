@@ -1,0 +1,21 @@
+name: deploy-to-btp
+
+on:
+  push:
+    branches:
+      - release/8.5
+
+jobs:
+  deploy-to-btp:
+    uses: ./.github/workflows/reusable-deploy.yml
+    with:
+      connector_version: '8.5.7'
+      cluster_id: ${{ secrets.C85_CLUSTER_ID }}
+      client_id: ${{ secrets.C85_CLIENT_ID }}
+      client_secret: ${{ secrets.C85_CLIENT_SECRET }}
+      region: 'bru-2'
+      cf_api_endpoint: 'https://api.cf.eu10-004.hana.ondemand.com'
+      cf_user: ${{ secrets.CF_USER }}
+      cf_password: ${{ secrets.CF_PASSWORD }}
+      cf_org: camunda-dev
+      cf_space: sap-integration

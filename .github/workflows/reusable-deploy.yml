@@ -69,7 +69,9 @@ jobs:
       - name: fill in target cluster credentials
         run: |
           cd yaml
-          sed -e "s/ZEEBE_CLIENT_CLOUD_CLUSTER-ID/ZEEBE_CLIENT_CLOUD_CLUSTER-ID: ${{ inputs.cluster_id }}/g" \
+          sed -e "s/version:/version: ${{ inputs.connector_version }}/g" \
+           -e "s/name: sap-odata-connector/name: sap-odata-connector-${{ inputs.connector_version }}/g" \
+           -e "s/ZEEBE_CLIENT_CLOUD_CLUSTER-ID/ZEEBE_CLIENT_CLOUD_CLUSTER-ID: ${{ inputs.cluster_id }}/g" \
            -e "s/ZEEBE_CLIENT_CLOUD_CLIENT-ID/ZEEBE_CLIENT_CLOUD_CLIENT-ID: ${{ inputs.client_id }}/g" \
            -e "s/ZEEBE_CLIENT_CLOUD_CLIENT-SECRET/ZEEBE_CLIENT_CLOUD_CLIENT-SECRET: ${{ inputs.client_secret }}/g" \
            -e "s/camunda\/sap-odata-connector/camunda\/sap-odata-connector:${{ inputs.connector_version }}/g" \
