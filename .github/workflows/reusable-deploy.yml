@@ -61,13 +61,15 @@ jobs:
       - name: fill in target cluster credentials
         run: |
           cd yaml
-          sed -i -e "s/version:/version: ${{ inputs.connector_version }}/g" \
+          sed -i -e "s/<app-version>/${{ inputs.connector_version }}/g" \
           -e "s/name: sap-odata-connector/name: sap-odata-connector-${{ inputs.connector_version }}/g" \
-          -e "s/ZEEBE_CLIENT_CLOUD_CLUSTER-ID/ZEEBE_CLIENT_CLOUD_CLUSTER-ID: ${{ secrets.cluster_id }}/g" \
-          -e "s/ZEEBE_CLIENT_CLOUD_CLIENT-ID/ZEEBE_CLIENT_CLOUD_CLIENT-ID: ${{ secrets.client_id }}/g" \
-          -e "s/ZEEBE_CLIENT_CLOUD_CLIENT-SECRET/ZEEBE_CLIENT_CLOUD_CLIENT-SECRET: '${{ secrets.client_secret }}'/g" \
-          -e "s/camunda\/sap-odata-connector/camunda\/sap-odata-connector:${{ inputs.connector_version }}/g" \
-          -e "s/ZEEBE_CLIENT_CLOUD_REGION/ZEEBE_CLIENT_CLOUD_REGION: ${{ inputs.region }}/g" \
+          -e "s/<your-cluster-id>/${{ secrets.cluster_id }}/g" \
+          -e "s/<cluster-id>/${{ secrets.cluster_id }}/g" \
+          -e "s/<client-id-credential-from-api-client>/${{ secrets.client_id }}/g" \
+          -e "s/<client-secret-credential-from-api-client>/${{ secrets.client_secret }}/g" \
+          -e "s/<your-cluster-region>/${{ inputs.region }}/g" \
+          -e "s/<region>/${{ inputs.region }}/g" \
+          -e "s/camunda\/sap-odata-connector.*/camunda\/sap-odata-connector:${{ inputs.connector_version }}/g" \
           mtad.yaml.example
           mv mtad.yaml.example mtad.yaml
           cd ..
