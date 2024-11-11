@@ -14,6 +14,7 @@ on:
       - Dockerfile
       - pom.xml
       # irrelevant
+#      - "!github/**"
       - "!idea/**"
       - "!cap-bookshop/**"
       - "!examples/**"
