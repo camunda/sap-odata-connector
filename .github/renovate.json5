@@ -1,13 +1,23 @@
 {
   "extends": [
-    "config:base"
+    "config:base",
+    // we build docker images from camunda/connectors base docker image
+    // in gh action build-and-publish-docker-image.yml
+    "docker:disable"
   ],
   "labels": ["dependencies", "no milestone"],
   "packageRules": [
     {
       "matchManagers": ["maven"],
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
-      "automerge": false
+      "automerge": false,
+      "rebaseWhen": "auto"
+    },
+    {
+      "description": "skip any release actions on main for auto-dep merges",
+      "matchBaseBranches": ["/main/", "/^release/.*/"],
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "commitBody": "[skip ci]"
     },
     {
       "matchManagers": ["github-actions"],
@@ -19,17 +29,15 @@
       "enabled": false
     },
     {
-      "matchPackagePrefixes": ["io.camunda.connector.sap"],
+      "matchPackagePrefixes": ["io.camunda.connector"],
       "enabled": false
     },
     {
-      "matchManagers": [
-        "maven"
-      ],
+      "matchManagers": ["maven"],
       "description" : "Exclude SNAPSHOT versions, renovate may suggest them for pre-release values.",
       "matchPackagePatterns": [".*"],
       "allowedVersions": "!/-SNAPSHOT$/"
     }
   ],
-  "baseBranches": ["main"]
+  "baseBranches": ["main", "release/8.5", "release/8.6"]
 }
