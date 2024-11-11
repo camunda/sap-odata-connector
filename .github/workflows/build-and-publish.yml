@@ -14,7 +14,7 @@ on:
       - Dockerfile
       - pom.xml
       # irrelevant
-#      - "!.github/**"
+      #      - "!.github/**"
       - "!.idea/**"
       - "!cap-bookshop/**"
       - "!examples/**"
@@ -34,6 +34,8 @@ jobs:
   build-and-publish:
     needs: build-and-test
     runs-on: ubuntu-latest
+    outputs:
+      VERSION: ${{ steps.build-and-publish.outputs.VERSION }}
 
     steps:
       - uses: actions/checkout@v4
@@ -84,16 +86,15 @@ jobs:
           push: true
           tags: |
             camunda/sap-odata-connector:${{ env.VERSION }}
-#            camunda/sap-odata-connector:latest
+          #            camunda/sap-odata-connector:latest
           platforms: linux/amd64
           provenance: false
-
 
   deploy-to-btp:
     needs: build-and-publish
     uses: ./.github/workflows/reusable-deploy.yml
     with:
-      connector_version: ${{ env.VERSION }}
+      connector_version: ${{ needs.build-and-publish.outputs.VERSION }}
       region: 'bru-2'
       cf_api_endpoint: 'https://api.cf.eu10-004.hana.ondemand.com'
       cf_org: camunda-dev
