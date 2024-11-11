@@ -3,7 +3,21 @@ name: build-and-publish-docker-image
 on:
   push:
     branches:
-      - main
+      - release/8.5
+    paths:
+      # relevant
+      - element-templates/**
+      - src/**
+      - Dockerfile/**
+      - pom.xml/**
+      # irrelevant
+      - "!github/**"
+      - "!idea/**"
+      - "!cap-bookshop/**"
+      - "!examples/**"
+      - "!*.java-version"
+      - "!*.example"
+      - "!*.md"
 
 jobs:
   build-and-test:
@@ -62,7 +76,7 @@ jobs:
         with:
           context: .
           build-args: |
-            CAMUNDA_CONNECTORS_VERSION=8.5.7
+            CAMUNDA_CONNECTORS_VERSION=8.5.10
           push: true
           tags: |
             camunda/sap-odata-connector:${{ env.VERSION }}
