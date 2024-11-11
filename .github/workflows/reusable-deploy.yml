@@ -62,8 +62,9 @@ jobs:
           repository: camunda/sap-odata-connector
           ref: ${{ needs.extract-version.outputs.camunda_release }}
           path: yaml
-          sparse-checkout:
-            - mtad.yaml.example
+          sparse-checkout: |
+            mtad.yaml.example
+          sparse-checkout-cone-mode: false
       - name: check
         run: ls -al yaml
       - name: fill in target cluster credentials
