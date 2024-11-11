@@ -8,8 +8,8 @@ on:
       # relevant
       - element-templates/**
       - src/**
-      - Dockerfile/**
-      - pom.xml/**
+      - Dockerfile
+      - pom.xml
       # irrelevant
       - "!github/**"
       - "!idea/**"
