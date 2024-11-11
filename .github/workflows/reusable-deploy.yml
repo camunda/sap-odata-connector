@@ -61,20 +61,14 @@ jobs:
       - name: fill in target cluster credentials
         run: |
           cd yaml
-          sed -e "s/version:/version: ${{ inputs.connector_version }}/g" \
-           -e "s/name: sap-odata-connector/name: sap-odata-connector-${{ inputs.connector_version }}/g" \
-           -e "s/ZEEBE_CLIENT_CLOUD_CLUSTER-ID/ZEEBE_CLIENT_CLOUD_CLUSTER-ID: ${{ secrets.cluster_id }}/g" \
-           -e "s/ZEEBE_CLIENT_CLOUD_CLIENT-ID/ZEEBE_CLIENT_CLOUD_CLIENT-ID: ${{ secrets.client_id }}/g" \
-           -e "s/ZEEBE_CLIENT_CLOUD_CLIENT-SECRET/ZEEBE_CLIENT_CLOUD_CLIENT-SECRET: ${{ secrets.client_secret }}/g" \
-           -e "s/camunda\/sap-odata-connector/camunda\/sap-odata-connector:${{ inputs.connector_version }}/g" \
-           -e "s/ZEEBE_CLIENT_CLOUD_REGION/ZEEBE_CLIENT_CLOUD_REGION: ${{ inputs.region }}/g" \
-           mtad.yaml.example
+          sed -e "s/version:/version: ${{ inputs.connector_version }}/g" -e "s/name: sap-odata-connector/name: sap-odata-connector-${{ inputs.connector_version }}/g" -e "s/ZEEBE_CLIENT_CLOUD_CLUSTER-ID/ZEEBE_CLIENT_CLOUD_CLUSTER-ID: ${{ secrets.cluster_id }}/g" -e "s/ZEEBE_CLIENT_CLOUD_CLIENT-ID/ZEEBE_CLIENT_CLOUD_CLIENT-ID: ${{ secrets.client_id }}/g" -e "s/ZEEBE_CLIENT_CLOUD_CLIENT-SECRET/ZEEBE_CLIENT_CLOUD_CLIENT-SECRET: ${{ secrets.client_secret }}/g" -e "s/camunda\/sap-odata-connector/camunda\/sap-odata-connector:${{ inputs.connector_version }}/g" -e "s/ZEEBE_CLIENT_CLOUD_REGION/ZEEBE_CLIENT_CLOUD_REGION: ${{ inputs.region }}/g" mtad.yaml.example
           mv mtad.yaml.example mtad.yaml
           cd ..
       - name: check substitution result
         run: cat yaml/mtad.yaml
 
   deploy:
+    needs: mtad-yaml
     runs-on: ubuntu-latest
     container:
       image: cloudfoundry/cli:latest
