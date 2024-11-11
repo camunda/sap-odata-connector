@@ -51,10 +51,10 @@ jobs:
           cd yaml
           sed -i -e "s/<app-version>/${{ inputs.connector_version }}/g" \
           -e "s/name: sap-odata-connector/name: sap-odata-connector-${{ inputs.connector_version }}/g" \
-          -e "s/<your-cluster-id>/${{ secrets.cluster_id }}/g" \
-          -e "s/<cluster-id>/${{ secrets.cluster_id }}/g" \
-          -e "s/<client-id-credential-from-api-client>/${{ secrets.client_id }}/g" \
-          -e "s/<client-secret-credential-from-api-client>/${{ secrets.client_secret }}/g" \
+          -e "s/<your-cluster-id>/${{ secrets.C85_CLUSTER_ID }}/g" \
+          -e "s/<cluster-id>/${{ secrets.C85_CLUSTER_ID }}/g" \ 
+          -e "s/<client-id-credential-from-api-client>/${{ secrets.C85_CLIENT_ID }}/g" \
+          -e "s/<client-secret-credential-from-api-client>/${{ secrets.C85_CLIENT_SECRET }}/g" \
           -e "s/<your-cluster-region>/${{ inputs.region }}/g" \
           -e "s/<region>/${{ inputs.region }}/g" \
           -e "s/camunda\/sap-odata-connector.*/camunda\/sap-odata-connector:${{ inputs.connector_version }}/g" \
@@ -90,5 +90,5 @@ jobs:
         run: |
           cf install-plugin multiapps -f
           ls -al .
-          cf login -a ${{ inputs.cf_api_endpoint }} -u ${{ secrets.cf_user }} -p ${{ secrets.cf_password }} -o ${{ inputs.cf_org }} -s ${{ inputs.cf_space }}
+          cf login -a ${{ inputs.cf_api_endpoint }} -u ${{ secrets.CF_USER }} -p ${{ secrets.CF_PASSWORD }} -o ${{ inputs.cf_org }} -s ${{ inputs.cf_space }}
           cf deploy ./ -f
