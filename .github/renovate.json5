@@ -14,13 +14,10 @@
       "rebaseWhen": "auto"
     },
     {
-      "description": "skip any release actions on main for auto-dep merges",
-      "matchBaseBranches": ["/main/", "/^release/.*/"],
-      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
-      "commitBody": "[skip ci]"
-    },
-    {
       "matchManagers": ["github-actions"],
+      "description": "skip any release actions on main for auto-dep merges",
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "commitBody": "[skip ci]",
       "automerge": false
     },
     {

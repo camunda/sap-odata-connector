@@ -19,18 +19,6 @@ on:
         required: true
         type: string
 
-    secrets:
-      cluster_id:
-        required: true
-      client_id:
-        required: true
-      client_secret:
-        required: true
-      cf_user:
-        required: true
-      cf_password:
-        required: true
-
 jobs:
   extract-version:
     runs-on: ubuntu-latest
