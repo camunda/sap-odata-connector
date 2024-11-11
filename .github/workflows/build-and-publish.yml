@@ -35,7 +35,7 @@ jobs:
     needs: build-and-test
     runs-on: ubuntu-latest
     outputs:
-      VERSION: ${{ steps.build-and-publish.outputs.VERSION }}
+      VERSION: ${{ steps.extract_version.outputs.VERSION }}
 
     steps:
       - uses: actions/checkout@v4
