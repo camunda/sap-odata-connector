@@ -21,7 +21,6 @@ on:
 
 jobs:
   build-and-test:
-    if: ${{ false }} # tmp disable
     uses: ./.github/workflows/reusable-build-and-test.yml
     with:
       java-version: '21'
@@ -70,6 +69,7 @@ jobs:
 
       - name: extract release version
         id: extract_version
+        # this extracts <version> from pom.xml into env.VERSION
         run: echo "VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
 
       - name: sap-odata-connector - build and push docker image tag ${{ env.VERSION }}
@@ -81,6 +81,6 @@ jobs:
           push: true
           tags: |
             camunda/sap-odata-connector:${{ env.VERSION }}
-            camunda/sap-odata-connector:latest
+#            camunda/sap-odata-connector:latest
           platforms: linux/amd64
           provenance: false
