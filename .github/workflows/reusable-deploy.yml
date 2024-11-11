@@ -97,7 +97,7 @@ jobs:
       - name: deploy ${{inputs.connector_version}} to BTP
         run: |
           cf install-plugin multiapps -f
-          cd /tmp/yaml
-          ls -al /tmp/yaml
+          ls -al .
+          cd yaml
           cf login -a ${{ inputs.cf_api_endpoint }} -u ${{ secrets.cf_user }} -p ${{ secrets.cf_password }} -o ${{ inputs.cf_org }} -s ${{ inputs.cf_space }}
           cf deploy ./ -f
