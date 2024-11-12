@@ -98,6 +98,13 @@ public class ODataConnector implements OutboundConnectorFunction {
     }
   }
 
+  /**
+   * Build the response object based on the OData version.
+   *
+   * @param oDataResponse what execute(httpClient) returned
+   * @param oDataVersion enum: V2, V4
+   * @return a ODataConnectorResponse or ODataConnectorResponseWithCount object
+   */
   private Record buildResponse(ODataRequestResult oDataResponse, ODataVersion oDataVersion) {
     JsonNode responseBody = readResponseBody(oDataResponse);
     int statusCode = oDataResponse.getHttpResponse().getStatusLine().getStatusCode();
