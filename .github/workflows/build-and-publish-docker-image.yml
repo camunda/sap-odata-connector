@@ -1,18 +1,21 @@
-name: build-and-publish-docker-image
+name: build-and-publish
+# - docker-image
+# - deployment to BTP
 
 on:
   push:
     branches:
-      - release/8.7
+      - main
     paths:
       # relevant
+      - .github/**
       - element-templates/**
       - src/**
-      - Dockerfile/**
-      - pom.xml/**
+      - Dockerfile
+      - pom.xml
       # irrelevant
-      - "!github/**"
-      - "!idea/**"
+      #      - "!.github/**"
+      - "!.idea/**"
       - "!cap-bookshop/**"
       - "!examples/**"
       - "!*.java-version"
@@ -32,6 +35,8 @@ jobs:
   build-and-publish:
     needs: build-and-test
     runs-on: ubuntu-latest
+    outputs:
+      VERSION: ${{ steps.scope_version.outputs.VERSION }}
 
     steps:
       - uses: actions/checkout@v4
@@ -70,7 +75,12 @@ jobs:
 
       - name: extract release version
         id: extract_version
+        # this extracts <version> from pom.xml into env.VERSION
         run: echo "VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
+
+      - name: scope the version into an output
+        id: scope_version
+        run: echo "VERSION=${{ env.VERSION }}" >> "$GITHUB_OUTPUT"
 
       - name: sap-odata-connector - build and push docker image tag ${{ env.VERSION }}
         uses: docker/build-push-action@v6
@@ -81,6 +91,17 @@ jobs:
           push: true
           tags: |
             camunda/sap-odata-connector:${{ env.VERSION }}
-            camunda/sap-odata-connector:latest
+          #            camunda/sap-odata-connector:latest
           platforms: linux/amd64
           provenance: false
+
+  deploy-to-btp:
+    needs: build-and-publish
+    uses: ./.github/workflows/reusable-deploy.yml
+    with:
+      connector_version: ${{ needs.build-and-publish.outputs.VERSION }}
+      region: 'bru-2'
+      cf_api_endpoint: 'https://api.cf.eu10-004.hana.ondemand.com'
+      cf_org: camunda-dev
+      cf_space: sap-integration
+    secrets: inherit
