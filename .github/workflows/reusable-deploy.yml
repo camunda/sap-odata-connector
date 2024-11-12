@@ -67,7 +67,7 @@ jobs:
       # no worries: gh marks secrets with *** also when cat'ing files
       - name: check substitution result
         run: |
-          ls -al .
+#          ls -al .
           ls -al yaml/mtad.yaml
           cat yaml/mtad.yaml
 
