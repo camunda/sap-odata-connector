@@ -35,7 +35,7 @@ jobs:
     needs: build-and-test
     runs-on: ubuntu-latest
     outputs:
-      VERSION: ${{ steps.extract_version.outputs.VERSION }}
+      VERSION: ${{ steps.scope_version.outputs.VERSION }}
 
     steps:
       - uses: actions/checkout@v4
@@ -76,6 +76,10 @@ jobs:
         id: extract_version
         # this extracts <version> from pom.xml into env.VERSION
         run: echo "VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
+
+      - name: scope the version into an output
+        id: scope_version
+        run: echo "VERSION=${{ env.VERSION }}" >> "$GITHUB_OUTPUT"
 
       - name: sap-odata-connector - build and push docker image tag ${{ env.VERSION }}
         uses: docker/build-push-action@v6
