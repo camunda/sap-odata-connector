@@ -16,7 +16,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
     <!-- connector SDK version -->
-    <version.connectors>8.6.4</version.connectors>
+    <version.connectors>8.6.2</version.connectors>
 
     <!-- external libraries -->
     <version.assertj>3.25.3</version.assertj>
@@ -36,6 +36,37 @@
     <plugin.version.maven-surefire-plugin>3.2.5</plugin.version.maven-surefire-plugin>
     <plugin.version.spotless-maven-plugin>2.43.0</plugin.version.spotless-maven-plugin>
   </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <version>3.3.5</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.junit</groupId>
+        <artifactId>junit-bom</artifactId>
+        <version>${version.junit-jupiter}</version>
+        <scope>test</scope>
+        <type>pom</type>
+      </dependency>
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter</artifactId>
+        <version>${version.junit-jupiter}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-params</artifactId>
+        <version>${version.junit-jupiter}</version>
+        <scope>test</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
   <dependencies>
     <!-- connector-specific -->
@@ -107,11 +138,16 @@
       <scope>test</scope>
     </dependency>
 
+<!--    <dependency>-->
+<!--      <groupId>org.slf4j</groupId>-->
+<!--      <artifactId>slf4j-jdk14</artifactId>-->
+<!--      <version>${version.slf4j}</version>-->
+<!--      <scope>test</scope>-->
+<!--    </dependency>-->
+
     <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-jdk14</artifactId>
-      <version>${version.slf4j}</version>
-      <scope>test</scope>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
     </dependency>
 
     <!-- for testing connectors locally in bundle with runtime -->
@@ -122,31 +158,79 @@
       <scope>test</scope>
       <exclusions>
         <exclusion>
+          <groupId>org.junit.jupiter</groupId>
+          <artifactId>junit-jupiter-api</artifactId>
+        </exclusion>
+        <exclusion>
           <groupId>ch.qos.logback</groupId>
           <artifactId>logback-classic</artifactId>
+        </exclusion>
+        <exclusion>
+          <artifactId>log4j-to-slf4j</artifactId>
+          <groupId>org.apache.logging.log4j</groupId>
         </exclusion>
       </exclusions>
     </dependency>
 
+<!--    <dependency>-->
+<!--      <groupId>io.camunda</groupId>-->
+<!--      <artifactId>camunda-process-test-spring</artifactId>-->
+<!--      <version>8.6.5</version>-->
+<!--      <scope>test</scope>-->
+<!--    </dependency>-->
+
     <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-test</artifactId>
-      <version>3.3.5</version>
+      <groupId>io.camunda.connector</groupId>
+      <artifactId>connectors-e2e-test-base</artifactId>
+      <version>8.6.0-alpha3.1</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
           <groupId>ch.qos.logback</groupId>
           <artifactId>logback-classic</artifactId>
         </exclusion>
+        <exclusion>
+          <artifactId>log4j-to-slf4j</artifactId>
+          <groupId>org.apache.logging.log4j</groupId>
+        </exclusion>
       </exclusions>
     </dependency>
 
-    <dependency>
-      <groupId>io.camunda</groupId>
-      <artifactId>camunda-process-test-spring</artifactId>
-      <scope>test</scope>
-      <version>8.6.5</version>
-    </dependency>
+
+
+<!--    <dependency>-->
+<!--      <groupId>org.springframework.boot</groupId>-->
+<!--      <artifactId>spring-boot-starter-test</artifactId>-->
+<!--      <version>3.3.5</version>-->
+<!--      <scope>test</scope>-->
+<!--      <exclusions>-->
+<!--        <exclusion>-->
+<!--          <groupId>ch.qos.logback</groupId>-->
+<!--          <artifactId>logback-classic</artifactId>-->
+<!--        </exclusion>-->
+<!--        <exclusion>-->
+<!--          <artifactId>log4j-to-slf4j</artifactId>-->
+<!--          <groupId>org.apache.logging.log4j</groupId>-->
+<!--        </exclusion>-->
+<!--      </exclusions>-->
+<!--    </dependency>-->
+
+<!--    <dependency>-->
+<!--      <groupId>io.camunda</groupId>-->
+<!--      <artifactId>camunda-process-test-spring</artifactId>-->
+<!--      <scope>test</scope>-->
+<!--      <version>8.6.5</version>-->
+<!--      <exclusions>-->
+<!--        <exclusion>-->
+<!--          <groupId>ch.qos.logback</groupId>-->
+<!--          <artifactId>logback-classic</artifactId>-->
+<!--        </exclusion>-->
+<!--        <exclusion>-->
+<!--          <artifactId>log4j-to-slf4j</artifactId>-->
+<!--          <groupId>org.apache.logging.log4j</groupId>-->
+<!--        </exclusion>-->
+<!--      </exclusions>-->
+<!--    </dependency>-->
   </dependencies>
 
   <build>
