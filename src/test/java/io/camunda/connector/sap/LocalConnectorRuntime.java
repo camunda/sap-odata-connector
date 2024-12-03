@@ -6,11 +6,11 @@ import org.springframework.core.env.Environment;
 
 @SpringBootApplication
 public class LocalConnectorRuntime {
-    private final Environment environment;
+  private final Environment environment;
 
-    public LocalConnectorRuntime(Environment environment) {
-      this.environment = environment;
-    }
+  public LocalConnectorRuntime(Environment environment) {
+    this.environment = environment;
+  }
 
   public static void main(String[] args) {
     SpringApplication.run(LocalConnectorRuntime.class, args);
