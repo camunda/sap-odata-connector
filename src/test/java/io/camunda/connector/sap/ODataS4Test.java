@@ -1,5 +1,9 @@
 package io.camunda.connector.sap;
 
+import static io.camunda.connector.sap.model.ODataConnectorRequest.ODataVersion.V4;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
+
 import io.camunda.connector.sap.helper.CustomODataRequestCreate;
 import io.camunda.connector.sap.helper.CustomODataRequestDelete;
 import io.camunda.connector.sap.helper.CustomODataRequestRead;
@@ -8,19 +12,14 @@ import io.camunda.connector.sap.model.ODataConnectorRequest;
 import io.camunda.connector.sap.model.ODataConnectorResponse;
 import io.camunda.connector.sap.model.ODataConnectorResponseWithCount;
 import io.camunda.connector.test.outbound.OutboundConnectorContextBuilder;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.FieldSource;
 import org.springframework.test.context.junit.jupiter.EnabledIf;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
-import static io.camunda.connector.sap.model.ODataConnectorRequest.ODataVersion.V4;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 public class ODataS4Test {

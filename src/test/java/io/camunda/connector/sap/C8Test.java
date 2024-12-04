@@ -1,10 +1,14 @@
 package io.camunda.connector.sap;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import com.sap.cloud.sdk.cloudplatform.connectivity.AuthenticationType;
 import com.sap.cloud.sdk.cloudplatform.connectivity.DefaultHttpDestination;
 import com.sap.cloud.sdk.cloudplatform.connectivity.DestinationAccessor;
 import io.camunda.zeebe.client.ZeebeClient;
 import io.vavr.control.Try;
+import java.util.ArrayList;
+import java.util.Map;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -12,11 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.env.Environment;
 import org.springframework.test.context.junit.jupiter.EnabledIf;
-
-import java.util.ArrayList;
-import java.util.Map;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(classes = LocalConnectorRuntime.class)
 @EnabledIf(
