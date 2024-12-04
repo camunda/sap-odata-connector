@@ -62,3 +62,16 @@ $> cds run
 ```
 
 After the mockserver is up and running, `mvn test` can be run in the root directory to execute the unit tests.
+
+## Release cutting
+
+- create release branch: `release/8.x`
+- adjust version in `/src/pom.xml`
+- in `.github/workflows/build-and-publish-docker-image.yml`:
+    - adjust `on.push.branches` to the release branch
+    - adjust `CAMUNDA_CONNECTORS_VERSION`
+- in `.github/workflows/build-and-test.yml`:
+    - adjust `on.pull_request.branches` to the release branch
+- in `.github/workflows/reusable-deploy.yml`:
+    - adjust `secrets.C8x_...` to the target cluster version (and eventually create those gh secrets)
+- adjust `baseBranches` in `.github/renovate.json5`
