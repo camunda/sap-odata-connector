@@ -50,6 +50,9 @@ jobs:
       #        run: echo $destinations
       - name: create application-${{ inputs.spring_profile }}.properties
         run: |
+          echo "current directory: $(pwd)"
+          echo "content of current directory: $(ls -al)"
+          
           touch ./src/test/resources/application-${{ inputs.spring_profile }}.properties
           {
             echo "camunda.client.mode=saas"
@@ -66,13 +69,20 @@ jobs:
             echo "logging.level.com.sap.cloud.sdk=DEBUG"
           } > ./src/test/resources/application-${{ inputs.spring_profile }}.properties
 
-      - name: build and test with maven
+      - name: unit tests
         env:
           destinations: ${{ secrets.DESTINATIONS }}
         run: |
-          # unit tests
           mvn ${{ inputs.maven-options }} test
-          # against S/4
+          
+      - name: integration tests (against S/4)
+        env:
+          destinations: ${{ secrets.DESTINATIONS }}
+        run: |
           SPRING_PROFILES_ACTIVE=integration-s4 mvn ${{ inputs.maven-options }} test
-          # e2e against c8
+
+      - name: e2e tests (against c8)
+        env:
+          destinations: ${{ secrets.DESTINATIONS }}
+        run: |
           SPRING_PROFILES_ACTIVE=integration-c86-saas mvn ${{ inputs.maven-options }} test
