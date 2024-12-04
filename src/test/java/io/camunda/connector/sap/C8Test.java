@@ -72,11 +72,11 @@ public class C8Test {
 
     ArrayList result_v4 =
         (ArrayList) processInstanceResult.getVariablesAsMap().get("result_get_v4_expr");
-    assertEquals("Wuthering Heights", ((Map) result_v4.get(0)).get("title"));
-    assertEquals(12, ((Map) result_v4.get(0)).get("stock"));
+    assertEquals("Wuthering Heights", ((Map<?, ?>) result_v4.getFirst()).get("title"));
+    assertEquals(12, ((Map<?, ?>) result_v4.getFirst()).get("stock"));
     ArrayList result_v2 =
         (ArrayList) processInstanceResult.getVariablesAsMap().get("result_get_v2_expr");
-    assertEquals("Wuthering Heights", ((Map) result_v2.get(0)).get("title"));
-    assertEquals(12, ((Map) result_v2.get(0)).get("stock"));
+    assertEquals("Wuthering Heights", ((Map<?, ?>) result_v2.getFirst()).get("title"));
+    assertEquals(12, ((Map<?, ?>) result_v2.getFirst()).get("stock"));
   }
 }
