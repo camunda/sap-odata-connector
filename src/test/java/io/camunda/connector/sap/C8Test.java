@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.env.Environment;
-import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit.jupiter.EnabledIf;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -19,20 +19,24 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(classes = LocalConnectorRuntime.class)
-//@TestPropertySource(locations = "classpath:application.properties")
-public class LocalConnectorRuntimeTest {
+@EnabledIf(
+    value =
+        "#{environment.getActiveProfiles().length > 0 && environment.getActiveProfiles()[0].startsWith('integration-c8')}",
+    loadContext = true)
+public class C8Test {
 
   Environment env;
   ZeebeClient zeebeClient;
 
-  LocalConnectorRuntimeTest(@Autowired Environment environment) {
+  C8Test(@Autowired Environment environment) {
     this.env = environment;
-    zeebeClient = ZeebeClient.newCloudClientBuilder()
-        .withClusterId(env.getProperty("camunda.client.cluster-id"))
-        .withClientId(env.getProperty("camunda.client.auth.client-id"))
-        .withClientSecret(env.getProperty("camunda.client.auth.client-secret"))
-        .withRegion(env.getProperty("camunda.client.region"))
-        .build();
+    zeebeClient =
+        ZeebeClient.newCloudClientBuilder()
+            .withClusterId(env.getProperty("camunda.client.cluster-id"))
+            .withClientId(env.getProperty("camunda.client.auth.client-id"))
+            .withClientSecret(env.getProperty("camunda.client.auth.client-secret"))
+            .withRegion(env.getProperty("camunda.client.region"))
+            .build();
   }
 
   @BeforeAll
@@ -49,25 +53,30 @@ public class LocalConnectorRuntimeTest {
 
   @SneakyThrows
   @Test
-    // gets the books from the local bookshop mockserver
-    // via odata v2 + v4
+  // gets the books from the local bookshop mockserver
+  // via odata v2 + v4
   void get_v2_v4() {
-    zeebeClient.newDeployResourceCommand()
+    zeebeClient
+        .newDeployResourceCommand()
         .addResourceFromClasspath("minimal-mockserver-sample.bpmn")
         .send()
         .join();
 
-    var processInstanceResult = zeebeClient.newCreateInstanceCommand()
-        .bpmnProcessId("minimal-mockserver-sample")
-        .latestVersion()
-        .withResult()
-        .send()
-        .join();
+    var processInstanceResult =
+        zeebeClient
+            .newCreateInstanceCommand()
+            .bpmnProcessId("minimal-mockserver-sample")
+            .latestVersion()
+            .withResult()
+            .send()
+            .join();
 
-    ArrayList result_v4 = (ArrayList) processInstanceResult.getVariablesAsMap().get("result_get_v4_expr");
+    ArrayList result_v4 =
+        (ArrayList) processInstanceResult.getVariablesAsMap().get("result_get_v4_expr");
     assertEquals("Wuthering Heights", ((Map) result_v4.get(0)).get("title"));
     assertEquals(12, ((Map) result_v4.get(0)).get("stock"));
-    ArrayList result_v2 = (ArrayList) processInstanceResult.getVariablesAsMap().get("result_get_v2_expr");
+    ArrayList result_v2 =
+        (ArrayList) processInstanceResult.getVariablesAsMap().get("result_get_v2_expr");
     assertEquals("Wuthering Heights", ((Map) result_v2.get(0)).get("title"));
     assertEquals(12, ((Map) result_v2.get(0)).get("stock"));
   }
