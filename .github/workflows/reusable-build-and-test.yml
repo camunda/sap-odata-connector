@@ -52,10 +52,10 @@ jobs:
           distribution: ${{ inputs.distribution }}
           cache: maven
 
-#      - name: test env var availability
-#        env:
-#          destinations: ${{ secrets.DESTINATIONS }}
-#        run: echo $destinations
+      #      - name: test env var availability
+      #        env:
+      #          destinations: ${{ secrets.DESTINATIONS }}
+      #        run: echo $destinations
       - name: create application-${{ inputs.spring_profile }}.properties
         run: |
           touch ./src/test/resources/application-${{ inputs.spring_profile }}.properties
@@ -78,9 +78,9 @@ jobs:
         env:
           destinations: ${{ secrets.DESTINATIONS }}
         run: |
-        # unit tests
+          # unit tests
           mvn ${{ inputs.maven-options }} test
-        # against S/4
+          # against S/4
           SPRING_PROFILES_ACTIVE=integration-s4 mvn ${{ inputs.maven-options }} test
-        # e2e against c8
+          # e2e against c8
           SPRING_PROFILES_ACTIVE=integration-c86-saas mvn ${{ inputs.maven-options }} test
