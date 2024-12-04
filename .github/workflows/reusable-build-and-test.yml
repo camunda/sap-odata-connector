@@ -50,4 +50,10 @@ jobs:
       - name: build and test with maven
         env:
           destinations: ${{ secrets.DESTINATIONS }}
-        run: mvn -B ${{ inputs.maven-options }} --file pom.xml
+        run: |
+        # unit tests
+          mvn ${{ inputs.maven-options }} test
+        # against S/4
+          SPRING_PROFILES_ACTIVE=integration-s4 mvn ${{ inputs.maven-options }} test
+        # e2e against c8
+          SPRING_PROFILES_ACTIVE=integration-c86-saas mvn ${{ inputs.maven-options }} test
