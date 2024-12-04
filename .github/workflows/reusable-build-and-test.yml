@@ -14,14 +14,6 @@ on:
         type: string
       spring_profile:
         type: string
-      CLUSTER_ID:
-        type: string
-      CLIENT_ID:
-        type: string
-      CLIENT_SECRET:
-        type: string
-      REGION:
-        type: string
 
 jobs:
   build-and-test:
@@ -62,10 +54,10 @@ jobs:
           {
             echo "camunda.client.mode=saas"
 
-            echo "camunda.client.auth.client-id=${{ inputs.CLIENT_ID }}"
-            echo "camunda.client.auth.client-secret=${{ inputs.CLIENT_SECRET }}"
-            echo "camunda.client.cluster-id=${{ inputs.CLUSTER_ID }}"
-            echo "camunda.client.region=${{ inputs.REGION }}"
+            echo "camunda.client.auth.client-id=${{ secrets.C86_CLIENT_ID }}"
+            echo "camunda.client.auth.client-secret=${{ secrets.C86_CLIENT_SECRET }}"
+            echo "camunda.client.cluster-id=${{ secrets.C86_CLUSTER_ID }}"
+            echo "camunda.client.region=${{ secrets.C86_REGION }}"
 
             echo "camunda.client.operate.enabled=false"
             echo "camunda.connector.polling.enabled=false"

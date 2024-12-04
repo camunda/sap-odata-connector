@@ -14,7 +14,6 @@ on:
       - Dockerfile
       - pom.xml
       # irrelevant
-      #      - "!.github/**"
       - "!.idea/**"
       - "!cap-bookshop/**"
       - "!examples/**"
@@ -30,10 +29,6 @@ jobs:
       distribution: 'temurin'
       maven-options: '-PcheckFormat'
       spring_profile: 'integration-c86-saas'
-      CLUSTER_ID: ${{ secrets.C86_CLUSTER_ID }}
-      CLIENT_ID: ${{ secrets.C86_CLIENT_ID }}
-      CLIENT_SECRET: ${{ secrets.C86_CLIENT_SECRET }}
-      REGION: 'bru-2'
     secrets: inherit
 
   build-and-publish:
