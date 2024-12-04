@@ -12,6 +12,16 @@ on:
       maven-options:
         required: true
         type: string
+      spring_profile:
+        type: string
+      CLUSTER_ID:
+        type: string
+      CLIENT_ID:
+        type: string
+      CLIENT_SECRET:
+        type: string
+      REGION:
+        type: string
 
 jobs:
   build-and-test:
@@ -46,6 +56,23 @@ jobs:
 #        env:
 #          destinations: ${{ secrets.DESTINATIONS }}
 #        run: echo $destinations
+      - name: create application-${{ inputs.spring_profile }}.properties
+        run: |
+          touch src/test/resources/application-${{ inputs.spring_profile }}.properties
+          {
+            echo "camunda.client.mode=saas"
+
+            echo "camunda.client.auth.client-id=${{ inputs.CLIENT_ID }}"
+            echo "camunda.client.auth.client-secret=${{ inputs.CLIENT_SECRET }}"
+            echo "camunda.client.cluster-id=${{ inputs.CLUSTER_ID }}"
+            echo "camunda.client.region=${{ inputs.REGION }}"
+
+            echo "camunda.client.operate.enabled=false"
+            echo "camunda.connector.polling.enabled=false"
+            echo "spring.main.allow-bean-definition-overriding=true"
+            echo "logging.level.io.camunda.connector.sap=DEBUG"
+            echo "logging.level.com.sap.cloud.sdk=DEBUG"
+          } > src/test/resources/application-${{ inputs.spring_profile }}.properties
 
       - name: build and test with maven
         env:
