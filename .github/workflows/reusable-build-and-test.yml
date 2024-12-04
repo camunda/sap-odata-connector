@@ -58,7 +58,7 @@ jobs:
 #        run: echo $destinations
       - name: create application-${{ inputs.spring_profile }}.properties
         run: |
-          touch src/test/resources/application-${{ inputs.spring_profile }}.properties
+          touch ./src/test/resources/application-${{ inputs.spring_profile }}.properties
           {
             echo "camunda.client.mode=saas"
 
@@ -72,7 +72,7 @@ jobs:
             echo "spring.main.allow-bean-definition-overriding=true"
             echo "logging.level.io.camunda.connector.sap=DEBUG"
             echo "logging.level.com.sap.cloud.sdk=DEBUG"
-          } > src/test/resources/application-${{ inputs.spring_profile }}.properties
+          } > ./src/test/resources/application-${{ inputs.spring_profile }}.properties
 
       - name: build and test with maven
         env:
