@@ -1,8 +1,5 @@
 package io.camunda.connector.sap;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
-
 import com.sap.cloud.sdk.cloudplatform.connectivity.AuthenticationType;
 import com.sap.cloud.sdk.cloudplatform.connectivity.DefaultHttpDestination;
 import com.sap.cloud.sdk.cloudplatform.connectivity.DestinationAccessor;
@@ -12,14 +9,17 @@ import io.camunda.connector.sap.model.ODataConnectorRequest;
 import io.camunda.connector.sap.model.ODataConnectorRequest.HttpMethod.Get;
 import io.camunda.connector.test.outbound.OutboundConnectorContextBuilder;
 import io.vavr.control.Try;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
+import org.springframework.test.context.junit.jupiter.EnabledIf;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+@EnabledIf(
+    value =
+        "#{environment.getActiveProfiles().length == 0 || {'default','unit'}.contains(environment.getActiveProfiles()[0])}",
+    loadContext = true)
 public class ErrorCodesTest {
   @Test
   void destination_error() {

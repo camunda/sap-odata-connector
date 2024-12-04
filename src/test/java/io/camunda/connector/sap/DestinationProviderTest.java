@@ -1,9 +1,9 @@
 package io.camunda.connector.sap;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
-import com.sap.cloud.sdk.cloudplatform.connectivity.*;
+import com.sap.cloud.sdk.cloudplatform.connectivity.DefaultHttpDestination;
+import com.sap.cloud.sdk.cloudplatform.connectivity.Destination;
+import com.sap.cloud.sdk.cloudplatform.connectivity.DestinationAccessor;
+import com.sap.cloud.sdk.cloudplatform.connectivity.DestinationType;
 import io.camunda.connector.api.error.ConnectorException;
 import io.camunda.connector.sap.model.ErrorCodes;
 import io.vavr.control.Try;
@@ -15,9 +15,18 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.context.junit.jupiter.EnabledIf;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @ExtendWith(MockitoExtension.class)
+@EnabledIf(
+    value =
+        "#{environment.getActiveProfiles().length == 0 || {'default','unit'}.contains(environment.getActiveProfiles()[0])}",
+    loadContext = true)
 public class DestinationProviderTest {
 
   @Mock private Destination mockDestination;

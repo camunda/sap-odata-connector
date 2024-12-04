@@ -28,8 +28,13 @@ import org.junit.jupiter.api.parallel.ResourceLock;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.FieldSource;
+import org.springframework.test.context.junit.jupiter.EnabledIf;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+@EnabledIf(
+    value =
+        "#{environment.getActiveProfiles().length == 0 || {'default', 'unit'}.contains(environment.getActiveProfiles()[0])}",
+    loadContext = true)
 public class ODataStandardTest {
 
   String tpl_Destination =
