@@ -21,7 +21,8 @@
     <!-- external libraries -->
     <version.assertj>3.25.3</version.assertj>
     <version.junit-jupiter>5.11.3</version.junit-jupiter>
-    <version.mockito>5.11.0</version.mockito>
+    <version.junit-platform>1.11.3</version.junit-platform>
+    <version.mockito>5.14.2</version.mockito>
     <version.slf4j>2.0.16</version.slf4j>
     <version.cloud-sdk>5.10.0</version.cloud-sdk>
 
@@ -63,6 +64,24 @@
         <groupId>org.junit.jupiter</groupId>
         <artifactId>junit-jupiter-params</artifactId>
         <version>${version.junit-jupiter}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-engine</artifactId>
+        <version>${version.junit-jupiter}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-api</artifactId>
+        <version>${version.junit-jupiter}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.junit.platform</groupId>
+        <artifactId>junit-platform-commons</artifactId>
+        <version>${version.junit-platform}</version>
         <scope>test</scope>
       </dependency>
     </dependencies>
@@ -117,12 +136,12 @@
       <scope>test</scope>
     </dependency>
 
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter</artifactId>
-      <version>${version.junit-jupiter}</version>
-      <scope>test</scope>
-    </dependency>
+<!--    <dependency>-->
+<!--      <groupId>org.junit.jupiter</groupId>-->
+<!--      <artifactId>junit-jupiter</artifactId>-->
+<!--      <version>${version.junit-jupiter}</version>-->
+<!--      <scope>test</scope>-->
+<!--    </dependency>-->
 
     <dependency>
       <groupId>org.mockito</groupId>
@@ -138,12 +157,12 @@
       <scope>test</scope>
     </dependency>
 
-<!--    <dependency>-->
-<!--      <groupId>org.slf4j</groupId>-->
-<!--      <artifactId>slf4j-jdk14</artifactId>-->
-<!--      <version>${version.slf4j}</version>-->
-<!--      <scope>test</scope>-->
-<!--    </dependency>-->
+    <!--    <dependency>-->
+    <!--      <groupId>org.slf4j</groupId>-->
+    <!--      <artifactId>slf4j-jdk14</artifactId>-->
+    <!--      <version>${version.slf4j}</version>-->
+    <!--      <scope>test</scope>-->
+    <!--    </dependency>-->
 
     <dependency>
       <groupId>ch.qos.logback</groupId>
@@ -169,15 +188,23 @@
           <artifactId>log4j-to-slf4j</artifactId>
           <groupId>org.apache.logging.log4j</groupId>
         </exclusion>
+        <exclusion>
+          <groupId>io.camunda.spring</groupId>
+          <artifactId>spring-boot-starter-camunda-test</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-test</artifactId>
+        </exclusion>
       </exclusions>
     </dependency>
 
-<!--    <dependency>-->
-<!--      <groupId>io.camunda</groupId>-->
-<!--      <artifactId>camunda-process-test-spring</artifactId>-->
-<!--      <version>8.6.5</version>-->
-<!--      <scope>test</scope>-->
-<!--    </dependency>-->
+    <!--    <dependency>-->
+    <!--      <groupId>io.camunda</groupId>-->
+    <!--      <artifactId>camunda-process-test-spring</artifactId>-->
+    <!--      <version>8.6.5</version>-->
+    <!--      <scope>test</scope>-->
+    <!--    </dependency>-->
 
     <dependency>
       <groupId>io.camunda.connector</groupId>
@@ -197,40 +224,39 @@
     </dependency>
 
 
+    <!--    <dependency>-->
+    <!--      <groupId>org.springframework.boot</groupId>-->
+    <!--      <artifactId>spring-boot-starter-test</artifactId>-->
+    <!--      <version>3.3.5</version>-->
+    <!--      <scope>test</scope>-->
+    <!--      <exclusions>-->
+    <!--        <exclusion>-->
+    <!--          <groupId>ch.qos.logback</groupId>-->
+    <!--          <artifactId>logback-classic</artifactId>-->
+    <!--        </exclusion>-->
+    <!--        <exclusion>-->
+    <!--          <artifactId>log4j-to-slf4j</artifactId>-->
+    <!--          <groupId>org.apache.logging.log4j</groupId>-->
+    <!--        </exclusion>-->
+    <!--      </exclusions>-->
+    <!--    </dependency>-->
 
-<!--    <dependency>-->
-<!--      <groupId>org.springframework.boot</groupId>-->
-<!--      <artifactId>spring-boot-starter-test</artifactId>-->
-<!--      <version>3.3.5</version>-->
-<!--      <scope>test</scope>-->
-<!--      <exclusions>-->
-<!--        <exclusion>-->
-<!--          <groupId>ch.qos.logback</groupId>-->
-<!--          <artifactId>logback-classic</artifactId>-->
-<!--        </exclusion>-->
-<!--        <exclusion>-->
-<!--          <artifactId>log4j-to-slf4j</artifactId>-->
-<!--          <groupId>org.apache.logging.log4j</groupId>-->
-<!--        </exclusion>-->
-<!--      </exclusions>-->
-<!--    </dependency>-->
-
-<!--    <dependency>-->
-<!--      <groupId>io.camunda</groupId>-->
-<!--      <artifactId>camunda-process-test-spring</artifactId>-->
-<!--      <scope>test</scope>-->
-<!--      <version>8.6.5</version>-->
-<!--      <exclusions>-->
-<!--        <exclusion>-->
-<!--          <groupId>ch.qos.logback</groupId>-->
-<!--          <artifactId>logback-classic</artifactId>-->
-<!--        </exclusion>-->
-<!--        <exclusion>-->
-<!--          <artifactId>log4j-to-slf4j</artifactId>-->
-<!--          <groupId>org.apache.logging.log4j</groupId>-->
-<!--        </exclusion>-->
-<!--      </exclusions>-->
-<!--    </dependency>-->
+    <!--    <dependency>-->
+    <!--      <groupId>io.camunda</groupId>-->
+    <!--      <artifactId>camunda-process-test-spring</artifactId>-->
+    <!--      <scope>test</scope>-->
+    <!--      <version>8.6.5</version>-->
+    <!--      <exclusions>-->
+    <!--        <exclusion>-->
+    <!--          <groupId>ch.qos.logback</groupId>-->
+    <!--          <artifactId>logback-classic</artifactId>-->
+    <!--        </exclusion>-->
+    <!--        <exclusion>-->
+    <!--          <artifactId>log4j-to-slf4j</artifactId>-->
+    <!--          <groupId>org.apache.logging.log4j</groupId>-->
+    <!--        </exclusion>-->
+    <!--      </exclusions>-->
+    <!--    </dependency>-->
   </dependencies>
 
   <build>
@@ -504,7 +530,6 @@
       </snapshots>
     </pluginRepository>
   </pluginRepositories>
-
 
 
 </project>
