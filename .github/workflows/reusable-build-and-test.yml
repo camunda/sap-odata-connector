@@ -53,9 +53,6 @@ jobs:
           echo "current directory: $(pwd)"
           echo "content of current directory: $(ls -al)"
           
-          # so we're sourcing the right c8 saas props for the e2e test
-          rm ./src/test/resources/*.properties 
-          
           touch ./src/test/resources/application-${{ inputs.spring_profile }}.properties
           {
             echo "camunda.client.mode=saas"
@@ -93,4 +90,6 @@ jobs:
         env:
           destinations: ${{ secrets.DESTINATIONS }}
         run: |
+          # so we're sourcing the right c8 saas props for the e2e test
+          rm ./src/test/resources/application.properties 
           SPRING_PROFILES_ACTIVE=integration-c86-saas mvn ${{ inputs.maven-options }} test
