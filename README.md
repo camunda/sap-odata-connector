@@ -13,6 +13,7 @@ Camunda Connector to interact with an SAP S/4 and ECC system via OData v2 + v4.
   - "integration-s4" &rarr; 'ODataS4Test' (only applicable if `destinations` env var is pointing to an actual S/4 system - which is done in the gh action)
   - "integration-c8" + Camunda 8 minor version + {"saas" | "sm" }
      - e.g. "integration-c86-saas" &rarr; activates matching config file (e.g. `src/test/resources/application-integration-c86-saas.yaml`) and
+     - merges it with `application.properties` and
      - runs 'C8Test' pointing to a specific c8 saas or sm cluster
 
 ### OData sample backend

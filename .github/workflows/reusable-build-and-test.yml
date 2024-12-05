@@ -69,6 +69,9 @@ jobs:
             echo "logging.level.com.sap.cloud.sdk=DEBUG"
           } > ./src/test/resources/application-${{ inputs.spring_profile }}.properties
 
+          echo "content of application-${{ inputs.spring_profile }}.properties:"
+          cat ./src/test/resources/application-${{ inputs.spring_profile }}.properties
+
       - name: unit tests
         env:
           destinations: ${{ secrets.DESTINATIONS }}
@@ -85,4 +88,6 @@ jobs:
         env:
           destinations: ${{ secrets.DESTINATIONS }}
         run: |
+          # so we're sourcing the right c8 saas props for the e2e test
+          mv ./src/test/resources/application-${{ inputs.spring_profile }}.properties ./src/test/resources/application.properties 
           SPRING_PROFILES_ACTIVE=integration-c86-saas mvn ${{ inputs.maven-options }} test
