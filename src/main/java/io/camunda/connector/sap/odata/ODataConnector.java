@@ -1,4 +1,4 @@
-package io.camunda.connector.sap;
+package io.camunda.connector.sap.odata;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -18,19 +18,20 @@ import io.camunda.connector.api.json.ConnectorsObjectMapperSupplier;
 import io.camunda.connector.api.outbound.OutboundConnectorContext;
 import io.camunda.connector.api.outbound.OutboundConnectorFunction;
 import io.camunda.connector.generator.java.annotation.ElementTemplate;
-import io.camunda.connector.sap.helper.CustomODataRequestCreate;
-import io.camunda.connector.sap.helper.CustomODataRequestDelete;
-import io.camunda.connector.sap.helper.CustomODataRequestRead;
-import io.camunda.connector.sap.helper.CustomODataRequestUpdate;
-import io.camunda.connector.sap.model.*;
-import io.camunda.connector.sap.model.ODataConnectorRequest.HttpMethod.*;
-import io.camunda.connector.sap.model.ODataConnectorRequest.ODataVersion;
+import io.camunda.connector.sap.odata.helper.CustomODataRequestCreate;
+import io.camunda.connector.sap.odata.helper.CustomODataRequestDelete;
+import io.camunda.connector.sap.odata.helper.CustomODataRequestRead;
+import io.camunda.connector.sap.odata.helper.CustomODataRequestUpdate;
+import io.camunda.connector.sap.odata.model.*;
+import io.camunda.connector.sap.odata.model.ODataConnectorRequest.HttpMethod.*;
+import io.camunda.connector.sap.odata.model.ODataConnectorRequest.ODataVersion;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Optional;
+
 import lombok.Getter;
 import org.apache.http.client.HttpClient;
 import org.slf4j.Logger;

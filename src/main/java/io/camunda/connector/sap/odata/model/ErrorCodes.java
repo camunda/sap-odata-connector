@@ -1,4 +1,4 @@
-package io.camunda.connector.sap.model;
+package io.camunda.connector.sap.odata.model;
 
 public enum ErrorCodes {
   INVALID_PAYLOAD, //> OData v2 + v4 write operations input validation

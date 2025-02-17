@@ -5,7 +5,7 @@
 
   <name>sap-odata-connector</name>
   <description>Camunda SAP OData protocol outbound Connector</description>
-  <groupId>io.camunda.connector.sap</groupId>
+  <groupId>io.camunda.connector.sap.odata</groupId>
   <artifactId>odata</artifactId>
   <packaging>jar</packaging>
   <version>8.6.1</version>
@@ -281,7 +281,7 @@
         <configuration>
           <connectors>
             <connector>
-              <connectorClass>io.camunda.connector.sap.ODataConnector</connectorClass>
+              <connectorClass>io.camunda.connector.sap.odata.ODataConnector</connectorClass>
             </connector>
           </connectors>
         </configuration>
