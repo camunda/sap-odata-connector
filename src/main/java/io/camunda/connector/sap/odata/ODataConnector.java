@@ -44,7 +44,7 @@ import org.slf4j.LoggerFactory;
     type = TYPE)
 @ElementTemplate(
     id = NAME,
-    name = "SAP OData Outbound Connector",
+    name = "SAP OData Connector",
     inputDataClass = ODataConnectorRequest.class,
     version = VERSION,
     description = "This connector allows you to interact with an SAP System via OData v2 + v4",
@@ -57,7 +57,7 @@ import org.slf4j.LoggerFactory;
 public class ODataConnector implements OutboundConnectorFunction {
   public static final String NAME = "SAP_ODATA_CONNECTOR";
   public static final int VERSION = 1;
-  public static final String TYPE = "io.camunda:sap-odata-outbound" + ":" + VERSION;
+  public static final String TYPE = "io.camunda:sap-odata" + ":" + VERSION;
   private static final Logger LOGGER = LoggerFactory.getLogger(ODataConnector.class);
 
   @Getter private ODataRequestExecutable oDataRequest;
