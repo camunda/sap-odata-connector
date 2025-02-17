@@ -70,7 +70,7 @@ public class ODataConnector implements OutboundConnectorFunction {
 
   private Record executeRequest(ODataConnectorRequest request) {
     Destination destination = buildDestination(request.destination());
-    LOGGER.debug("Destination: {}", destination.toString());
+    LOGGER.debug("Destination: {}", destination);
     HttpClient httpClient = HttpClientAccessor.getHttpClient(destination);
 
     this.oDataRequest = buildRequest(request);
