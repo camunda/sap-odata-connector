@@ -1,16 +1,16 @@
-package io.camunda.connector.sap;
+package io.camunda.connector.sap.odata;
 
-import static io.camunda.connector.sap.model.ODataConnectorRequest.ODataVersion.V4;
+import static io.camunda.connector.sap.odata.model.ODataConnectorRequest.ODataVersion.V4;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
-import io.camunda.connector.sap.helper.CustomODataRequestCreate;
-import io.camunda.connector.sap.helper.CustomODataRequestDelete;
-import io.camunda.connector.sap.helper.CustomODataRequestRead;
-import io.camunda.connector.sap.helper.CustomODataRequestUpdate;
-import io.camunda.connector.sap.model.ODataConnectorRequest;
-import io.camunda.connector.sap.model.ODataConnectorResponse;
-import io.camunda.connector.sap.model.ODataConnectorResponseWithCount;
+import io.camunda.connector.sap.odata.helper.CustomODataRequestCreate;
+import io.camunda.connector.sap.odata.helper.CustomODataRequestDelete;
+import io.camunda.connector.sap.odata.helper.CustomODataRequestRead;
+import io.camunda.connector.sap.odata.helper.CustomODataRequestUpdate;
+import io.camunda.connector.sap.odata.model.ODataConnectorRequest;
+import io.camunda.connector.sap.odata.model.ODataConnectorResponse;
+import io.camunda.connector.sap.odata.model.ODataConnectorResponseWithCount;
 import io.camunda.connector.test.outbound.OutboundConnectorContextBuilder;
 import java.util.Arrays;
 import java.util.List;

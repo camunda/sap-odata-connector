@@ -1,10 +1,10 @@
-package io.camunda.connector.sap;
+package io.camunda.connector.sap.odata;
 
 import com.sap.cloud.sdk.cloudplatform.connectivity.Destination;
 import com.sap.cloud.sdk.cloudplatform.connectivity.DestinationAccessor;
 import com.sap.cloud.sdk.cloudplatform.connectivity.DestinationType;
 import io.camunda.connector.api.error.ConnectorException;
-import io.camunda.connector.sap.model.ErrorCodes;
+import io.camunda.connector.sap.odata.model.ErrorCodes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

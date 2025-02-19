@@ -1,4 +1,4 @@
-package io.camunda.connector.sap.helper;
+package io.camunda.connector.sap.odata.helper;
 
 import com.sap.cloud.sdk.datamodel.odata.client.ODataProtocol;
 import com.sap.cloud.sdk.datamodel.odata.client.request.ODataRequestRead;

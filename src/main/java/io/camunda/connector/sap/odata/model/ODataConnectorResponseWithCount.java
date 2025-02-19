@@ -1,4 +1,4 @@
-package io.camunda.connector.sap.model;
+package io.camunda.connector.sap.odata.model;
 
 import com.fasterxml.jackson.databind.JsonNode;
 

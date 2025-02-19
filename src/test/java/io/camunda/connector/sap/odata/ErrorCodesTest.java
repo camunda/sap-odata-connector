@@ -1,4 +1,4 @@
-package io.camunda.connector.sap;
+package io.camunda.connector.sap.odata;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -7,9 +7,9 @@ import com.sap.cloud.sdk.cloudplatform.connectivity.AuthenticationType;
 import com.sap.cloud.sdk.cloudplatform.connectivity.DefaultHttpDestination;
 import com.sap.cloud.sdk.cloudplatform.connectivity.DestinationAccessor;
 import io.camunda.connector.api.error.ConnectorException;
-import io.camunda.connector.sap.model.ErrorCodes;
-import io.camunda.connector.sap.model.ODataConnectorRequest;
-import io.camunda.connector.sap.model.ODataConnectorRequest.HttpMethod.Get;
+import io.camunda.connector.sap.odata.model.ErrorCodes;
+import io.camunda.connector.sap.odata.model.ODataConnectorRequest;
+import io.camunda.connector.sap.odata.model.ODataConnectorRequest.HttpMethod.Get;
 import io.camunda.connector.test.outbound.OutboundConnectorContextBuilder;
 import io.vavr.control.Try;
 import org.junit.jupiter.api.AfterEach;
