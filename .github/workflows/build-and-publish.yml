@@ -1,26 +1,12 @@
 name: build-and-publish
 # - docker-image
-# - deployment to BTP
 
 on:
   push:
     branches:
       - release/8.5
     paths:
-      # relevant
-      - .github/**
-      - element-templates/**
-      - src/**
-      - Dockerfile
       - pom.xml
-      # irrelevant
-      #      - "!.github/**"
-      - "!.idea/**"
-      - "!cap-bookshop/**"
-      - "!examples/**"
-      - "!*.java-version"
-      - "!*.example"
-      - "!*.md"
 
 jobs:
   determine-connector-version:
