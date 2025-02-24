@@ -1,4 +1,6 @@
-package io.camunda.connector.sap;
+package io.camunda.connector.sap.odata;
+
+import static io.camunda.connector.sap.odata.ODataConnector.*;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -18,13 +20,13 @@ import io.camunda.connector.api.json.ConnectorsObjectMapperSupplier;
 import io.camunda.connector.api.outbound.OutboundConnectorContext;
 import io.camunda.connector.api.outbound.OutboundConnectorFunction;
 import io.camunda.connector.generator.java.annotation.ElementTemplate;
-import io.camunda.connector.sap.helper.CustomODataRequestCreate;
-import io.camunda.connector.sap.helper.CustomODataRequestDelete;
-import io.camunda.connector.sap.helper.CustomODataRequestRead;
-import io.camunda.connector.sap.helper.CustomODataRequestUpdate;
-import io.camunda.connector.sap.model.*;
-import io.camunda.connector.sap.model.ODataConnectorRequest.HttpMethod.*;
-import io.camunda.connector.sap.model.ODataConnectorRequest.ODataVersion;
+import io.camunda.connector.sap.odata.helper.CustomODataRequestCreate;
+import io.camunda.connector.sap.odata.helper.CustomODataRequestDelete;
+import io.camunda.connector.sap.odata.helper.CustomODataRequestRead;
+import io.camunda.connector.sap.odata.helper.CustomODataRequestUpdate;
+import io.camunda.connector.sap.odata.model.*;
+import io.camunda.connector.sap.odata.model.ODataConnectorRequest.HttpMethod.*;
+import io.camunda.connector.sap.odata.model.ODataConnectorRequest.ODataVersion;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
@@ -37,22 +39,25 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @OutboundConnector(
-    name = "SAPOUTBOUNDCONNECTOR",
+    name = NAME,
     inputVariables = {},
-    type = "io.camunda:sap:odata:outbound:")
+    type = TYPE)
 @ElementTemplate(
-    id = "io.camunda.connector.sap.odata.outbound.v1",
+    id = NAME,
     name = "SAP OData Connector",
-    version = 1,
+    inputDataClass = ODataConnectorRequest.class,
+    version = VERSION,
+    description = "This connector allows you to interact with an SAP System via OData v2 + v4",
     icon = "sap-odata-connector-outbound.svg",
     documentationRef = "https://docs.camunda.io/xxx",
-    inputDataClass = ODataConnectorRequest.class,
     propertyGroups = {
       @ElementTemplate.PropertyGroup(id = "sap", label = "SAP"),
       @ElementTemplate.PropertyGroup(id = "advanced", label = "Advanced")
     })
 public class ODataConnector implements OutboundConnectorFunction {
-
+  public static final String NAME = "SAP_ODATA_CONNECTOR";
+  public static final int VERSION = 1;
+  public static final String TYPE = "io.camunda:sap-odata" + ":" + VERSION;
   private static final Logger LOGGER = LoggerFactory.getLogger(ODataConnector.class);
 
   @Getter private ODataRequestExecutable oDataRequest;
@@ -65,7 +70,7 @@ public class ODataConnector implements OutboundConnectorFunction {
 
   private Record executeRequest(ODataConnectorRequest request) {
     Destination destination = buildDestination(request.destination());
-    LOGGER.debug("Destination: {}", destination.toString());
+    LOGGER.debug("Destination: {}", destination);
     HttpClient httpClient = HttpClientAccessor.getHttpClient(destination);
 
     this.oDataRequest = buildRequest(request);

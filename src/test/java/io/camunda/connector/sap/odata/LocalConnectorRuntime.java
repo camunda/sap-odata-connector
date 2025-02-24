@@ -1,4 +1,4 @@
-package io.camunda.connector.sap;
+package io.camunda.connector.sap.odata;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

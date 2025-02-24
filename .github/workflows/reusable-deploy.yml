@@ -53,10 +53,10 @@ jobs:
           cd yaml
           sed -i.bak -e "s/<app-version>/${{ inputs.connector_version }}/g" \
           -e "s/name: sap-odata-connector/name: sap-odata-connector-${{ inputs.connector_version }}/g" \
-          -e "s/<your-cluster-id>/${{ secrets.C87_CLUSTER_ID }}/g" \
-          -e "s/<cluster-id>/${{ secrets.C87_CLUSTER_ID }}/g" \
-          -e "s/<client-id-credential-from-api-client>/${{ secrets.C87_CLIENT_ID }}/g" \
-          -e "s/<client-secret-credential-from-api-client>/${{ secrets.C87_CLIENT_SECRET }}/g" \
+          -e "s/<your-cluster-id>/${{ secrets.C86_CLUSTER_ID }}/g" \
+          -e "s/<cluster-id>/${{ secrets.C86_CLUSTER_ID }}/g" \
+          -e "s/<client-id-credential-from-api-client>/${{ secrets.C86_CLIENT_ID }}/g" \
+          -e "s/<client-secret-credential-from-api-client>/${{ secrets.C86_CLIENT_SECRET }}/g" \
           -e "s/<your-cluster-region>/${{ inputs.region }}/g" \
           -e "s/<region>/${{ inputs.region }}/g" \
           -e "s/camunda\/sap-odata-connector.*/camunda\/sap-odata-connector:${{ inputs.connector_version }}/g" \

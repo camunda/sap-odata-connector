@@ -1,4 +1,4 @@
-package io.camunda.connector.sap;
+package io.camunda.connector.sap.odata;
 
 import static java.util.Map.entry;
 import static java.util.Map.ofEntries;
@@ -9,14 +9,14 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 import com.sap.cloud.sdk.cloudplatform.connectivity.AuthenticationType;
 import com.sap.cloud.sdk.cloudplatform.connectivity.DefaultHttpDestination;
 import com.sap.cloud.sdk.cloudplatform.connectivity.DestinationAccessor;
-import io.camunda.connector.sap.model.ODataConnectorRequest;
-import io.camunda.connector.sap.model.ODataConnectorRequest.HttpMethod.*;
-import io.camunda.connector.sap.model.ODataConnectorRequest.HttpMethod.Get.ODataVersionGet;
-import io.camunda.connector.sap.model.ODataConnectorRequest.HttpMethod.Get.ODataVersionGet.V2;
-import io.camunda.connector.sap.model.ODataConnectorRequest.HttpMethod.Get.ODataVersionGet.V4;
-import io.camunda.connector.sap.model.ODataConnectorRequest.ODataVersion;
-import io.camunda.connector.sap.model.ODataConnectorResponse;
-import io.camunda.connector.sap.model.ODataConnectorResponseWithCount;
+import io.camunda.connector.sap.odata.model.ODataConnectorRequest;
+import io.camunda.connector.sap.odata.model.ODataConnectorRequest.HttpMethod.*;
+import io.camunda.connector.sap.odata.model.ODataConnectorRequest.HttpMethod.Get.ODataVersionGet;
+import io.camunda.connector.sap.odata.model.ODataConnectorRequest.HttpMethod.Get.ODataVersionGet.V2;
+import io.camunda.connector.sap.odata.model.ODataConnectorRequest.HttpMethod.Get.ODataVersionGet.V4;
+import io.camunda.connector.sap.odata.model.ODataConnectorRequest.ODataVersion;
+import io.camunda.connector.sap.odata.model.ODataConnectorResponse;
+import io.camunda.connector.sap.odata.model.ODataConnectorResponseWithCount;
 import io.camunda.connector.test.outbound.OutboundConnectorContextBuilder;
 import io.vavr.control.Try;
 import java.util.Arrays;

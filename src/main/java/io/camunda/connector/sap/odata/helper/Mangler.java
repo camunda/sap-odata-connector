@@ -1,4 +1,4 @@
-package io.camunda.connector.sap.helper;
+package io.camunda.connector.sap.odata.helper;
 
 import java.net.URI;
 

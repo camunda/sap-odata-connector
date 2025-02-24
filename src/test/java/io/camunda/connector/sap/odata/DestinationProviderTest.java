@@ -1,11 +1,11 @@
-package io.camunda.connector.sap;
+package io.camunda.connector.sap.odata;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import com.sap.cloud.sdk.cloudplatform.connectivity.*;
 import io.camunda.connector.api.error.ConnectorException;
-import io.camunda.connector.sap.model.ErrorCodes;
+import io.camunda.connector.sap.odata.model.ErrorCodes;
 import io.vavr.control.Try;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;

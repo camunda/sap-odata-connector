@@ -1,7 +1,8 @@
 {
   "$schema" : "https://unpkg.com/@camunda/zeebe-element-templates-json-schema/resources/schema.json",
   "name" : "SAP OData Connector",
-  "id" : "io.camunda.connector.sap.odata.outbound.v1",
+  "id" : "SAP_ODATA_CONNECTOR",
+  "description" : "This connector allows you to interact with an SAP System via OData v2 + v4",
   "documentationRef" : "https://docs.camunda.io/xxx",
   "version" : 1,
   "category" : {
@@ -29,7 +30,7 @@
     "label" : "Retries"
   } ],
   "properties" : [ {
-    "value" : "io.camunda:sap:odata:outbound:",
+    "value" : "io.camunda:sap-odata:1",
     "binding" : {
       "property" : "type",
       "type" : "zeebe:taskDefinition"
