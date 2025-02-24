@@ -2,8 +2,15 @@
 
 Camunda Connector to interact with an SAP S/4 and ECC system via OData v2 + v4.
 
-## development
+## development hints
 
+- c8.7, either locally or SaaS
+- have a `destinations` environment variable point to 
+  - the local mockserver (see below)
+  - the SAP system, including credentials
+```shell
+export destinations='[{"name":"localMockServer","url":"http://localhost:4004",Authentication:"BasicAuthentication","User":"alice","Password":"admin"}, {"name":"s4","url":"https:<sap-app-server>",Authentication:"BasicAuthentication","User":"<user>","Password":"<pwd>","sap-client":"<mandant>"}]'
+```
 - source code formatting is done with `maven-spotless-plugin` upon build/compile
 
 ### OData sample backend
@@ -11,7 +18,7 @@ Camunda Connector to interact with an SAP S/4 and ECC system via OData v2 + v4.
 There's a Node.js-based OData v2 + v4 backend located in `/cap-bookshop`.
 It is intended for dev-time and mandatory for running the unit tests.
 
-First, get yourself [Node.js >= 20](https://nodejs.org/en/download/package-manager/current).
+First, get [Node.js >= 20](https://nodejs.org/en/download/package-manager/current).
 Then get going via
 
 ```shell
@@ -56,13 +63,14 @@ After the mockserver is up and running, `mvn test` can be run in the root direct
 
 ## Release cutting
 
+:warning: Publishing of docker images and GH releases is only done upon changes to `pom.xml` in a push to this branch.
+
 - create release branch: `release/8.x`
 - adjust version in `/src/pom.xml`
-- in `.github/workflows/build-and-publish-docker-image.yml`:
+- in `.github/workflows/build-and-publish.yml`:
     - adjust `on.push.branches` to the release branch
     - adjust `CAMUNDA_CONNECTORS_VERSION`
 - in `.github/workflows/build-and-test.yml`:
     - adjust `on.pull_request.branches` to the release branch
-- in `.github/workflows/reusable-deploy.yml`:
+- (soon) (adjust secrets in both GH and .yaml to point to an 8.7 cluster)
     - adjust `secrets.C8x_...` to the target cluster version (and eventually create those gh secrets)
-- adjust `baseBranches` in `.github/renovate.json5`
