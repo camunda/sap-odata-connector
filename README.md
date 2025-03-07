@@ -1,6 +1,7 @@
 # Camunda-SAP integration: SAP OData protocol outbound Connector
 
 Camunda Connector to interact with an SAP S/4 and ECC system via OData v2 + v4.
+It is distributed as [a Docker image](https://hub.docker.com/repository/docker/camunda/sap-odata-connector) and needs deployment to BTP.
 
 ## development hints
 
@@ -13,6 +14,10 @@ export destinations='[{"name":"localMockServer","url":"http://localhost:4004",Au
 ```
 - source code formatting is done with `maven-spotless-plugin` upon build/compile
 
+- on PRs
+  - always bump the patch version first in `pom.xml`
+  - don't change major or minor, as they indicate the Camunda 8 release assocation
+  
 ### OData sample backend
 
 There's a Node.js-based OData v2 + v4 backend located in `/cap-bookshop`.
@@ -62,6 +67,8 @@ $> cds run
 After the mockserver is up and running, `mvn test` can be run in the root directory to execute the unit tests.
 
 ## Release cutting
+
+&rarr; will publish a docker image and do a GH release
 
 :warning: Publishing of docker images and GH releases is only done upon changes to `pom.xml` in a push to this branch.
 
