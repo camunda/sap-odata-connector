@@ -1,6 +1,6 @@
 _schema-version: 3.3.0
 ID: sap-odata-connector-<app-version>
-version: <app-version>
+version: "<app-version>"
 modules:
 - name: sap-odata-connector
   type: application
