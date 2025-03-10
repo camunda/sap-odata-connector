@@ -1,0 +1,32 @@
+GET https://{{host}}:{{port}}/sap/opu/odata/sap/API_BUSINESS_PARTNER
+    /A_BusinessPartner('1500063')
+    ?sap-client={{client}}
+Authorization: Basic {{user}} {{password}}
+Accept: application/json
+
+
+###
+HEAD https://{{host}}:{{port}}/sap/opu/odata/sap/API_BUSINESS_PARTNER
+X-CSRF-Token: Fetch
+Authorization: Basic {{user}} {{password}}
+Accept: application/json
+
+> {% client.global.set("csrf_token", response.headers.valueOf("x-csrf-token")); %}
+
+###
+# this works, but saves the reponse in unreadable format
+# also: cURL export seems broken as the corresponding curl command fails with
+# "error validating csrf token"...
+POST https://{{host}}:{{port}}/sap/opu/odata/sap/API_BUSINESS_PARTNER/$batch
+Authorization: Basic {{user}} {{password}}
+X-CSRF-Token: {{csrf_token}}
+Content-Type: multipart/mixed; boundary=batch_36522ad7-fc75-4b56-8c71-56071383e77b
+
+--batch_36522ad7-fc75-4b56-8c71-56071383e77b
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+
+GET A_BusinessPartner('1500062') HTTP/1.1
+
+
+--batch_36522ad7-fc75-4b56-8c71-56071383e77b--
