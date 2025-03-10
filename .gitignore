@@ -60,6 +60,7 @@ build/
 
 # environment
 .env
+*.env.json
 mtad.yaml
 request*.json
 
