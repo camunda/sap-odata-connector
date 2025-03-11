@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import io.camunda.connector.generator.dsl.Property.FeelMode;
+import io.camunda.connector.generator.java.annotation.NestedProperties;
 import io.camunda.connector.generator.java.annotation.TemplateDiscriminatorProperty;
 import io.camunda.connector.generator.java.annotation.TemplateProperty;
 import io.camunda.connector.generator.java.annotation.TemplateSubType;
@@ -41,7 +42,7 @@ public record ODataConnectorRequest(
         @NotEmpty
         String entityOrEntitySet,
     @Valid
-        @TemplateProperty(
+        @NestedProperties(
             condition =
                 @TemplateProperty.PropertyCondition(property = "batchReq", equals = "=false"))
         HttpMethod httpMethod,
