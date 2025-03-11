@@ -52,11 +52,14 @@ import org.slf4j.LoggerFactory;
     documentationRef = "https://docs.camunda.io/xxx",
     propertyGroups = {
       @ElementTemplate.PropertyGroup(id = "sap", label = "SAP"),
+      @ElementTemplate.PropertyGroup(id = "batch", label = "Batch Request"),
       @ElementTemplate.PropertyGroup(id = "advanced", label = "Advanced")
     })
 public class ODataConnector implements OutboundConnectorFunction {
   public static final String NAME = "SAP_ODATA_CONNECTOR";
   public static final int VERSION = 1;
+  // the format "io.camunda:<type>:<version>" is important as this
+  // is in line w/ "zeebe-analytics", exporting usage of the connector task to mixpanel (for SaaS)
   public static final String TYPE = "io.camunda:sap-odata" + ":" + VERSION;
   private static final Logger LOGGER = LoggerFactory.getLogger(ODataConnector.class);
 

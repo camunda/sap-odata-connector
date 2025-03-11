@@ -17,6 +17,9 @@
     "id" : "sap",
     "label" : "SAP"
   }, {
+    "id" : "batch",
+    "label" : "Batch Request"
+  }, {
     "id" : "advanced",
     "label" : "Advanced"
   }, {
@@ -88,6 +91,11 @@
       "name" : "entityOrEntitySet",
       "type" : "zeebe:input"
     },
+    "condition" : {
+      "property" : "batchReq",
+      "equals" : "=false",
+      "type" : "simple"
+    },
     "type" : "String"
   }, {
     "id" : "httpMethod.httpMethod",
@@ -151,9 +159,15 @@
       "type" : "zeebe:input"
     },
     "condition" : {
-      "property" : "httpMethod.httpMethod",
-      "equals" : "post",
-      "type" : "simple"
+      "allMatch" : [ {
+        "property" : "batchReq",
+        "equals" : "=false",
+        "type" : "simple"
+      }, {
+        "property" : "httpMethod.httpMethod",
+        "equals" : "post",
+        "type" : "simple"
+      } ]
     },
     "type" : "Dropdown",
     "choices" : [ {
@@ -175,9 +189,15 @@
       "type" : "zeebe:input"
     },
     "condition" : {
-      "property" : "httpMethod.httpMethod",
-      "equals" : "put",
-      "type" : "simple"
+      "allMatch" : [ {
+        "property" : "batchReq",
+        "equals" : "=false",
+        "type" : "simple"
+      }, {
+        "property" : "httpMethod.httpMethod",
+        "equals" : "put",
+        "type" : "simple"
+      } ]
     },
     "type" : "Dropdown",
     "choices" : [ {
@@ -199,9 +219,15 @@
       "type" : "zeebe:input"
     },
     "condition" : {
-      "property" : "httpMethod.httpMethod",
-      "equals" : "patch",
-      "type" : "simple"
+      "allMatch" : [ {
+        "property" : "batchReq",
+        "equals" : "=false",
+        "type" : "simple"
+      }, {
+        "property" : "httpMethod.httpMethod",
+        "equals" : "patch",
+        "type" : "simple"
+      } ]
     },
     "type" : "Dropdown",
     "choices" : [ {
@@ -223,9 +249,15 @@
       "type" : "zeebe:input"
     },
     "condition" : {
-      "property" : "httpMethod.httpMethod",
-      "equals" : "delete",
-      "type" : "simple"
+      "allMatch" : [ {
+        "property" : "batchReq",
+        "equals" : "=false",
+        "type" : "simple"
+      }, {
+        "property" : "httpMethod.httpMethod",
+        "equals" : "delete",
+        "type" : "simple"
+      } ]
     },
     "type" : "Dropdown",
     "choices" : [ {
@@ -248,11 +280,46 @@
       "type" : "zeebe:input"
     },
     "condition" : {
-      "property" : "httpMethod.httpMethod",
-      "oneOf" : [ "post", "put", "patch" ],
-      "type" : "simple"
+      "allMatch" : [ {
+        "property" : "batchReq",
+        "equals" : "=false",
+        "type" : "simple"
+      }, {
+        "property" : "httpMethod.httpMethod",
+        "oneOf" : [ "post", "put", "patch" ],
+        "type" : "simple"
+      } ]
     },
     "type" : "String"
+  }, {
+    "id" : "batchReq",
+    "label" : "$batch",
+    "description" : "Indicates if the request should be $batched",
+    "optional" : true,
+    "feel" : "optional",
+    "group" : "batch",
+    "binding" : {
+      "name" : "batch",
+      "type" : "zeebe:input"
+    },
+    "type" : "Boolean"
+  }, {
+    "id" : "batchRequestPayload",
+    "label" : "Batch Request Payload",
+    "description" : "Provide the payload for the batch request",
+    "optional" : true,
+    "feel" : "optional",
+    "group" : "batch",
+    "binding" : {
+      "name" : "batchRequestPayload",
+      "type" : "zeebe:input"
+    },
+    "condition" : {
+      "property" : "batchReq",
+      "equals" : "=true",
+      "type" : "simple"
+    },
+    "type" : "Text"
   }, {
     "id" : "httpMethod.filter",
     "label" : "$filter",
@@ -265,9 +332,15 @@
       "type" : "zeebe:input"
     },
     "condition" : {
-      "property" : "httpMethod.httpMethod",
-      "equals" : "get",
-      "type" : "simple"
+      "allMatch" : [ {
+        "property" : "batchReq",
+        "equals" : "=false",
+        "type" : "simple"
+      }, {
+        "property" : "httpMethod.httpMethod",
+        "equals" : "get",
+        "type" : "simple"
+      } ]
     },
     "type" : "String"
   }, {
@@ -282,9 +355,15 @@
       "type" : "zeebe:input"
     },
     "condition" : {
-      "property" : "httpMethod.httpMethod",
-      "equals" : "get",
-      "type" : "simple"
+      "allMatch" : [ {
+        "property" : "batchReq",
+        "equals" : "=false",
+        "type" : "simple"
+      }, {
+        "property" : "httpMethod.httpMethod",
+        "equals" : "get",
+        "type" : "simple"
+      } ]
     },
     "type" : "String"
   }, {
@@ -299,9 +378,15 @@
       "type" : "zeebe:input"
     },
     "condition" : {
-      "property" : "httpMethod.httpMethod",
-      "equals" : "get",
-      "type" : "simple"
+      "allMatch" : [ {
+        "property" : "batchReq",
+        "equals" : "=false",
+        "type" : "simple"
+      }, {
+        "property" : "httpMethod.httpMethod",
+        "equals" : "get",
+        "type" : "simple"
+      } ]
     },
     "type" : "String"
   }, {
@@ -316,9 +401,15 @@
       "type" : "zeebe:input"
     },
     "condition" : {
-      "property" : "httpMethod.httpMethod",
-      "equals" : "get",
-      "type" : "simple"
+      "allMatch" : [ {
+        "property" : "batchReq",
+        "equals" : "=false",
+        "type" : "simple"
+      }, {
+        "property" : "httpMethod.httpMethod",
+        "equals" : "get",
+        "type" : "simple"
+      } ]
     },
     "type" : "String"
   }, {
@@ -333,9 +424,15 @@
       "type" : "zeebe:input"
     },
     "condition" : {
-      "property" : "httpMethod.httpMethod",
-      "equals" : "get",
-      "type" : "simple"
+      "allMatch" : [ {
+        "property" : "batchReq",
+        "equals" : "=false",
+        "type" : "simple"
+      }, {
+        "property" : "httpMethod.httpMethod",
+        "equals" : "get",
+        "type" : "simple"
+      } ]
     },
     "type" : "String"
   }, {
@@ -357,9 +454,15 @@
       "type" : "zeebe:input"
     },
     "condition" : {
-      "property" : "httpMethod.httpMethod",
-      "equals" : "get",
-      "type" : "simple"
+      "allMatch" : [ {
+        "property" : "batchReq",
+        "equals" : "=false",
+        "type" : "simple"
+      }, {
+        "property" : "httpMethod.httpMethod",
+        "equals" : "get",
+        "type" : "simple"
+      } ]
     },
     "type" : "String"
   }, {
@@ -375,6 +478,10 @@
     },
     "condition" : {
       "allMatch" : [ {
+        "property" : "batchReq",
+        "equals" : "=false",
+        "type" : "simple"
+      }, {
         "property" : "httpMethod.oDataVersionGet.oDataVersionGet",
         "equals" : "V2",
         "type" : "simple"
@@ -398,6 +505,10 @@
     },
     "condition" : {
       "allMatch" : [ {
+        "property" : "batchReq",
+        "equals" : "=false",
+        "type" : "simple"
+      }, {
         "property" : "httpMethod.oDataVersionGet.oDataVersionGet",
         "equals" : "V4",
         "type" : "simple"
@@ -421,6 +532,10 @@
     },
     "condition" : {
       "allMatch" : [ {
+        "property" : "batchReq",
+        "equals" : "=false",
+        "type" : "simple"
+      }, {
         "property" : "httpMethod.oDataVersionGet.oDataVersionGet",
         "equals" : "V4",
         "type" : "simple"

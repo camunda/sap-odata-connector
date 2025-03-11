@@ -34,11 +34,17 @@ public record ODataConnectorRequest(
             label = "OData Entity/-Set",
             description =
                 "query target (e.g. bike(12) ), can also contain navigation properties\n( e.g. bike('12')/toWheels/toBolts )",
+            condition =
+                @TemplateProperty.PropertyCondition(property = "batchReq", equals = "=false"),
             feel = FeelMode.optional)
         @Pattern(regexp = "^[^/].*$", message = "entityOrEntitySet must not start with a '/'")
         @NotEmpty
         String entityOrEntitySet,
-    @Valid HttpMethod httpMethod,
+    @Valid
+        @TemplateProperty(
+            condition =
+                @TemplateProperty.PropertyCondition(property = "batchReq", equals = "=false"))
+        HttpMethod httpMethod,
     @TemplateProperty(
             label = "Request body",
             description = "Payload to send with the request",
@@ -48,9 +54,34 @@ public record ODataConnectorRequest(
             defaultValue = "={}",
             condition =
                 @TemplateProperty.PropertyCondition(
-                    property = "httpMethod.httpMethod",
-                    oneOf = {"post", "put", "patch"}))
-        Map<String, Object> payload) {
+                    property = "",
+                    allMatch = {
+                      @TemplateProperty.NestedPropertyCondition(
+                          property = "batchReq",
+                          equals = "=false"),
+                      @TemplateProperty.NestedPropertyCondition(
+                          property = "httpMethod.httpMethod",
+                          oneOf = {"post", "put", "patch"})
+                    }))
+        Map<String, Object> payload,
+    @TemplateProperty(
+            id = "batchReq",
+            group = "batch",
+            label = "$batch",
+            optional = true,
+            description = "Indicates if the request should be $batched",
+            feel = FeelMode.optional)
+        Boolean batch,
+    @TemplateProperty(
+            group = "batch",
+            label = "Batch Request Payload",
+            feel = FeelMode.optional,
+            optional = true,
+            type = TemplateProperty.PropertyType.Text,
+            description = "Provide the payload for the batch request",
+            condition =
+                @TemplateProperty.PropertyCondition(property = "batchReq", equals = "=true"))
+        String batchRequestPayload) {
 
   @TemplateDiscriminatorProperty(
       group = "sap",
@@ -83,36 +114,48 @@ public record ODataConnectorRequest(
         @TemplateProperty(
                 group = "advanced",
                 label = "$filter",
+                condition =
+                    @TemplateProperty.PropertyCondition(property = "batchReq", equals = "=false"),
                 description = "$filter on EntitySet",
                 optional = true)
             String filter,
         @TemplateProperty(
                 group = "advanced",
                 label = "$top",
+                condition =
+                    @TemplateProperty.PropertyCondition(property = "batchReq", equals = "=false"),
                 description = "only the first $top results of an EntitySet",
                 optional = true)
             Long top,
         @TemplateProperty(
                 group = "advanced",
                 label = "$skip",
+                condition =
+                    @TemplateProperty.PropertyCondition(property = "batchReq", equals = "=false"),
                 description = "skip the first $skip results of an EntitySet",
                 optional = true)
             Long skip,
         @TemplateProperty(
                 group = "advanced",
                 label = "$orderby",
+                condition =
+                    @TemplateProperty.PropertyCondition(property = "batchReq", equals = "=false"),
                 description = "order the EntitySet by one or more properties",
                 optional = true)
             String orderby,
         @TemplateProperty(
                 group = "advanced",
                 label = "$expand",
+                condition =
+                    @TemplateProperty.PropertyCondition(property = "batchReq", equals = "=false"),
                 description = "expand an Entity/-Set by another Entity/-Set",
                 optional = true)
             String expand,
         @TemplateProperty(
                 group = "advanced",
                 label = "$select",
+                condition =
+                    @TemplateProperty.PropertyCondition(property = "batchReq", equals = "=false"),
                 description = "only select $select properties of an Entity/-Set",
                 optional = true)
             @Pattern(regexp = "^\\S*$", message = "must not contain any whitespace!")
@@ -139,6 +182,10 @@ public record ODataConnectorRequest(
                     group = "advanced",
                     label = "$inlinecount",
                     description = "$inlinecount result in EntitySet",
+                    condition =
+                        @TemplateProperty.PropertyCondition(
+                            property = "batchReq",
+                            equals = "=false"),
                     optional = true)
                 Boolean inlinecount)
             implements ODataVersionGet {}
@@ -149,12 +196,20 @@ public record ODataConnectorRequest(
                     group = "advanced",
                     label = "$search",
                     description = "search for $search in EntitySet",
+                    condition =
+                        @TemplateProperty.PropertyCondition(
+                            property = "batchReq",
+                            equals = "=false"),
                     optional = true)
                 String search,
             @TemplateProperty(
                     group = "advanced",
                     label = "$count",
                     description = "$count of EntitySet",
+                    condition =
+                        @TemplateProperty.PropertyCondition(
+                            property = "batchReq",
+                            equals = "=false"),
                     optional = true)
                 Boolean count)
             implements ODataVersionGet {}
@@ -167,6 +222,8 @@ public record ODataConnectorRequest(
                 group = "sap",
                 label = "OData version",
                 description = "what version of the OData protocol the above service uses",
+                condition =
+                    @TemplateProperty.PropertyCondition(property = "batchReq", equals = "=false"),
                 defaultValue = "V2")
             ODataVersion oDataVersionPost)
         implements HttpMethod {}
@@ -177,6 +234,8 @@ public record ODataConnectorRequest(
                 group = "sap",
                 label = "OData version",
                 description = "what version of the OData protocol the above service uses",
+                condition =
+                    @TemplateProperty.PropertyCondition(property = "batchReq", equals = "=false"),
                 defaultValue = "V2")
             ODataVersion oDataVersionPut)
         implements HttpMethod {}
@@ -187,6 +246,8 @@ public record ODataConnectorRequest(
                 group = "sap",
                 label = "OData version",
                 description = "what version of the OData protocol the above service uses",
+                condition =
+                    @TemplateProperty.PropertyCondition(property = "batchReq", equals = "=false"),
                 defaultValue = "V2")
             ODataVersion oDataVersionPatch)
         implements HttpMethod {}
@@ -196,6 +257,8 @@ public record ODataConnectorRequest(
         @TemplateProperty(
                 group = "sap",
                 label = "OData version",
+                condition =
+                    @TemplateProperty.PropertyCondition(property = "batchReq", equals = "=false"),
                 description = "what version of the OData protocol the above service uses",
                 defaultValue = "V2")
             ODataVersion oDataVersionDelete)
