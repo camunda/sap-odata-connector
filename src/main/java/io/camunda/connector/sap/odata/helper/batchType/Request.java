@@ -3,6 +3,8 @@ package io.camunda.connector.sap.odata.helper.batchType;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Map;
+
 @Getter @Setter
 public class Request {
   public enum Method {
@@ -28,7 +30,8 @@ public class Request {
   // optional for GET
   private Options options;
   // only required for POST, PUT, PATCH
-  private Payload payload;
+//  private Payload payload;
+  private Map<String, Object> payload;
 }
 
 

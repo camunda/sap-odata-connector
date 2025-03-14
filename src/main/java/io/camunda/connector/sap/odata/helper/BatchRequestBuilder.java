@@ -73,7 +73,7 @@ public class BatchRequestBuilder {
               // DELETE typically does not have a payload, but the all other http verbs
               String payload =
                   request.getPayload() != null
-                      ? ODataConnector.createSerializedEntity(request.getPayload().getContent())
+                      ? ODataConnector.createSerializedEntity(request.getPayload())
                       : "";
 
               // again let's be generous in what we accept, be it "Post" or "post" or "POST"
