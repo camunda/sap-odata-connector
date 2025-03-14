@@ -214,7 +214,7 @@ public class ODataConnector implements OutboundConnectorFunction {
     }
   }
 
-  private String createSerializedEntity(Map<String, Object> entity) {
+  public static String createSerializedEntity(Map<String, Object> entity) {
     try {
       return ConnectorsObjectMapperSupplier.DEFAULT_MAPPER.writeValueAsString(entity);
     } catch (JsonProcessingException e) {
