@@ -37,6 +37,28 @@ public class ODataConnectorRequestAccessor {
     return params;
   }
 
+  public static Map<String, String> queryParams(Map<String, String> getParams) {
+    Map<String, String> params = new HashMap<>();
+    getParams.forEach(
+        (key, value) -> {
+          if (Set.of(
+                  "$format",
+                  "$top",
+                  "$skip",
+                  "$filter",
+                  "$orderby",
+                  "$expand",
+                  "$select",
+                  "$inlinecount",
+                  "$count",
+                  "$search")
+              .contains(key)) {
+            putIfPresent(params, key, value);
+          }
+        });
+    return params;
+  }
+
   private static void putIfPresent(Map<String, String> params, String key, String value) {
     if (value != null && !value.isEmpty()) {
       if (Set.of("$filter", "$expand", "$select", "$search").contains(key)) {
