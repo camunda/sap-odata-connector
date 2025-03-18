@@ -1,5 +1,11 @@
 package io.camunda.connector.sap.odata.helper;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.sap.cloud.sdk.datamodel.odata.client.ODataProtocol;
 import com.sap.cloud.sdk.datamodel.odata.client.expression.ODataResourcePath;
 import com.sap.cloud.sdk.datamodel.odata.client.request.ODataRequestBatch;
@@ -9,26 +15,52 @@ import io.camunda.connector.sap.odata.helper.batchType.BatchRequestRepresentatio
 import io.camunda.connector.sap.odata.helper.batchType.Request;
 import io.camunda.connector.sap.odata.model.ODataConnectorRequestAccessor;
 import java.util.Arrays;
+import java.util.Optional;
 import lombok.Getter;
 import lombok.Setter;
 
 public class BatchRequestBuilder {
+  @Getter @Setter private String oDataService;
+  @Getter @Setter private ODataProtocol oDataVersion;
+
+  @Setter private ObjectMapper mapper;
   @Getter @Setter private BatchRequestRepresentation[] source;
-  private final String oDataService;
-  private final ODataProtocol oDataVersion;
+
   @Getter private ODataRequestBatch batch;
 
-  public BatchRequestBuilder(
-      String oDataService,
-      ODataProtocol oDataVersion,
-      BatchRequestRepresentation[] batchRequestRepresentation) {
-    this.oDataService = oDataService;
-    this.oDataVersion = oDataVersion;
-    this.source = batchRequestRepresentation;
-    this.batch = new ODataRequestBatch(oDataService, oDataVersion);
+  private ObjectMapper setDefaultMapper() {
+    ObjectMapper m =
+        JsonMapper.builder()
+            .enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS)
+            .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_VALUES, true)
+            .serializationInclusion(JsonInclude.Include.NON_NULL)
+            .build();
+    this.mapper = m;
+    return m;
   }
 
-  public void build() {
+  public ObjectMapper getMapper() {
+    return Optional.ofNullable(this.mapper).orElseGet(this::setDefaultMapper);
+  }
+
+  public BatchRequestBuilder buildSource(String batch) throws JsonProcessingException {
+    ObjectMapper mapper = Optional.ofNullable(this.mapper).orElseGet(this::setDefaultMapper);
+    JsonNode json = mapper.readTree(batch);
+    this.source = mapper.convertValue(json, BatchRequestRepresentation[].class);
+    return this;
+  }
+
+  public void buildRequest() {
+    if (this.oDataService == null || this.oDataVersion == null) {
+      throw new IllegalArgumentException(
+          "Set the OData service and version first via setODataService(String oDataService) and setODataVersion(ODataProtocol oDataVersion)!");
+    }
+    this.batch = new ODataRequestBatch(oDataService, oDataVersion);
+
+    if (this.source == null) {
+      throw new IllegalArgumentException(
+          "Set the batch request source first via buildRepresentation(String batch)!");
+    }
     for (BatchRequestRepresentation batchRequestRepresentation : source) {
       // we're generous in what we accept, be it "Batch" or "batch" or "BATCH"
       if (batchRequestRepresentation
