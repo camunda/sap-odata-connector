@@ -37,6 +37,17 @@
     <plugin.version.spotless-maven-plugin>2.43.0</plugin.version.spotless-maven-plugin>
   </properties>
 
+<!--  <dependencyManagement>-->
+<!--    <dependencies>-->
+<!--      <dependency>-->
+<!--        <groupId>com.fasterxml.jackson.core</groupId>-->
+<!--        <artifactId>jackson-bom</artifactId>-->
+<!--        <version>2.17.2</version>-->
+<!--        <type>pom</type>-->
+<!--        <scope>import</scope>-->
+<!--      </dependency>-->
+<!--    </dependencies>-->
+<!--  </dependencyManagement>-->
   <dependencies>
     <!-- connector-specific -->
     <dependency>
@@ -112,6 +123,14 @@
       <artifactId>slf4j-jdk14</artifactId>
       <version>${version.slf4j}</version>
       <scope>test</scope>
+    </dependency>
+
+    <!-- com.fasterxml.jackson.databind.JsonMappingException: Scala module 2.17.2 requires Jackson Databind version >= 2.17.0 and < 2.18.0 -->
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>2.17.3</version>
     </dependency>
 
     <!-- for testing connectors locally in bundle with runtime -->
@@ -380,6 +399,15 @@
 
   <pluginRepositories>
     <pluginRepository>
+      <id>central</id>
+      <name>Maven Central</name>
+      <layout>default</layout>
+      <url>https://repo1.maven.org/maven2</url>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </pluginRepository>
+    <pluginRepository>
       <id>connectors</id>
       <name>Connectors Repository</name>
       <url>https://artifacts.camunda.com/artifactory/connectors/</url>
@@ -391,17 +419,8 @@
       <url>https://artifacts.camunda.com/artifactory/connectors-snapshots/</url>
     </pluginRepository>
 
-    <pluginRepository>
-      <id>central</id>
-      <name>Maven Central</name>
-      <layout>default</layout>
-      <url>https://repo1.maven.org/maven2</url>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </pluginRepository>
-  </pluginRepositories>
 
+  </pluginRepositories>
 
 
 </project>
