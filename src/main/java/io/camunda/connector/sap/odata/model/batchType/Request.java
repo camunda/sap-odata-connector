@@ -1,4 +1,4 @@
-package io.camunda.connector.sap.odata.helper.batchType;
+package io.camunda.connector.sap.odata.model.batchType;
 
 import lombok.Getter;
 import lombok.Setter;

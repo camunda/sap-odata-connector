@@ -1,7 +1,7 @@
 package io.camunda.connector.sap.odata;
 
 import com.sap.cloud.sdk.datamodel.odata.client.ODataProtocol;
-import io.camunda.connector.sap.odata.helper.BatchRequestBuilder;
+import io.camunda.connector.sap.odata.model.BatchRequestBuilder;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

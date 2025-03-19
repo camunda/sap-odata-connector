@@ -1,4 +1,4 @@
-package io.camunda.connector.sap.odata.helper;
+package io.camunda.connector.sap.odata.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -11,9 +11,13 @@ import com.sap.cloud.sdk.datamodel.odata.client.expression.ODataResourcePath;
 import com.sap.cloud.sdk.datamodel.odata.client.request.ODataRequestBatch;
 import com.sap.cloud.sdk.datamodel.odata.client.request.UpdateStrategy;
 import io.camunda.connector.sap.odata.ODataConnector;
-import io.camunda.connector.sap.odata.helper.batchType.BatchRequestRepresentation;
-import io.camunda.connector.sap.odata.helper.batchType.Request;
-import io.camunda.connector.sap.odata.model.ODataConnectorRequestAccessor;
+import io.camunda.connector.sap.odata.helper.CustomODataRequestCreate;
+import io.camunda.connector.sap.odata.helper.CustomODataRequestDelete;
+import io.camunda.connector.sap.odata.helper.CustomODataRequestRead;
+import io.camunda.connector.sap.odata.helper.CustomODataRequestUpdate;
+import io.camunda.connector.sap.odata.model.batchType.BatchRequestRepresentation;
+import io.camunda.connector.sap.odata.model.batchType.Request;
+
 import java.util.Arrays;
 import java.util.Optional;
 import lombok.Getter;

@@ -1,6 +1,5 @@
-package io.camunda.connector.sap.odata.helper.batchType;
+package io.camunda.connector.sap.odata.model.batchType;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 
