@@ -12,6 +12,8 @@ import io.camunda.connector.generator.java.annotation.TemplateSubType;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
+
+import java.util.List;
 import java.util.Map;
 
 public record ODataConnectorRequest(
@@ -39,7 +41,7 @@ public record ODataConnectorRequest(
                 @TemplateProperty.PropertyCondition(property = "batchReq", equals = "=false"),
             feel = FeelMode.optional)
         @Pattern(regexp = "^[^/].*$", message = "entityOrEntitySet must not start with a '/'")
-        @NotEmpty
+//        @NotEmpty
         String entityOrEntitySet,
     @Valid
         @NestedProperties(
@@ -82,7 +84,7 @@ public record ODataConnectorRequest(
             description = "Provide the payload for the batch request",
             condition =
                 @TemplateProperty.PropertyCondition(property = "batchReq", equals = "=true"))
-        String batchRequestPayload) {
+    List<Map<String, Object>> batchRequestPayload) {
 
   @TemplateDiscriminatorProperty(
       group = "sap",

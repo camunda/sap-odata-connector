@@ -27,13 +27,16 @@ import io.camunda.connector.sap.odata.helper.CustomODataRequestUpdate;
 import io.camunda.connector.sap.odata.model.*;
 import io.camunda.connector.sap.odata.model.ODataConnectorRequest.HttpMethod.*;
 import io.camunda.connector.sap.odata.model.ODataConnectorRequest.ODataVersion;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Optional;
+
 import lombok.Getter;
+import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,9 +54,9 @@ import org.slf4j.LoggerFactory;
     icon = "sap-odata-connector-outbound.svg",
     documentationRef = "https://docs.camunda.io/xxx",
     propertyGroups = {
-      @ElementTemplate.PropertyGroup(id = "sap", label = "SAP"),
-      @ElementTemplate.PropertyGroup(id = "batch", label = "Batch Request"),
-      @ElementTemplate.PropertyGroup(id = "advanced", label = "Advanced")
+        @ElementTemplate.PropertyGroup(id = "sap", label = "SAP"),
+        @ElementTemplate.PropertyGroup(id = "batch", label = "Batch Request"),
+        @ElementTemplate.PropertyGroup(id = "advanced", label = "Advanced")
     })
 public class ODataConnector implements OutboundConnectorFunction {
   public static final String NAME = "SAP_ODATA_CONNECTOR";
@@ -63,13 +66,54 @@ public class ODataConnector implements OutboundConnectorFunction {
   public static final String TYPE = "io.camunda:sap-odata" + ":" + VERSION;
   private static final Logger LOGGER = LoggerFactory.getLogger(ODataConnector.class);
 
-  @Getter private ODataRequestExecutable oDataRequest;
+  @Getter
+  private ODataRequestExecutable oDataRequest;
 
   @Override
   public Object execute(OutboundConnectorContext context) {
     ODataConnectorRequest request = context.bindVariables(ODataConnectorRequest.class);
-    return executeRequest(request);
+    if (request.batch()) {
+      return executeBatch(request);
+    } else {
+      return executeRequest(request);
+    }
   }
+
+  private Object executeBatch(ODataConnectorRequest request) {
+    Destination destination = buildDestination(request.destination());
+    LOGGER.debug("Destination: {}", destination);
+    HttpClient httpClient = HttpClientAccessor.getHttpClient(destination);
+
+    ODataProtocol protocol = determineProtocol(ODataConnectorRequestAccessor.oDataVersion(request));
+
+    BatchRequestBuilder builder = new BatchRequestBuilder();
+    builder.setODataVersion(protocol);
+    builder.setODataService(request.oDataService());
+    try {
+      var payloadAsString = builder.getMapper().writeValueAsString(request.batchRequestPayload());
+      builder.buildSource(payloadAsString).buildRequest();
+      ODataRequestResultMultipartGeneric batchResult = builder.getBatch().execute(httpClient);
+      return buildBatchResponse(batchResult, protocol);
+    } catch (JsonProcessingException e) {
+      throw new ConnectorException(
+          ErrorCodes.GENERIC_ERROR.name(), buildErrorMsg(e, "OData Batch runtime error: "), e);
+
+    } catch (ODataServiceErrorException e) {
+      throw new ConnectorException(
+          ErrorCodes.REQUEST_ERROR.name(), buildErrorMsg(e, "OData Batch request error: "), e);
+
+    }
+  }
+
+  private Record buildBatchResponse(ODataRequestResultMultipartGeneric batchResult, ODataProtocol oDataVersion) throws JsonProcessingException {
+    var combinedResponse = batchResult.getBatchedResponses().stream().map(response -> {
+      return response.stream().map(this::readResponseBody);
+    });
+    var json = ConnectorsObjectMapperSupplier.DEFAULT_MAPPER.readTree(combinedResponse.toString());
+    return buildV2Response(json, batchResult.getHttpResponse().getStatusLine().getStatusCode(), Optional.empty()
+    );
+  }
+
 
   private Record executeRequest(ODataConnectorRequest request) {
     Destination destination = buildDestination(request.destination());
@@ -110,7 +154,7 @@ public class ODataConnector implements OutboundConnectorFunction {
    * Build the response object based on the OData version.
    *
    * @param oDataResponse what execute(httpClient) returned
-   * @param oDataVersion enum: V2, V4
+   * @param oDataVersion  enum: V2, V4
    * @return a ODataConnectorResponse or ODataConnectorResponseWithCount object
    */
   private Record buildResponse(ODataRequestResult oDataResponse, ODataVersion oDataVersion) {
@@ -153,12 +197,23 @@ public class ODataConnector implements OutboundConnectorFunction {
     }
   }
 
+  private JsonNode readResponseBody(HttpResponse httpResponse) {
+    if (httpResponse.getEntity() == null) {
+      return JsonNodeFactory.instance.nullNode();
+    }
+    try (InputStream in = httpResponse.getEntity().getContent()) {
+      return ConnectorsObjectMapperSupplier.DEFAULT_MAPPER.readTree(in);
+    } catch (IOException e) {
+      throw new RuntimeException("Error while reading http response", e);
+    }
+  }
+
   private Record buildV4Response(
       JsonNode responseBody, int statusCode, Optional<Long> countOrInlineCount) {
     JsonNode value = responseBody.has("value") ? responseBody.get("value") : responseBody;
     return countOrInlineCount.isPresent()
         ? new ODataConnectorResponseWithCount(
-            value, statusCode, countOrInlineCount.get().intValue())
+        value, statusCode, countOrInlineCount.get().intValue())
         : new ODataConnectorResponse(value, statusCode);
   }
 
@@ -168,7 +223,7 @@ public class ODataConnector implements OutboundConnectorFunction {
     JsonNode results = d.has("results") ? d.get("results") : d;
     return countOrInlineCount.isPresent()
         ? new ODataConnectorResponseWithCount(
-            results, statusCode, countOrInlineCount.get().intValue())
+        results, statusCode, countOrInlineCount.get().intValue())
         : new ODataConnectorResponse(results, statusCode);
   }
 
