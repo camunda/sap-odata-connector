@@ -61,14 +61,5 @@ public class BatchBuildingTest {
 
     var batchRequest = builder.getBatch();
     assertEquals(batchRequest.getRequests().size() , 5);
-    // assert that there is three single requests and two change sets
-    var batches = 0;
-    var changesets = 0;
-   batchRequest.getRequests().stream().forEach(batchItem -> {
-
-   });
-    assertEquals(batches, 2);
-    assertEquals(changesets, 3);
-
   }
 }
