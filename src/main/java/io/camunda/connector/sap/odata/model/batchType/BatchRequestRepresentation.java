@@ -4,10 +4,11 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * runtime equivalent of the connector template's batch request options
- * see src/test/resources/batch.json for an example
+ * runtime equivalent of the connector template's batch request options see
+ * src/test/resources/batch.json for an example
  */
-@Getter @Setter
+@Getter
+@Setter
 public class BatchRequestRepresentation {
   public enum EntryKind {
     BATCH("batch"),
@@ -28,6 +29,3 @@ public class BatchRequestRepresentation {
   private EntryKind type;
   private Request[] requests;
 }
-
-
-

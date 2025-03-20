@@ -1,18 +1,13 @@
 package io.camunda.connector.sap.odata;
 
-// import static com.sap.cloud.sdk.datamodel.odata.client.request;
+import static io.camunda.connector.sap.odata.ODataConnector.*;
+import static io.camunda.connector.sap.odata.model.ODataRequestDetails.BatchRequest;
 
-import com.sap.cloud.sdk.datamodel.odata.client.request.ODataRequestExecutable;
 import io.camunda.connector.api.annotation.OutboundConnector;
 import io.camunda.connector.api.outbound.OutboundConnectorContext;
 import io.camunda.connector.api.outbound.OutboundConnectorFunction;
 import io.camunda.connector.generator.java.annotation.ElementTemplate;
 import io.camunda.connector.sap.odata.model.ODataConnectorRequest;
-import lombok.Getter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import static io.camunda.connector.sap.odata.ODataConnector.*;
 
 @OutboundConnector(
     name = NAME,
@@ -33,19 +28,16 @@ import static io.camunda.connector.sap.odata.ODataConnector.*;
     })
 public class ODataConnector implements OutboundConnectorFunction {
   public static final String NAME = "SAP_ODATA_CONNECTOR";
-  public static final int VERSION = 1;
+  public static final int VERSION = 2;
   // the format "io.camunda:<type>:<version>" is important as this
   // is in line w/ "zeebe-analytics", exporting usage of the connector task to mixpanel (for SaaS)
   public static final String TYPE = "io.camunda:sap-odata" + ":" + VERSION;
-  private static final Logger LOGGER = LoggerFactory.getLogger(ODataConnector.class);
-
-  @Getter
-  private ODataRequestExecutable oDataRequest;
 
   @Override
   public Object execute(OutboundConnectorContext context) {
     ODataConnectorRequest request = context.bindVariables(ODataConnectorRequest.class);
-    if (request.batch()) {
+    // check that request.requestDetails() is of type BatchRequest
+    if (request.requestDetails() instanceof BatchRequest) {
       ODataBatchRequestExecutor batchExecutor = new ODataBatchRequestExecutor();
       return batchExecutor.executeBatch(request);
     } else {

@@ -10,7 +10,7 @@ import com.sap.cloud.sdk.datamodel.odata.client.request.ODataRequestResult;
 import com.sap.cloud.sdk.datamodel.odata.client.request.ODataRequestResultGeneric;
 import io.camunda.connector.api.json.ConnectorsObjectMapperSupplier;
 import io.camunda.connector.sap.odata.DestinationProvider;
-import io.camunda.connector.sap.odata.model.ODataConnectorRequest;
+import io.camunda.connector.sap.odata.model.HttpMethod;
 import io.camunda.connector.sap.odata.model.ODataConnectorResponse;
 import io.camunda.connector.sap.odata.model.ODataConnectorResponseWithCount;
 import java.io.IOException;
@@ -22,10 +22,10 @@ import org.slf4j.LoggerFactory;
 public class CommonExecutor {
   private static final Logger LOGGER = LoggerFactory.getLogger(CommonExecutor.class);
 
-  public static ODataProtocol determineProtocol(ODataConnectorRequest.ODataVersion oDataVersion) {
-    if (oDataVersion.equals(ODataConnectorRequest.ODataVersion.V2)) {
+  public static ODataProtocol determineProtocol(HttpMethod.ODataVersion oDataVersion) {
+    if (oDataVersion.equals(HttpMethod.ODataVersion.V2)) {
       return ODataProtocol.V2;
-    } else if (oDataVersion.equals(ODataConnectorRequest.ODataVersion.V4)) {
+    } else if (oDataVersion.equals(HttpMethod.ODataVersion.V4)) {
       return ODataProtocol.V4;
     }
     throw new IllegalStateException("Unknown protocol " + oDataVersion);
@@ -47,7 +47,7 @@ public class CommonExecutor {
   }
 
   public static Record buildResponse(
-      ODataRequestResult oDataResponse, ODataConnectorRequest.ODataVersion oDataVersion) {
+      ODataRequestResult oDataResponse, HttpMethod.ODataVersion oDataVersion) {
     JsonNode responseBody = CommonExecutor.readResponseBody(oDataResponse);
     int statusCode = oDataResponse.getHttpResponse().getStatusLine().getStatusCode();
 
@@ -67,9 +67,9 @@ public class CommonExecutor {
     if (responseBody.isNull()) {
       return new ODataConnectorResponse(responseBody, statusCode);
     }
-    if (oDataVersion.equals(ODataConnectorRequest.ODataVersion.V2)) {
+    if (oDataVersion.equals(HttpMethod.ODataVersion.V2)) {
       return CommonExecutor.buildV2Response(responseBody, statusCode, countOrInlineCount);
-    } else if (oDataVersion.equals(ODataConnectorRequest.ODataVersion.V4)) {
+    } else if (oDataVersion.equals(HttpMethod.ODataVersion.V4)) {
       return CommonExecutor.buildV4Response(responseBody, statusCode, countOrInlineCount);
     } else {
       throw new IllegalArgumentException("Unsupported version: " + oDataVersion);

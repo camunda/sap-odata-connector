@@ -1,10 +1,9 @@
 package io.camunda.connector.sap.odata.model.batchType;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import java.util.HashMap;
 import java.util.Map;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter

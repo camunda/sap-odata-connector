@@ -11,9 +11,7 @@ import com.sap.cloud.sdk.datamodel.odata.client.request.*;
 import io.camunda.connector.api.error.ConnectorException;
 import io.camunda.connector.api.json.ConnectorsObjectMapperSupplier;
 import io.camunda.connector.sap.odata.helper.*;
-import io.camunda.connector.sap.odata.model.ErrorCodes;
-import io.camunda.connector.sap.odata.model.ODataConnectorRequest;
-import io.camunda.connector.sap.odata.model.ODataConnectorRequestAccessor;
+import io.camunda.connector.sap.odata.model.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
@@ -29,7 +27,8 @@ public class ODataRequestExecutor {
     LOGGER.debug("Destination: {}", destination);
     HttpClient httpClient = HttpClientAccessor.getHttpClient(destination);
 
-    ODataRequestExecutable oDataRequest = buildRequest(request);
+    ODataRequestExecutable oDataRequest =
+        buildRequest((ODataRequestDetails.SimpleRequest) request.requestDetails(), request);
 
     LOGGER.debug(
         "OData request: {}",
@@ -47,7 +46,9 @@ public class ODataRequestExecutor {
           "OData request finished at: "
               + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss:SSS")));
       return CommonExecutor.buildResponse(
-          oDataResponse, ODataConnectorRequestAccessor.oDataVersion(request));
+          oDataResponse,
+          ODataConnectorRequestAccessor.oDataVersion(
+              (ODataRequestDetails.SimpleRequest) request.requestDetails()));
     } catch (ODataRequestException e) {
       throw new ConnectorException(
           ErrorCodes.REQUEST_ERROR.name(),
@@ -66,40 +67,41 @@ public class ODataRequestExecutor {
     }
   }
 
-  public ODataRequestExecutable buildRequest(ODataConnectorRequest request) {
+  public ODataRequestExecutable buildRequest(
+      ODataRequestDetails.SimpleRequest request, ODataConnectorRequest oDataRequest) {
     ODataProtocol protocol =
         CommonExecutor.determineProtocol(ODataConnectorRequestAccessor.oDataVersion(request));
     ODataResourcePath path = ODataResourcePath.of(request.entityOrEntitySet());
     switch (request.httpMethod()) {
-      case ODataConnectorRequest.HttpMethod.Get get -> {
+      case HttpMethod.Get get -> {
         ODataRequestRead read =
             new CustomODataRequestRead(
-                request.oDataService(), request.entityOrEntitySet(), "", protocol);
+                oDataRequest.oDataService(), request.entityOrEntitySet(), "", protocol);
         ODataConnectorRequestAccessor.queryParams(get).forEach(read::addQueryParameter);
         return read;
       }
-      case ODataConnectorRequest.HttpMethod.Post ignore -> {
+      case HttpMethod.Post ignore -> {
         String serializedEntity = createSerializedEntity(request.payload());
         return new CustomODataRequestCreate(
-            request.oDataService(), path, serializedEntity, protocol);
+            oDataRequest.oDataService(), path, serializedEntity, protocol);
       }
-      case ODataConnectorRequest.HttpMethod.Delete ignored -> {
-        return new CustomODataRequestDelete(request.oDataService(), path, null, protocol);
+      case HttpMethod.Delete ignored -> {
+        return new CustomODataRequestDelete(oDataRequest.oDataService(), path, null, protocol);
       }
-      case ODataConnectorRequest.HttpMethod.Put ignore -> {
+      case HttpMethod.Put ignore -> {
         String serializedEntity = createSerializedEntity(request.payload());
         return new CustomODataRequestUpdate(
-            request.oDataService(),
+            oDataRequest.oDataService(),
             path,
             serializedEntity,
             UpdateStrategy.REPLACE_WITH_PUT,
             null,
             protocol);
       }
-      case ODataConnectorRequest.HttpMethod.Patch ignore -> {
+      case HttpMethod.Patch ignore -> {
         String serializedEntity = createSerializedEntity(request.payload());
         return new CustomODataRequestUpdate(
-            request.oDataService(),
+            oDataRequest.oDataService(),
             path,
             serializedEntity,
             UpdateStrategy.MODIFY_WITH_PATCH,

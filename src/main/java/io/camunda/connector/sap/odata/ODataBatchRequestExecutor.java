@@ -10,8 +10,6 @@ import com.sap.cloud.sdk.datamodel.odata.client.request.ODataRequestResultMultip
 import io.camunda.connector.api.error.ConnectorException;
 import io.camunda.connector.sap.odata.helper.CommonExecutor;
 import io.camunda.connector.sap.odata.model.*;
-import io.camunda.connector.sap.odata.model.ODataConnectorRequest.ODataVersion;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -28,18 +26,28 @@ public class ODataBatchRequestExecutor {
     HttpClient httpClient = HttpClientAccessor.getHttpClient(destination);
 
     ODataProtocol protocol =
-        CommonExecutor.determineProtocol(ODataConnectorRequestAccessor.oDataVersion(request));
+        CommonExecutor.determineProtocol(
+            ODataConnectorRequestAccessor.oDataVersion(
+                (ODataRequestDetails.SimpleRequest) request.requestDetails()));
 
     BatchRequestBuilder builder = new BatchRequestBuilder();
     builder.setODataVersion(protocol);
     builder.setODataService(request.oDataService());
 
     try {
-      var payloadAsString = builder.getMapper().writeValueAsString(request.batchRequestPayload());
+      var payloadAsString =
+          builder
+              .getMapper()
+              .writeValueAsString(
+                  ((ODataRequestDetails.BatchRequest) request.requestDetails())
+                      .batchRequestPayload());
       builder.buildSource(payloadAsString).buildRequest();
 
       LOGGER.debug(
-          "OData $batch to: {}", builder.getODataService() + " - incl requests: " + builder.getBatch().getRequests().size());
+          "OData $batch to: {}",
+          builder.getODataService()
+              + " - incl requests: "
+              + builder.getBatch().getRequests().size());
 
       LOGGER.debug(
           "OData $batch start at: "
@@ -76,7 +84,9 @@ public class ODataBatchRequestExecutor {
       var response =
           CommonExecutor.buildResponse(
               result,
-              oDataVersion.getProtocolVersion().equals("V2") ? ODataVersion.V2 : ODataVersion.V4);
+              oDataVersion.getProtocolVersion().equals("V2")
+                  ? HttpMethod.ODataVersion.V2
+                  : HttpMethod.ODataVersion.V4);
       responses.add(response);
     }
     return new ODataConnectorBatchResponse(responses);

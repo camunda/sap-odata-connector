@@ -4,7 +4,7 @@
   "id" : "SAP_ODATA_CONNECTOR",
   "description" : "This connector allows you to interact with an SAP System via OData v2 + v4",
   "documentationRef" : "https://docs.camunda.io/xxx",
-  "version" : 1,
+  "version" : 2,
   "category" : {
     "id" : "connectors",
     "name" : "Connectors"
@@ -33,7 +33,7 @@
     "label" : "Retries"
   } ],
   "properties" : [ {
-    "value" : "io.camunda:sap-odata:1",
+    "value" : "io.camunda:sap-odata:2",
     "binding" : {
       "property" : "type",
       "type" : "zeebe:taskDefinition"
@@ -74,7 +74,25 @@
     },
     "type" : "String"
   }, {
-    "id" : "entityOrEntitySet",
+    "id" : "requestDetails.requestType",
+    "label" : "Request type",
+    "description" : "Whether the request is a batch request or not",
+    "value" : "simpleReq",
+    "group" : "sap",
+    "binding" : {
+      "name" : "requestDetails.requestType",
+      "type" : "zeebe:input"
+    },
+    "type" : "Dropdown",
+    "choices" : [ {
+      "name" : "Batch Request",
+      "value" : "batchReq"
+    }, {
+      "name" : "OData Request",
+      "value" : "simpleReq"
+    } ]
+  }, {
+    "id" : "requestDetails.entityOrEntitySet",
     "label" : "OData Entity/-Set",
     "description" : "query target (e.g. bike(12) ), can also contain navigation properties\n( e.g. bike('12')/toWheels/toBolts )",
     "optional" : false,
@@ -88,24 +106,29 @@
     "feel" : "optional",
     "group" : "sap",
     "binding" : {
-      "name" : "entityOrEntitySet",
+      "name" : "requestDetails.entityOrEntitySet",
       "type" : "zeebe:input"
     },
     "condition" : {
-      "property" : "batchReq",
-      "equals" : "=false",
+      "property" : "requestDetails.requestType",
+      "equals" : "simpleReq",
       "type" : "simple"
     },
     "type" : "String"
   }, {
-    "id" : "httpMethod.httpMethod",
+    "id" : "requestDetails.httpMethod.httpMethod",
     "label" : "HTTP method",
     "description" : "read, write, update or delete operation",
     "value" : "get",
     "group" : "sap",
     "binding" : {
-      "name" : "httpMethod.httpMethod",
+      "name" : "requestDetails.httpMethod.httpMethod",
       "type" : "zeebe:input"
+    },
+    "condition" : {
+      "property" : "requestDetails.requestType",
+      "equals" : "simpleReq",
+      "type" : "simple"
     },
     "type" : "Dropdown",
     "choices" : [ {
@@ -125,19 +148,25 @@
       "value" : "delete"
     } ]
   }, {
-    "id" : "httpMethod.oDataVersionGet.oDataVersionGet",
+    "id" : "requestDetails.httpMethod.oDataVersionGet.oDataVersionGet",
     "label" : "OData version",
     "description" : "what version of the OData protocol the above service uses",
     "value" : "V2",
     "group" : "sap",
     "binding" : {
-      "name" : "httpMethod.oDataVersionGet.oDataVersionGet",
+      "name" : "requestDetails.httpMethod.oDataVersionGet.oDataVersionGet",
       "type" : "zeebe:input"
     },
     "condition" : {
-      "property" : "httpMethod.httpMethod",
-      "equals" : "get",
-      "type" : "simple"
+      "allMatch" : [ {
+        "property" : "requestDetails.httpMethod.httpMethod",
+        "equals" : "get",
+        "type" : "simple"
+      }, {
+        "property" : "requestDetails.requestType",
+        "equals" : "simpleReq",
+        "type" : "simple"
+      } ]
     },
     "type" : "Dropdown",
     "choices" : [ {
@@ -148,25 +177,25 @@
       "value" : "V4"
     } ]
   }, {
-    "id" : "httpMethod.oDataVersionPost",
+    "id" : "requestDetails.httpMethod.oDataVersionPost",
     "label" : "OData version",
     "description" : "what version of the OData protocol the above service uses",
     "optional" : false,
     "value" : "V2",
     "group" : "sap",
     "binding" : {
-      "name" : "httpMethod.oDataVersionPost",
+      "name" : "requestDetails.httpMethod.oDataVersionPost",
       "type" : "zeebe:input"
     },
     "condition" : {
       "allMatch" : [ {
-        "property" : "batchReq",
-        "equals" : "=false",
-        "type" : "simple"
-      }, {
-        "property" : "httpMethod.httpMethod",
+        "property" : "requestDetails.httpMethod.httpMethod",
         "equals" : "post",
         "type" : "simple"
+      }, {
+        "property" : "requestDetails.requestType",
+        "equals" : "simpleReq",
+        "type" : "simple"
       } ]
     },
     "type" : "Dropdown",
@@ -178,25 +207,25 @@
       "value" : "V4"
     } ]
   }, {
-    "id" : "httpMethod.oDataVersionPut",
+    "id" : "requestDetails.httpMethod.oDataVersionPut",
     "label" : "OData version",
     "description" : "what version of the OData protocol the above service uses",
     "optional" : false,
     "value" : "V2",
     "group" : "sap",
     "binding" : {
-      "name" : "httpMethod.oDataVersionPut",
+      "name" : "requestDetails.httpMethod.oDataVersionPut",
       "type" : "zeebe:input"
     },
     "condition" : {
       "allMatch" : [ {
-        "property" : "batchReq",
-        "equals" : "=false",
-        "type" : "simple"
-      }, {
-        "property" : "httpMethod.httpMethod",
+        "property" : "requestDetails.httpMethod.httpMethod",
         "equals" : "put",
         "type" : "simple"
+      }, {
+        "property" : "requestDetails.requestType",
+        "equals" : "simpleReq",
+        "type" : "simple"
       } ]
     },
     "type" : "Dropdown",
@@ -208,25 +237,25 @@
       "value" : "V4"
     } ]
   }, {
-    "id" : "httpMethod.oDataVersionPatch",
+    "id" : "requestDetails.httpMethod.oDataVersionPatch",
     "label" : "OData version",
     "description" : "what version of the OData protocol the above service uses",
     "optional" : false,
     "value" : "V2",
     "group" : "sap",
     "binding" : {
-      "name" : "httpMethod.oDataVersionPatch",
+      "name" : "requestDetails.httpMethod.oDataVersionPatch",
       "type" : "zeebe:input"
     },
     "condition" : {
       "allMatch" : [ {
-        "property" : "batchReq",
-        "equals" : "=false",
-        "type" : "simple"
-      }, {
-        "property" : "httpMethod.httpMethod",
+        "property" : "requestDetails.httpMethod.httpMethod",
         "equals" : "patch",
         "type" : "simple"
+      }, {
+        "property" : "requestDetails.requestType",
+        "equals" : "simpleReq",
+        "type" : "simple"
       } ]
     },
     "type" : "Dropdown",
@@ -238,24 +267,24 @@
       "value" : "V4"
     } ]
   }, {
-    "id" : "httpMethod.oDataVersionDelete",
+    "id" : "requestDetails.httpMethod.oDataVersionDelete",
     "label" : "OData version",
     "description" : "what version of the OData protocol the above service uses",
     "optional" : false,
     "value" : "V2",
     "group" : "sap",
     "binding" : {
-      "name" : "httpMethod.oDataVersionDelete",
+      "name" : "requestDetails.httpMethod.oDataVersionDelete",
       "type" : "zeebe:input"
     },
     "condition" : {
       "allMatch" : [ {
-        "property" : "batchReq",
-        "equals" : "=false",
+        "property" : "requestDetails.httpMethod.httpMethod",
+        "equals" : "delete",
         "type" : "simple"
       }, {
-        "property" : "httpMethod.httpMethod",
-        "equals" : "delete",
+        "property" : "requestDetails.requestType",
+        "equals" : "simpleReq",
         "type" : "simple"
       } ]
     },
@@ -268,7 +297,7 @@
       "value" : "V4"
     } ]
   }, {
-    "id" : "payload",
+    "id" : "requestDetails.payload",
     "label" : "Request body",
     "description" : "Payload to send with the request",
     "optional" : true,
@@ -276,167 +305,155 @@
     "feel" : "optional",
     "group" : "sap",
     "binding" : {
-      "name" : "payload",
+      "name" : "requestDetails.payload",
       "type" : "zeebe:input"
     },
     "condition" : {
       "allMatch" : [ {
-        "property" : "batchReq",
-        "equals" : "=false",
+        "property" : "requestDetails.httpMethod.httpMethod",
+        "oneOf" : [ "post", "put", "patch" ],
         "type" : "simple"
       }, {
-        "property" : "httpMethod.httpMethod",
-        "oneOf" : [ "post", "put", "patch" ],
+        "property" : "requestDetails.requestType",
+        "equals" : "simpleReq",
         "type" : "simple"
       } ]
     },
     "type" : "String"
   }, {
-    "id" : "batchReq",
-    "label" : "$batch",
-    "description" : "Indicates if the request should be $batched",
-    "optional" : true,
-    "feel" : "optional",
-    "group" : "batch",
-    "binding" : {
-      "name" : "batch",
-      "type" : "zeebe:input"
-    },
-    "type" : "Boolean"
-  }, {
-    "id" : "batchRequestPayload",
+    "id" : "requestDetails.batchRequestPayload",
     "label" : "Batch Request Payload",
     "description" : "Provide the payload for the batch request",
-    "optional" : true,
-    "feel" : "optional",
+    "optional" : false,
+    "feel" : "required",
     "group" : "batch",
     "binding" : {
-      "name" : "batchRequestPayload",
+      "name" : "requestDetails.batchRequestPayload",
       "type" : "zeebe:input"
     },
     "condition" : {
-      "property" : "batchReq",
-      "equals" : "=true",
+      "property" : "requestDetails.requestType",
+      "equals" : "batchReq",
       "type" : "simple"
     },
     "type" : "Text"
   }, {
-    "id" : "httpMethod.filter",
+    "id" : "requestDetails.httpMethod.filter",
     "label" : "$filter",
     "description" : "$filter on EntitySet",
     "optional" : true,
     "feel" : "optional",
     "group" : "advanced",
     "binding" : {
-      "name" : "httpMethod.filter",
+      "name" : "requestDetails.httpMethod.filter",
       "type" : "zeebe:input"
     },
     "condition" : {
       "allMatch" : [ {
-        "property" : "batchReq",
-        "equals" : "=false",
+        "property" : "requestDetails.httpMethod.httpMethod",
+        "equals" : "get",
         "type" : "simple"
       }, {
-        "property" : "httpMethod.httpMethod",
-        "equals" : "get",
+        "property" : "requestDetails.requestType",
+        "equals" : "simpleReq",
         "type" : "simple"
       } ]
     },
     "type" : "String"
   }, {
-    "id" : "httpMethod.top",
+    "id" : "requestDetails.httpMethod.top",
     "label" : "$top",
     "description" : "only the first $top results of an EntitySet",
     "optional" : true,
     "feel" : "optional",
     "group" : "advanced",
     "binding" : {
-      "name" : "httpMethod.top",
+      "name" : "requestDetails.httpMethod.top",
       "type" : "zeebe:input"
     },
     "condition" : {
       "allMatch" : [ {
-        "property" : "batchReq",
-        "equals" : "=false",
+        "property" : "requestDetails.httpMethod.httpMethod",
+        "equals" : "get",
         "type" : "simple"
       }, {
-        "property" : "httpMethod.httpMethod",
-        "equals" : "get",
+        "property" : "requestDetails.requestType",
+        "equals" : "simpleReq",
         "type" : "simple"
       } ]
     },
     "type" : "String"
   }, {
-    "id" : "httpMethod.skip",
+    "id" : "requestDetails.httpMethod.skip",
     "label" : "$skip",
     "description" : "skip the first $skip results of an EntitySet",
     "optional" : true,
     "feel" : "optional",
     "group" : "advanced",
     "binding" : {
-      "name" : "httpMethod.skip",
+      "name" : "requestDetails.httpMethod.skip",
       "type" : "zeebe:input"
     },
     "condition" : {
       "allMatch" : [ {
-        "property" : "batchReq",
-        "equals" : "=false",
+        "property" : "requestDetails.httpMethod.httpMethod",
+        "equals" : "get",
         "type" : "simple"
       }, {
-        "property" : "httpMethod.httpMethod",
-        "equals" : "get",
+        "property" : "requestDetails.requestType",
+        "equals" : "simpleReq",
         "type" : "simple"
       } ]
     },
     "type" : "String"
   }, {
-    "id" : "httpMethod.orderby",
+    "id" : "requestDetails.httpMethod.orderby",
     "label" : "$orderby",
     "description" : "order the EntitySet by one or more properties",
     "optional" : true,
     "feel" : "optional",
     "group" : "advanced",
     "binding" : {
-      "name" : "httpMethod.orderby",
+      "name" : "requestDetails.httpMethod.orderby",
       "type" : "zeebe:input"
     },
     "condition" : {
       "allMatch" : [ {
-        "property" : "batchReq",
-        "equals" : "=false",
+        "property" : "requestDetails.httpMethod.httpMethod",
+        "equals" : "get",
         "type" : "simple"
       }, {
-        "property" : "httpMethod.httpMethod",
-        "equals" : "get",
+        "property" : "requestDetails.requestType",
+        "equals" : "simpleReq",
         "type" : "simple"
       } ]
     },
     "type" : "String"
   }, {
-    "id" : "httpMethod.expand",
+    "id" : "requestDetails.httpMethod.expand",
     "label" : "$expand",
     "description" : "expand an Entity/-Set by another Entity/-Set",
     "optional" : true,
     "feel" : "optional",
     "group" : "advanced",
     "binding" : {
-      "name" : "httpMethod.expand",
+      "name" : "requestDetails.httpMethod.expand",
       "type" : "zeebe:input"
     },
     "condition" : {
       "allMatch" : [ {
-        "property" : "batchReq",
-        "equals" : "=false",
+        "property" : "requestDetails.httpMethod.httpMethod",
+        "equals" : "get",
         "type" : "simple"
       }, {
-        "property" : "httpMethod.httpMethod",
-        "equals" : "get",
+        "property" : "requestDetails.requestType",
+        "equals" : "simpleReq",
         "type" : "simple"
       } ]
     },
     "type" : "String"
   }, {
-    "id" : "httpMethod.select",
+    "id" : "requestDetails.httpMethod.select",
     "label" : "$select",
     "description" : "only select $select properties of an Entity/-Set",
     "optional" : true,
@@ -450,98 +467,98 @@
     "feel" : "optional",
     "group" : "advanced",
     "binding" : {
-      "name" : "httpMethod.select",
+      "name" : "requestDetails.httpMethod.select",
       "type" : "zeebe:input"
     },
     "condition" : {
       "allMatch" : [ {
-        "property" : "batchReq",
-        "equals" : "=false",
+        "property" : "requestDetails.httpMethod.httpMethod",
+        "equals" : "get",
         "type" : "simple"
       }, {
-        "property" : "httpMethod.httpMethod",
-        "equals" : "get",
+        "property" : "requestDetails.requestType",
+        "equals" : "simpleReq",
         "type" : "simple"
       } ]
     },
     "type" : "String"
   }, {
-    "id" : "httpMethod.oDataVersionGet.inlinecount",
+    "id" : "requestDetails.httpMethod.oDataVersionGet.inlinecount",
     "label" : "$inlinecount",
     "description" : "$inlinecount result in EntitySet",
     "optional" : true,
     "feel" : "optional",
     "group" : "advanced",
     "binding" : {
-      "name" : "httpMethod.oDataVersionGet.inlinecount",
+      "name" : "requestDetails.httpMethod.oDataVersionGet.inlinecount",
       "type" : "zeebe:input"
     },
     "condition" : {
       "allMatch" : [ {
-        "property" : "batchReq",
-        "equals" : "=false",
-        "type" : "simple"
-      }, {
-        "property" : "httpMethod.oDataVersionGet.oDataVersionGet",
+        "property" : "requestDetails.httpMethod.oDataVersionGet.oDataVersionGet",
         "equals" : "V2",
         "type" : "simple"
       }, {
-        "property" : "httpMethod.httpMethod",
+        "property" : "requestDetails.httpMethod.httpMethod",
         "equals" : "get",
+        "type" : "simple"
+      }, {
+        "property" : "requestDetails.requestType",
+        "equals" : "simpleReq",
         "type" : "simple"
       } ]
     },
     "type" : "Boolean"
   }, {
-    "id" : "httpMethod.oDataVersionGet.search",
+    "id" : "requestDetails.httpMethod.oDataVersionGet.search",
     "label" : "$search",
     "description" : "search for $search in EntitySet",
     "optional" : true,
     "feel" : "optional",
     "group" : "advanced",
     "binding" : {
-      "name" : "httpMethod.oDataVersionGet.search",
+      "name" : "requestDetails.httpMethod.oDataVersionGet.search",
       "type" : "zeebe:input"
     },
     "condition" : {
       "allMatch" : [ {
-        "property" : "batchReq",
-        "equals" : "=false",
-        "type" : "simple"
-      }, {
-        "property" : "httpMethod.oDataVersionGet.oDataVersionGet",
+        "property" : "requestDetails.httpMethod.oDataVersionGet.oDataVersionGet",
         "equals" : "V4",
         "type" : "simple"
       }, {
-        "property" : "httpMethod.httpMethod",
+        "property" : "requestDetails.httpMethod.httpMethod",
         "equals" : "get",
+        "type" : "simple"
+      }, {
+        "property" : "requestDetails.requestType",
+        "equals" : "simpleReq",
         "type" : "simple"
       } ]
     },
     "type" : "String"
   }, {
-    "id" : "httpMethod.oDataVersionGet.count",
+    "id" : "requestDetails.httpMethod.oDataVersionGet.count",
     "label" : "$count",
     "description" : "$count of EntitySet",
     "optional" : true,
     "feel" : "optional",
     "group" : "advanced",
     "binding" : {
-      "name" : "httpMethod.oDataVersionGet.count",
+      "name" : "requestDetails.httpMethod.oDataVersionGet.count",
       "type" : "zeebe:input"
     },
     "condition" : {
       "allMatch" : [ {
-        "property" : "batchReq",
-        "equals" : "=false",
-        "type" : "simple"
-      }, {
-        "property" : "httpMethod.oDataVersionGet.oDataVersionGet",
+        "property" : "requestDetails.httpMethod.oDataVersionGet.oDataVersionGet",
         "equals" : "V4",
         "type" : "simple"
       }, {
-        "property" : "httpMethod.httpMethod",
+        "property" : "requestDetails.httpMethod.httpMethod",
         "equals" : "get",
+        "type" : "simple"
+      }, {
+        "property" : "requestDetails.requestType",
+        "equals" : "simpleReq",
         "type" : "simple"
       } ]
     },

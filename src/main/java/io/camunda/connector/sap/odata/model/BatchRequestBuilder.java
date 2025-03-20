@@ -18,12 +18,11 @@ import io.camunda.connector.sap.odata.helper.CustomODataRequestRead;
 import io.camunda.connector.sap.odata.helper.CustomODataRequestUpdate;
 import io.camunda.connector.sap.odata.model.batchType.BatchRequestRepresentation;
 import io.camunda.connector.sap.odata.model.batchType.Request;
-import lombok.Getter;
-import lombok.Setter;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Optional;
+import lombok.Getter;
+import lombok.Setter;
 
 public class BatchRequestBuilder {
   @Getter @Setter private String oDataService;
