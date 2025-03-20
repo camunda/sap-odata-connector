@@ -6,7 +6,7 @@ It is distributed as [a Docker image](https://hub.docker.com/repository/docker/c
 ## development hints
 
 - c8.7, either locally or SaaS
-- have a `destinations` environment variable point to 
+- have a `destinations` environment variable point to
   - the local mockserver (see below)
   - the SAP system, including credentials
 ```shell
@@ -17,7 +17,7 @@ export destinations='[{"name":"localMockServer","url":"http://localhost:4004",Au
 - on PRs
   - always bump the patch version first in `pom.xml`
   - don't change major or minor, as they indicate the Camunda 8 release assocation
-  
+
 ### OData sample backend
 
 There's a Node.js-based OData v2 + v4 backend located in `/cap-bookshop`.
