@@ -9,19 +9,21 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.sap.cloud.sdk.datamodel.odata.client.ODataProtocol;
 import com.sap.cloud.sdk.datamodel.odata.client.expression.ODataResourcePath;
 import com.sap.cloud.sdk.datamodel.odata.client.request.ODataRequestBatch;
+import com.sap.cloud.sdk.datamodel.odata.client.request.ODataRequestGeneric;
 import com.sap.cloud.sdk.datamodel.odata.client.request.UpdateStrategy;
-import io.camunda.connector.sap.odata.ODataConnector;
+import io.camunda.connector.sap.odata.ODataRequestExecutor;
 import io.camunda.connector.sap.odata.helper.CustomODataRequestCreate;
 import io.camunda.connector.sap.odata.helper.CustomODataRequestDelete;
 import io.camunda.connector.sap.odata.helper.CustomODataRequestRead;
 import io.camunda.connector.sap.odata.helper.CustomODataRequestUpdate;
 import io.camunda.connector.sap.odata.model.batchType.BatchRequestRepresentation;
 import io.camunda.connector.sap.odata.model.batchType.Request;
-
-import java.util.Arrays;
-import java.util.Optional;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Optional;
 
 public class BatchRequestBuilder {
   @Getter @Setter private String oDataService;
@@ -30,6 +32,9 @@ public class BatchRequestBuilder {
   @Setter private ObjectMapper mapper;
   @Getter @Setter private BatchRequestRepresentation[] source;
 
+  // we need to keep track of the individual requests for the batch
+  // for later retrieving the results programmatically
+  @Getter @Setter private ArrayList<ODataRequestGeneric> requests = new ArrayList<>();
   @Getter private ODataRequestBatch batch;
 
   private ObjectMapper setDefaultMapper() {
@@ -95,7 +100,9 @@ public class BatchRequestBuilder {
                 ODataConnectorRequestAccessor.queryParams(request.getOptions().asMap())
                     .forEach(read::addQueryParameter);
               }
+
               this.batch.addRead(read);
+              this.requests.add(read); //> keep track for later result retrieval
             });
   }
 
@@ -109,7 +116,7 @@ public class BatchRequestBuilder {
               // DELETE typically does not have a payload, but the all other http verbs
               String payload =
                   request.getPayload() != null
-                      ? ODataConnector.createSerializedEntity(request.getPayload())
+                      ? ODataRequestExecutor.createSerializedEntity(request.getPayload())
                       : "";
 
               // again let's be generous in what we accept, be it "Post" or "post" or "POST"
@@ -119,6 +126,7 @@ public class BatchRequestBuilder {
                     new CustomODataRequestCreate(
                         this.oDataService, resourcePath, payload, this.oDataVersion);
                 changeset.addCreate(create);
+                this.requests.add(create); //> keep track for later result retrieval
               } else if (method.equalsIgnoreCase(Request.Method.PUT.toString().toLowerCase())) {
                 CustomODataRequestUpdate update =
                     new CustomODataRequestUpdate(
@@ -129,6 +137,7 @@ public class BatchRequestBuilder {
                         null,
                         this.oDataVersion);
                 changeset.addUpdate(update);
+                this.requests.add(update); //> keep track for later result retrieval
               } else if (method.equalsIgnoreCase(Request.Method.PATCH.toString().toLowerCase())) {
                 CustomODataRequestUpdate update =
                     new CustomODataRequestUpdate(
@@ -139,11 +148,13 @@ public class BatchRequestBuilder {
                         null,
                         this.oDataVersion);
                 changeset.addUpdate(update);
+                this.requests.add(update); //> keep track for later result retrieval
               } else if (method.equalsIgnoreCase(Request.Method.DELETE.toString().toLowerCase())) {
                 CustomODataRequestDelete delete =
                     new CustomODataRequestDelete(
                         this.oDataService, resourcePath, null, this.oDataVersion);
                 changeset.addDelete(delete);
+                this.requests.add(delete); //> keep track for later result retrieval
               } else {
                 throw new IllegalArgumentException("Unknown method: " + request.getMethod());
               }
