@@ -1,16 +1,15 @@
 package io.camunda.connector.sap.odata;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import com.sap.cloud.sdk.datamodel.odata.client.ODataProtocol;
 import io.camunda.connector.sap.odata.model.BatchRequestBuilder;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class BatchBuildingTest {
 
@@ -60,6 +59,6 @@ public class BatchBuildingTest {
     builder.buildSource(testFileContent).buildRequest();
 
     var batchRequest = builder.getBatch();
-    assertEquals(batchRequest.getRequests().size() , 5);
+    assertEquals(batchRequest.getRequests().size(), 5);
   }
 }
