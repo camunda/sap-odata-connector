@@ -11,6 +11,9 @@ import io.camunda.connector.api.error.ConnectorException;
 import io.camunda.connector.sap.odata.helper.CommonExecutor;
 import io.camunda.connector.sap.odata.model.*;
 import io.camunda.connector.sap.odata.model.ODataConnectorRequest.ODataVersion;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import org.apache.http.client.HttpClient;
 import org.slf4j.Logger;
@@ -30,21 +33,33 @@ public class ODataBatchRequestExecutor {
     BatchRequestBuilder builder = new BatchRequestBuilder();
     builder.setODataVersion(protocol);
     builder.setODataService(request.oDataService());
+
     try {
       var payloadAsString = builder.getMapper().writeValueAsString(request.batchRequestPayload());
       builder.buildSource(payloadAsString).buildRequest();
+
+      LOGGER.debug(
+          "OData $batch to: {}", builder.getODataService() + " - incl requests: " + builder.getBatch().getRequests().size());
+
+      LOGGER.debug(
+          "OData $batch start at: "
+              + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss:SSS")));
       ODataRequestResultMultipartGeneric batchResult = builder.getBatch().execute(httpClient);
+      LOGGER.debug(
+          "OData $batch finished at: "
+              + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss:SSS")));
+
       return buildBatchResponse(builder, batchResult, protocol);
     } catch (JsonProcessingException e) {
       throw new ConnectorException(
           ErrorCodes.GENERIC_ERROR.name(),
-          CommonExecutor.buildErrorMsg(e, "OData Batch runtime error: "),
+          CommonExecutor.buildErrorMsg(e, "OData $batch runtime error: "),
           e);
 
     } catch (ODataServiceErrorException e) {
       throw new ConnectorException(
           ErrorCodes.REQUEST_ERROR.name(),
-          CommonExecutor.buildErrorMsg(e, "OData Batch request error: "),
+          CommonExecutor.buildErrorMsg(e, "OData $batch request error: "),
           e);
     }
   }
