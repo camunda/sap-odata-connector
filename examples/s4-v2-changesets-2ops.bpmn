@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_022jekt" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.33.1" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.6.0">
+  <bpmn:process id="batch_changeset_with_2_ops" name="Batch changeset with 2 Ops" isExecutable="true">
+    <bpmn:extensionElements />
+    <bpmn:startEvent id="StartEvent_1" name="need for several records in batch">
+      <bpmn:extensionElements>
+        <zeebe:ioMapping>
+          <zeebe:output source="=&#34;1500062&#34;" target="bp1" />
+          <zeebe:output source="=&#34;1000030&#34;" target="bp2" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:outgoing>Flow_1ur51y1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_1ur51y1" sourceRef="StartEvent_1" targetRef="Activity_07ayfnd" />
+    <bpmn:endEvent id="Event_06t66ae">
+      <bpmn:incoming>Flow_1azzwvd</bpmn:incoming>
+      <bpmn:incoming>Flow_1xgnhb8</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1azzwvd" sourceRef="Activity_07ayfnd" targetRef="Event_06t66ae" />
+    <bpmn:serviceTask id="Activity_07ayfnd" name="$batch PATCH 2 BPs" zeebe:modelerTemplate="SAP_ODATA_CONNECTOR" zeebe:modelerTemplateVersion="2" zeebe:modelerTemplateIcon="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEzIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDUxMyA1MTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHg9IjEuMjM0MzgiIHk9IjIiIHdpZHRoPSIxNDQiIGhlaWdodD0iNDAiIGZpbGw9IiNGRjhDMDAiLz4KPHJlY3QgeD0iMS4yMzQzOCIgeT0iNzgiIHdpZHRoPSIxNDQiIGhlaWdodD0iNDAiIGZpbGw9IiNGRjhDMDAiLz4KPHJlY3QgeD0iMS4yMzQzOCIgeT0iMTU0IiB3aWR0aD0iMTQ0IiBoZWlnaHQ9IjQwIiBmaWxsPSIjRkY4QzAwIi8+CjxyZWN0IHg9IjE3Ny4yMzQiIHk9IjIiIHdpZHRoPSIxNDQiIGhlaWdodD0iNDAiIGZpbGw9IiNGRjhDMDAiLz4KPHJlY3QgeD0iMTc3LjIzNCIgeT0iNzgiIHdpZHRoPSIxNDQiIGhlaWdodD0iNDAiIGZpbGw9IiNGRjhDMDAiLz4KPHJlY3QgeD0iMTc3LjIzNCIgeT0iMTU0IiB3aWR0aD0iMTQ0IiBoZWlnaHQ9IjQwIiBmaWxsPSIjRkY4QzAwIi8+CjxyZWN0IHg9IjE3Ny4yMzQiIHk9IjIzMCIgd2lkdGg9IjE0NCIgaGVpZ2h0PSI0MCIgZmlsbD0iI0ZGOEMwMCIvPgo8Y2lyY2xlIGN4PSI3My45NTI2IiBjeT0iMjg4IiByPSI2NSIgZmlsbD0iI0ZGOEMwMCIvPgo8ZyBjbGlwLXBhdGg9InVybCgjY2xpcDBfOThfNDQ3KSI+CjxwYXRoIGQ9Ik01MTIgMzIwSDE3OVY0ODVIMzQ3LjMzIiBmaWxsPSJ1cmwoI3BhaW50MF9saW5lYXJfOThfNDQ3KSIvPgo8cGF0aCBkPSJNMzQzLjY3IDM1M1Y0MzAuNzMzTDMxNS4xMjcgMzUzSDI4Ni41ODVMMjYyLjQzMyA0MTcuNTMzQzI1OS41MDUgNDAxLjQgMjQyLjY3MiAzOTUuNTMzIDIyOS40OTkgMzkxLjEzM0MyMjAuNzE2IDM4OC4yIDIxMS4yMDIgMzg0LjUzMyAyMTEuMjAyIDM3OS40QzIxMS4yMDIgMzc1LjczMyAyMTYuMzI1IDM3Mi4wNjcgMjI1LjgzOSAzNzIuOEMyMzIuNDI2IDM3My41MzMgMjM4LjI4MSAzNzMuNTMzIDI0OS45OTEgMzc5LjRMMjYxLjcwMSAzNTkuNkMyNTAuNzIzIDM1My43MzMgMjM2LjA4NiAzNTAuOCAyMjQuMzc2IDM1MC44QzIxMC40NyAzNTAuOCAxOTguNzYgMzU1LjIgMTkxLjQ0MiAzNjIuNTMzQzE4Ni4zMTkgMzY3LjY2NyAxODQuMTIzIDM3NC4yNjcgMTgzLjM5MSAzODEuNkMxODMuMzkxIDM5MS44NjcgMTg3LjA1IDM5OS4yIDE5NS4xMDEgNDA1LjA2N0MyMDEuNjg4IDQwOS40NjcgMjA5LjczOCA0MTIuNCAyMTcuMDU3IDQxNC42QzIyNi41NzEgNDE3LjUzMyAyMzMuODkgNDIwLjQ2NyAyMzMuODkgNDI1LjZDMjMzLjE1OCA0MzIuMiAyMjUuODM5IDQzMy42NjcgMjIwLjcxNiA0MzMuNjY3QzIxMS45MzQgNDM0LjQgMjA0LjYxNSA0MzIuOTMzIDE5My42MzcgNDI2LjMzM0wxODMuMzkxIDQ0Ni4xMzNDMTk0LjM2OSA0NTIuNzMzIDIwNi4wNzkgNDU1LjY2NyAyMTkuOTg1IDQ1NS42NjdDMjI5LjQ5OSA0NTUuNjY3IDI0NC4xMzYgNDUyLjczMyAyNTIuMTg3IDQ0NS40TDI1MC43MjMgNDUySDI3OC41MzRMMjgzLjY1NyA0MzkuNTMzQzI5NC42MzUgNDQyLjQ2NyAzMDcuMDc3IDQ0My4yIDMxOC4wNTUgNDM5LjUzM0wzMjEuNzE0IDQ1MkgzNzEuNDgxVjQyMi42NjdIMzgxLjcyN0M0MDcuMzQzIDQyMi42NjcgNDIyLjcxMiA0MTAuMiA0MjIuNzEyIDM4OC4yQzQyMi43MTIgMzYzLjI2NyA0MDguMDc1IDM1MyAzNzYuNjA0IDM1M0gzNDMuNjdaTTI5MC4yNDQgNDE3LjUzM0wzMDAuNDkgMzg0LjUzM0gzMDEuMjIyTDMxMS40NjggNDE3LjUzM0MzMDQuMTQ5IDQxOS43MzMgMjk2LjgzMSA0MTkuNzMzIDI5MC4yNDQgNDE3LjUzM1pNMzcxLjQ4MSA0MDAuNjY3VjM3NC4yNjdIMzc4LjhDMzg4LjMxNCAzNzQuMjY3IDM5NS42MzMgMzc3LjIgMzk1LjYzMyAzODYuNzMzQzM5NS42MzMgMzk3IDM4OC4zMTQgNDAwLjY2NyAzNzguOCA0MDAuNjY3SDM3MS40ODFaIiBmaWxsPSJ3aGl0ZSIvPgo8L2c+CjxkZWZzPgo8bGluZWFyR3JhZGllbnQgaWQ9InBhaW50MF9saW5lYXJfOThfNDQ3IiB4MT0iMTc5IiB5MT0iMzIwIiB4Mj0iMTc5IiB5Mj0iNDg1IiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+CjxzdG9wIHN0b3AtY29sb3I9IiMwMEFBRUUiLz4KPHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjMDA1NUFBIi8+CjwvbGluZWFyR3JhZGllbnQ+CjxjbGlwUGF0aCBpZD0iY2xpcDBfOThfNDQ3Ij4KPHJlY3Qgd2lkdGg9IjMzMyIgaGVpZ2h0PSIxNjUiIGZpbGw9IndoaXRlIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNzkgMzIwKSIvPgo8L2NsaXBQYXRoPgo8L2RlZnM+Cjwvc3ZnPgo=">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="io.camunda:sap-odata:2" retries="0" />
+        <zeebe:ioMapping>
+          <zeebe:input source="V2" target="oDataVersion" />
+          <zeebe:input source="s4" target="destination" />
+          <zeebe:input source="/sap/opu/odata/sap/API_BUSINESS_PARTNER" target="oDataService" />
+          <zeebe:input source="batchReq" target="requestDetails.requestType" />
+          <zeebe:input source="V2" target="requestDetails.oDataVersion" />
+          <zeebe:input source="=[&#10;  {&#10;    &#34;type&#34;: &#34;changeset&#34;,&#10;    &#34;requests&#34;: [&#10;      {&#10;        &#34;method&#34;: &#34;PATCH&#34;,&#10;        &#34;resourcePath&#34;: &#34;A_BusinessPartner(&#39;&#34; + bp1 + &#34;&#39;)&#34;,&#10;        &#34;payload&#34;: {&#10;          &#34;FirstName&#34;: &#34;Bernd (1 &#34; + string(now()) + &#34;)&#34;&#10;        }&#10;      },&#10;      {&#10;        &#34;method&#34;: &#34;PATCH&#34;,&#10;        &#34;resourcePath&#34;: &#34;A_BusinessPartner(&#39;&#34; + bp2 + &#34;&#39;)&#34;,&#10;        &#34;payload&#34;: {&#10;          &#34;FirstName&#34;: &#34;Barbara (2 &#34; + string(now()) + &#34;)&#34;&#10;        }&#10;      }&#10;    ]&#10;  }&#10;]&#10;" target="requestDetails.batchRequestPayload" />
+        </zeebe:ioMapping>
+        <zeebe:taskHeaders>
+          <zeebe:header key="resultVariable" value="batchResult" />
+          <zeebe:header key="errorExpression" value="=if error.code = &#34;400&#34; then&#10;  bpmnError(&#34;400&#34;, &#34;client request is bad&#34;, { errorMessage: error.message, errorCode: error.code })&#10;else if error.code = &#34;404&#34; then&#10;  bpmnError(&#34;404&#34;, &#34;queried resource not found&#34;, { errorMessage: error.message, errorCode: error.code })&#10;else if error.code = &#34;500&#34; then &#10;  bpmnError(&#34;500&#34;, &#34;server error&#34;, { errorMessage: error.message, errorCode: error.code })&#10;else if error.code = &#34;503&#34; then &#10;  bpmnError(&#34;503&#34;, &#34;I&#39;m just an proxy teapot&#34;, { errorMessage: error.message, errorCode: error.code })&#10;else &#10;  null" />
+          <zeebe:header key="retryBackoff" value="PT0S" />
+        </zeebe:taskHeaders>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1ur51y1</bpmn:incoming>
+      <bpmn:outgoing>Flow_1azzwvd</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:boundaryEvent id="Event_03m7av6" attachedToRef="Activity_07ayfnd">
+      <bpmn:extensionElements>
+        <zeebe:ioMapping>
+          <zeebe:output source="=errorMessage" target="ov_errorMessage" />
+          <zeebe:output source="=errorCode" target="ov_errorCode" />
+          <zeebe:output source="=error" target="ov_error" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:outgoing>Flow_1xgnhb8</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_0tdwn51" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="Flow_1xgnhb8" sourceRef="Event_03m7av6" targetRef="Event_06t66ae" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="batch_changeset_with_2_ops">
+      <bpmndi:BPMNShape id="StartEvent_1_di" bpmnElement="StartEvent_1">
+        <dc:Bounds x="182" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="161" y="145" width="79" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_06t66ae_di" bpmnElement="Event_06t66ae">
+        <dc:Bounds x="422" y="102" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_018ygsj_di" bpmnElement="Activity_07ayfnd">
+        <dc:Bounds x="270" y="80" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0lb48sh_di" bpmnElement="Event_03m7av6">
+        <dc:Bounds x="332" y="142" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1ur51y1_di" bpmnElement="Flow_1ur51y1">
+        <di:waypoint x="218" y="120" />
+        <di:waypoint x="270" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1azzwvd_di" bpmnElement="Flow_1azzwvd">
+        <di:waypoint x="370" y="120" />
+        <di:waypoint x="422" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1xgnhb8_di" bpmnElement="Flow_1xgnhb8">
+        <di:waypoint x="350" y="178" />
+        <di:waypoint x="350" y="198" />
+        <di:waypoint x="440" y="198" />
+        <di:waypoint x="440" y="138" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
