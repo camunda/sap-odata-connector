@@ -1,11 +1,14 @@
 package io.camunda.connector.sap.odata.helper;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.sap.cloud.sdk.cloudplatform.connectivity.Destination;
 import com.sap.cloud.sdk.cloudplatform.connectivity.DestinationType;
 import com.sap.cloud.sdk.datamodel.odata.client.ODataProtocol;
 import com.sap.cloud.sdk.datamodel.odata.client.exception.ODataServiceErrorException;
+import com.sap.cloud.sdk.datamodel.odata.client.request.ODataRequestGeneric;
 import com.sap.cloud.sdk.datamodel.odata.client.request.ODataRequestResult;
 import com.sap.cloud.sdk.datamodel.odata.client.request.ODataRequestResultGeneric;
 import io.camunda.connector.api.error.ConnectorException;
@@ -18,9 +21,6 @@ import io.camunda.connector.sap.odata.model.ODataConnectorResponseWithCount;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Optional;
-
-
-import org.apache.http.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -82,21 +82,22 @@ public class CommonExecutor {
   }
 
   public static Record buildBatchErrorResponse(
-      HttpResponse httpResponse) {
-    JsonNode error = JsonNodeFactory.instance.objectNode();
+      ODataServiceErrorException error, ODataRequestGeneric bogey) {
+    ObjectNode response = JsonNodeFactory.instance.objectNode();
+    var m = ConnectorsObjectMapperSupplier.DEFAULT_MAPPER;
     try {
-      var msg = httpResponse.getEntity().getContent();
-      error = ConnectorsObjectMapperSupplier.DEFAULT_MAPPER.readTree(msg);
-    } catch (IOException e) {
+      var body = error.getHttpBody().get();
+      response.put("target", bogey.getRelativeUri().toString()); //> hint the target entity
+      response.set("odata", m.readTree(body));
+    } catch (JsonProcessingException e) {
       throw new ConnectorException(
           ErrorCodes.GENERIC_ERROR.name(),
           CommonExecutor.buildErrorMsg(e, "OData batch response building error: "),
           e);
     }
-    int statusCode = httpResponse.getStatusLine().getStatusCode();
-    return new ODataConnectorResponse(error, statusCode);
+    int statusCode = error.getHttpCode();
+    return new ODataConnectorResponse(response, statusCode);
   }
-
 
   public static Record buildV4Response(
       JsonNode responseBody, int statusCode, Optional<Long> countOrInlineCount) {
