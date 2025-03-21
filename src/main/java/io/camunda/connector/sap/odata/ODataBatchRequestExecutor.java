@@ -5,7 +5,7 @@ import com.sap.cloud.sdk.cloudplatform.connectivity.Destination;
 import com.sap.cloud.sdk.cloudplatform.connectivity.HttpClientAccessor;
 import com.sap.cloud.sdk.datamodel.odata.client.ODataProtocol;
 import com.sap.cloud.sdk.datamodel.odata.client.exception.ODataResponseException;
-import com.sap.cloud.sdk.datamodel.odata.client.request.ODataRequestGeneric;
+import com.sap.cloud.sdk.datamodel.odata.client.request.ODataRequestResultGeneric;
 import com.sap.cloud.sdk.datamodel.odata.client.request.ODataRequestResultMultipartGeneric;
 import io.camunda.connector.api.error.ConnectorException;
 import io.camunda.connector.sap.odata.helper.CommonExecutor;
@@ -84,16 +84,29 @@ public class ODataBatchRequestExecutor {
       throws JsonProcessingException {
     var originalRequests = builder.getRequests();
     var responses = new ArrayList<>();
-    for (ODataRequestGeneric originalRequest : originalRequests) {
-      var result = batchResult.getResult(originalRequest);
-      var response =
-          CommonExecutor.buildResponse(
-              result,
-              oDataVersion.getProtocolVersion().equals("V2")
-                  ? HttpMethod.ODataVersion.V2
-                  : HttpMethod.ODataVersion.V4);
+    // individual requests inside a $batch may error out,
+    // yet the overall $batch is successful
+    for (int i = 0; i < batchResult.getBatchedResponses().size(); i++) {
+      ODataRequestResultGeneric result = null;
+      Record response = null;
+      try {
+        result = batchResult.getResult(originalRequests.get(i));
+        response =
+            CommonExecutor.buildResponse(
+                result,
+                oDataVersion.getProtocolVersion().equals("V2")
+                    ? HttpMethod.ODataVersion.V2
+                    : HttpMethod.ODataVersion.V4);
+      } catch (ODataResponseException e) {
+        // getting the batch result via the original request throws
+        // if the original request != 20x,
+        // yet it needs to be part of the overall successful $batch
+        var rawResponse = batchResult.getBatchedResponses().get(i).getFirst();
+        response = CommonExecutor.buildBatchErrorResponse(rawResponse);
+      }
       responses.add(response);
     }
+
     return new ODataConnectorBatchResponse(responses);
   }
 }
