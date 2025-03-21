@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.sap.cloud.sdk.cloudplatform.connectivity.Destination;
 import com.sap.cloud.sdk.cloudplatform.connectivity.HttpClientAccessor;
 import com.sap.cloud.sdk.datamodel.odata.client.ODataProtocol;
-import com.sap.cloud.sdk.datamodel.odata.client.exception.ODataServiceErrorException;
+import com.sap.cloud.sdk.datamodel.odata.client.exception.ODataResponseException;
 import com.sap.cloud.sdk.datamodel.odata.client.request.ODataRequestGeneric;
 import com.sap.cloud.sdk.datamodel.odata.client.request.ODataRequestResultMultipartGeneric;
 import io.camunda.connector.api.error.ConnectorException;
@@ -64,10 +64,15 @@ public class ODataBatchRequestExecutor {
           CommonExecutor.buildErrorMsg(e, "OData $batch runtime error: "),
           e);
 
-    } catch (ODataServiceErrorException e) {
+    } catch (ODataResponseException e) {
       throw new ConnectorException(
-          ErrorCodes.REQUEST_ERROR.name(),
-          CommonExecutor.buildErrorMsg(e, "OData $batch request error: "),
+          String.valueOf(e.getHttpCode()),
+          CommonExecutor.buildErrorMsg(e, "OData $batch response error: "),
+          e);
+    } catch (RuntimeException e) {
+      throw new ConnectorException(
+          ErrorCodes.BATCH_SERVICE_ERROR.name(),
+          CommonExecutor.buildErrorMsg(e, "OData $batch service error: "),
           e);
     }
   }

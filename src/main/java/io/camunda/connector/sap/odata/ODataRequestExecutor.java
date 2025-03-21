@@ -57,7 +57,7 @@ public class ODataRequestExecutor {
     } catch (ODataResponseException e) {
       throw new ConnectorException(
           String.valueOf(e.getHttpCode()),
-          CommonExecutor.buildErrorMsg(e, "OData request error: "),
+          CommonExecutor.buildErrorMsg(e, "OData response error: "),
           e);
     } catch (RuntimeException e) {
       throw new ConnectorException(
