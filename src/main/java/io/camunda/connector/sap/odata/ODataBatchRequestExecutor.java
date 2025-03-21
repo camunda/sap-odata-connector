@@ -28,7 +28,7 @@ public class ODataBatchRequestExecutor {
     ODataProtocol protocol =
         CommonExecutor.determineProtocol(
             ODataConnectorRequestAccessor.oDataVersion(
-                (ODataRequestDetails.SimpleRequest) request.requestDetails()));
+                (ODataRequestDetails.BatchRequest) request.requestDetails()));
 
     BatchRequestBuilder builder = new BatchRequestBuilder();
     builder.setODataVersion(protocol);

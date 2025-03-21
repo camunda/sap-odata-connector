@@ -21,19 +21,24 @@ import java.util.Map;
     group = "sap",
     label = "Request type",
     name = "requestType",
-    defaultValue = "simpleReq",
-    description = "Whether the request is a batch request or not")
+    defaultValue = "simpleReq")
 public sealed interface ODataRequestDetails {
 
   @TemplateSubType(id = "batchReq", label = "Batch Request")
   record BatchRequest(
       @TemplateProperty(
               group = "batch",
+              label = "OData Version",
+              description = "OData version to use for the batch request",
+              defaultValue = "V2")
+          HttpMethod.ODataVersion oDataVersion,
+      @TemplateProperty(
+              group = "batch",
               label = "Batch Request Payload",
               feel = FeelMode.required,
-              //              optional = true,
               type = TemplateProperty.PropertyType.Text,
               description = "Provide the payload for the batch request")
+          @NotEmpty
           List<Map<String, Object>> batchRequestPayload)
       implements ODataRequestDetails {}
 

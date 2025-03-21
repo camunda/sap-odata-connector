@@ -88,4 +88,9 @@ public class ODataConnectorRequestAccessor {
       case HttpMethod.Put put -> put.oDataVersionPut();
     };
   }
+
+  public static HttpMethod.ODataVersion oDataVersion(
+      ODataRequestDetails.BatchRequest requestDetails) {
+    return requestDetails.oDataVersion();
+  }
 }
