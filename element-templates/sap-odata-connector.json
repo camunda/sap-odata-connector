@@ -76,7 +76,6 @@
   }, {
     "id" : "requestDetails.requestType",
     "label" : "Request type",
-    "description" : "Whether the request is a batch request or not",
     "value" : "simpleReq",
     "group" : "sap",
     "binding" : {
@@ -321,10 +320,37 @@
     },
     "type" : "String"
   }, {
+    "id" : "requestDetails.oDataVersion",
+    "label" : "OData Version",
+    "description" : "OData version to use for the batch request",
+    "optional" : false,
+    "value" : "V2",
+    "group" : "batch",
+    "binding" : {
+      "name" : "requestDetails.oDataVersion",
+      "type" : "zeebe:input"
+    },
+    "condition" : {
+      "property" : "requestDetails.requestType",
+      "equals" : "batchReq",
+      "type" : "simple"
+    },
+    "type" : "Dropdown",
+    "choices" : [ {
+      "name" : "V2",
+      "value" : "V2"
+    }, {
+      "name" : "V4",
+      "value" : "V4"
+    } ]
+  }, {
     "id" : "requestDetails.batchRequestPayload",
     "label" : "Batch Request Payload",
     "description" : "Provide the payload for the batch request",
     "optional" : false,
+    "constraints" : {
+      "notEmpty" : true
+    },
     "feel" : "required",
     "group" : "batch",
     "binding" : {
