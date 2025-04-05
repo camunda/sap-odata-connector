@@ -68,10 +68,17 @@ After the mockserver is up and running, `mvn test` can be run in the root direct
 
 ## Release cutting
 
-&rarr; will publish a docker image and do a GH release
+&rarr; will always 
+- publish a docker image 
+- do a GH release
 
-:warning: Publishing of docker images and GH releases is only done upon changes to `pom.xml` in a push to this branch.
+### rolling 8.x release
+:warning: GH releases is only done upon changes to `pom.xml` in a push to a `release/8.x` branch.
+- adjust version in `/src/pom.xml` (minor version)
+- generate the connector template w/ the respective maven task
+- push changes to `release/8.x` branch
 
+### new 8.x release
 - create release branch: `release/8.x`
 - adjust version in `/src/pom.xml`
 - in `.github/workflows/build-and-publish.yml`:
