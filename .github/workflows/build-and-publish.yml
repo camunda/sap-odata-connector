@@ -1,11 +1,10 @@
 name: build-and-publish
 # - docker-image
-# - deployment to BTP
 
 on:
   push:
     branches:
-      - release/8.5
+      - release/*
     paths:
       - pom.xml
 
@@ -92,7 +91,7 @@ jobs:
           cache: maven
 
       - name: build
-        run: mvn -B -PcheckFormat package --file pom.xml -DskipTests # as we've run the tests in the previous job
+        run: mvn --no-transfer-progress -PcheckFormat package --file pom.xml -DskipTests # as we've run the tests in the previous job
 
       - name: set up docker buildx
         uses: docker/setup-buildx-action@v3
