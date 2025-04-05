@@ -2,10 +2,6 @@ package io.camunda.connector.sap.odata.model;
 
 import static java.net.URLEncoder.encode;
 
-import io.camunda.connector.sap.odata.model.ODataConnectorRequest.HttpMethod.*;
-import io.camunda.connector.sap.odata.model.ODataConnectorRequest.HttpMethod.Get.ODataVersionGet.V2;
-import io.camunda.connector.sap.odata.model.ODataConnectorRequest.HttpMethod.Get.ODataVersionGet.V4;
-import io.camunda.connector.sap.odata.model.ODataConnectorRequest.ODataVersion;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,7 +9,7 @@ import java.util.Set;
 import java.util.function.Function;
 
 public class ODataConnectorRequestAccessor {
-  public static Map<String, String> queryParams(Get get) {
+  public static Map<String, String> queryParams(HttpMethod.Get get) {
     Map<String, String> params = new HashMap<>();
     putIfPresent(params, "$top", get.top(), String::valueOf);
     putIfPresent(params, "$filter", get.filter());
@@ -22,18 +18,40 @@ public class ODataConnectorRequestAccessor {
     putIfPresent(params, "$expand", get.expand());
     putIfPresent(params, "$select", get.select());
     switch (get.oDataVersionGet()) {
-      case V2 v2 -> {
+      case HttpMethod.Get.ODataVersionGet.V2 v2 -> {
         if (v2.inlinecount() != null && v2.inlinecount()) {
           putIfPresent(params, "$inlinecount", true, (ignored) -> "allpages");
         }
       }
-      case V4 v4 -> {
+      case HttpMethod.Get.ODataVersionGet.V4 v4 -> {
         if (v4.count() != null && v4.count()) {
           putIfPresent(params, "$count", true, (ignored) -> "true");
         }
         putIfPresent(params, "$search", v4.search());
       }
     }
+    return params;
+  }
+
+  public static Map<String, String> queryParams(Map<String, String> getParams) {
+    Map<String, String> params = new HashMap<>();
+    getParams.forEach(
+        (key, value) -> {
+          if (Set.of(
+                  "$format",
+                  "$top",
+                  "$skip",
+                  "$filter",
+                  "$orderby",
+                  "$expand",
+                  "$select",
+                  "$inlinecount",
+                  "$count",
+                  "$search")
+              .contains(key)) {
+            putIfPresent(params, key, value);
+          }
+        });
     return params;
   }
 
@@ -56,17 +74,23 @@ public class ODataConnectorRequestAccessor {
     }
   }
 
-  public static ODataConnectorRequest.ODataVersion oDataVersion(ODataConnectorRequest request) {
-    return switch (request.httpMethod()) {
-      case Get get ->
+  public static HttpMethod.ODataVersion oDataVersion(
+      ODataRequestDetails.SimpleRequest requestDetails) {
+    return switch (requestDetails.httpMethod()) {
+      case HttpMethod.Get get ->
           switch (get.oDataVersionGet()) {
-            case V2 ignored -> ODataVersion.V2;
-            case V4 ignored -> ODataVersion.V4;
+            case HttpMethod.Get.ODataVersionGet.V2 ignored -> HttpMethod.ODataVersion.V2;
+            case HttpMethod.Get.ODataVersionGet.V4 ignored -> HttpMethod.ODataVersion.V4;
           };
-      case Delete delete -> delete.oDataVersionDelete();
-      case Patch patch -> patch.oDataVersionPatch();
-      case Post post -> post.oDataVersionPost();
-      case Put put -> put.oDataVersionPut();
+      case HttpMethod.Delete delete -> delete.oDataVersionDelete();
+      case HttpMethod.Patch patch -> patch.oDataVersionPatch();
+      case HttpMethod.Post post -> post.oDataVersionPost();
+      case HttpMethod.Put put -> put.oDataVersionPut();
     };
+  }
+
+  public static HttpMethod.ODataVersion oDataVersion(
+      ODataRequestDetails.BatchRequest requestDetails) {
+    return requestDetails.oDataVersion();
   }
 }

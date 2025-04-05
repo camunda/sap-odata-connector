@@ -1,0 +1,77 @@
+[
+  {
+    "type": "batch",
+    "requests": [
+      {
+        "method": "GET",
+        "resourcePath": "A_BusinessPartner",
+        "options": {
+          "format": "json",
+          "top": "10",
+          "filter": "CompanyName eq 'SAP SE'",
+          "orderby": "BusinessPartnerID desc",
+          "expand": "to_BusinessPartnerAddress",
+          "select": "BusinessPartnerID,CompanyName",
+          "inlinecount": "allpages"
+        }
+      },
+      {
+        "method": "GET",
+        "resourcePath": "A_BusinessPartner('1500062')",
+        "options": {
+          "format": "json",
+          "select": "FirstName,LastName"
+        }
+      }
+    ]
+  },
+  {
+    "type": "changeset",
+    "requests": [
+      {
+        "method": "PATCH",
+        "resourcePath": "A_BusinessPartner('1500062')",
+        "payload": {
+          "FirstName": "Bernd (changed)"
+        }
+      },
+      {
+        "method": "POST",
+        "resourcePath": "A_BusinessPartner",
+        "payload": {
+          "FirstName": "Jane",
+          "LastName": "Doe",
+          "CompanyName": "Camunda"
+        }
+      },
+      {
+        "method": "DELETE",
+        "resourcePath": "A_BusinessPartner('1500100')"
+      }
+    ]
+  },
+  {
+    "type": "batch",
+    "requests": [
+      {
+        "method": "GET",
+        "resourcePath": "A_BusinessPartner('1500062')/to_BusinessPartnerAddress",
+        "options": {
+          "format": "json"
+        }
+      }
+    ]
+  },
+  {
+    "type": "changeset",
+    "requests": [
+      {
+        "method": "PATCH",
+        "resourcePath": "A_BusinessPartner('1500100')",
+        "payload": {
+          "FirstName": "John (changed)"
+        }
+      }
+    ]
+  }
+]
