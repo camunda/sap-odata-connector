@@ -45,7 +45,7 @@ public class CommonExecutor {
       return JsonNodeFactory.instance.nullNode();
     }
     try (InputStream in = oDataResponse.getHttpResponse().getEntity().getContent()) {
-      return ConnectorsObjectMapperSupplier.DEFAULT_MAPPER.readTree(in);
+      return ConnectorsObjectMapperSupplier.getCopy().readTree(in);
     } catch (IOException e) {
       throw new RuntimeException("Error while reading http response", e);
     }
@@ -84,7 +84,7 @@ public class CommonExecutor {
   public static Record buildBatchErrorResponse(
       ODataServiceErrorException error, ODataRequestGeneric bogey) {
     ObjectNode response = JsonNodeFactory.instance.objectNode();
-    var m = ConnectorsObjectMapperSupplier.DEFAULT_MAPPER;
+    var m = ConnectorsObjectMapperSupplier.getCopy();
     try {
       var body = error.getHttpBody().get();
       response.put("target", bogey.getRelativeUri().toString()); //> hint the target entity

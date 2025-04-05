@@ -113,7 +113,7 @@ public class ODataRequestExecutor {
 
   public static String createSerializedEntity(Map<String, Object> entity) {
     try {
-      return ConnectorsObjectMapperSupplier.DEFAULT_MAPPER.writeValueAsString(entity);
+      return ConnectorsObjectMapperSupplier.getCopy().writeValueAsString(entity);
     } catch (JsonProcessingException e) {
       throw new RuntimeException("Error while serializing payload", e);
     }
