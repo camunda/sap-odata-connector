@@ -1,6 +1,5 @@
 package io.camunda.connector.sap.odata;
 
-import static io.camunda.connector.sap.odata.model.ODataConnectorRequest.ODataVersion.V4;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
@@ -8,9 +7,16 @@ import io.camunda.connector.sap.odata.helper.CustomODataRequestCreate;
 import io.camunda.connector.sap.odata.helper.CustomODataRequestDelete;
 import io.camunda.connector.sap.odata.helper.CustomODataRequestRead;
 import io.camunda.connector.sap.odata.helper.CustomODataRequestUpdate;
+import io.camunda.connector.sap.odata.model.HttpMethod;
+import io.camunda.connector.sap.odata.model.HttpMethod.Delete;
+import io.camunda.connector.sap.odata.model.HttpMethod.Get;
+import io.camunda.connector.sap.odata.model.HttpMethod.Get.ODataVersionGet;
+import io.camunda.connector.sap.odata.model.HttpMethod.Post;
+import io.camunda.connector.sap.odata.model.HttpMethod.Put;
 import io.camunda.connector.sap.odata.model.ODataConnectorRequest;
 import io.camunda.connector.sap.odata.model.ODataConnectorResponse;
 import io.camunda.connector.sap.odata.model.ODataConnectorResponseWithCount;
+import io.camunda.connector.sap.odata.model.ODataRequestDetails.SimpleRequest;
 import io.camunda.connector.test.outbound.OutboundConnectorContextBuilder;
 import java.util.Arrays;
 import java.util.List;
@@ -60,26 +66,17 @@ public class ODataS4Test {
 
     @Test
     void count_not_for_entity_in_v4() {
-      var input =
-          new ODataConnectorRequest(
-              "s4",
-              oDataService,
-              entity,
-              new ODataConnectorRequest.HttpMethod.Get(
-                  null,
-                  null,
-                  null,
-                  null,
-                  null,
-                  null,
-                  new ODataConnectorRequest.HttpMethod.Get.ODataVersionGet.V4(null, false)),
-              null);
+      var httpMethod =
+          new Get(null, null, null, null, null, null, new ODataVersionGet.V4(null, false));
+      var requestDetails = new SimpleRequest(entity, httpMethod, null);
+
+      var input = new ODataConnectorRequest("s4", oDataService, requestDetails);
+
       var context = OutboundConnectorContextBuilder.create().variables(input).build();
 
       var function = new ODataConnector();
-      var req =
-          (CustomODataRequestRead)
-              function.buildRequest(context.bindVariables((ODataConnectorRequest.class)));
+      var requestExecutor = new ODataRequestExecutor();
+      var req = (CustomODataRequestRead) requestExecutor.buildRequest(requestDetails, input);
       var response = function.execute(context);
 
       assertThat(req.getRelativeUri().toString()).isEqualTo(oDataService + entity);
@@ -95,34 +92,19 @@ public class ODataS4Test {
 
     @Test
     void allow_count_in_entitysets_v4() {
-      var input =
-          new ODataConnectorRequest(
-              "s4",
-              oDataService,
-              entitySet,
-              new ODataConnectorRequest.HttpMethod.Get(
-                  null,
-                  5L,
-                  null,
-                  null,
-                  null,
-                  null,
-                  new ODataConnectorRequest.HttpMethod.Get.ODataVersionGet.V4(null, true)),
-              null);
+      var httpMethod =
+          new Get(null, 5L, null, null, null, null, new ODataVersionGet.V4(null, true));
+      var requestDetails = new SimpleRequest(entitySet, httpMethod, null);
+
+      var input = new ODataConnectorRequest("s4", oDataService, requestDetails);
+
+      var httpMethodWithoutCount =
+          new Get(null, 5L, null, null, null, null, new ODataVersionGet.V4(null, false));
+      var requestDetailsWithoutCount = new SimpleRequest(entitySet, httpMethodWithoutCount, null);
+
       var inputWithoutCount =
-          new ODataConnectorRequest(
-              "s4",
-              oDataService,
-              entitySet,
-              new ODataConnectorRequest.HttpMethod.Get(
-                  null,
-                  5L,
-                  null,
-                  null,
-                  null,
-                  null,
-                  new ODataConnectorRequest.HttpMethod.Get.ODataVersionGet.V4(null, false)),
-              null);
+          new ODataConnectorRequest("s4", oDataService, requestDetailsWithoutCount);
+
       var context = OutboundConnectorContextBuilder.create().variables(input).build();
       var contextWithoutCount =
           OutboundConnectorContextBuilder.create().variables(inputWithoutCount).build();
@@ -155,19 +137,12 @@ public class ODataS4Test {
     // fex: /WarrantyClaim/{WrntyClaimHeaderUUID}/SAP__self.ProcessSupplierClaim
 
     static String path = "/sap/opu/odata4/sap/api_purchaseorder_2/srvd_a2x/sap/purchaseorder/0001";
-    static ODataConnectorRequest.HttpMethod _get =
-        new ODataConnectorRequest.HttpMethod.Get(
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            new ODataConnectorRequest.HttpMethod.Get.ODataVersionGet.V4(null, null));
-    static ODataConnectorRequest.HttpMethod _post = new ODataConnectorRequest.HttpMethod.Post(V4);
-    static ODataConnectorRequest.HttpMethod _put = new ODataConnectorRequest.HttpMethod.Put(V4);
-    static ODataConnectorRequest.HttpMethod _delete =
-        new ODataConnectorRequest.HttpMethod.Delete(V4);
+
+    static HttpMethod _get =
+        new Get(null, null, null, null, null, null, new ODataVersionGet.V4(null, null));
+    static HttpMethod _post = new Post(HttpMethod.ODataVersion.V4);
+    static HttpMethod _put = new Put(HttpMethod.ODataVersion.V4);
+    static HttpMethod _delete = new Delete(HttpMethod.ODataVersion.V4);
 
     static String[] _paths = {
       "PurchaseOrder/4500000001/SAP__self.ProcessSupplierClaim",
@@ -187,59 +162,52 @@ public class ODataS4Test {
 
     @ParameterizedTest
     @FieldSource({"v4_get"})
-    void for_GET(String entityPath, ODataConnectorRequest.HttpMethod method) {
-
-      var input = new ODataConnectorRequest("notRelevant", path, entityPath, method, null);
+    void for_GET(String entityPath, HttpMethod method) {
+      var requestDetails = new SimpleRequest(entityPath, method, null);
+      var input = new ODataConnectorRequest("notRelevant", path, requestDetails);
       var context = OutboundConnectorContextBuilder.create().variables(input).build();
 
-      var function = new ODataConnector();
-      var req =
-          (CustomODataRequestRead)
-              function.buildRequest(context.bindVariables((ODataConnectorRequest.class)));
+      var requestExecutor = new ODataRequestExecutor();
+      var req = (CustomODataRequestRead) requestExecutor.buildRequest(requestDetails, input);
 
       assertThat(req.getRelativeUri().toString()).isEqualTo(path + "/" + entityPath);
     }
 
     @ParameterizedTest
     @FieldSource({"v4_post"})
-    void for_POST(
-        String entityPath, ODataConnectorRequest.HttpMethod method, Map<String, Object> payload) {
-      var input = new ODataConnectorRequest("notRelevant", path, entityPath, method, payload);
+    void for_POST(String entityPath, HttpMethod method, Map<String, Object> payload) {
+      var requestDetails = new SimpleRequest(entityPath, method, payload);
+      var input = new ODataConnectorRequest("notRelevant", path, requestDetails);
       var context = OutboundConnectorContextBuilder.create().variables(input).build();
 
-      var function = new ODataConnector();
-      var req =
-          (CustomODataRequestCreate)
-              function.buildRequest(context.bindVariables((ODataConnectorRequest.class)));
+      var requestExecutor = new ODataRequestExecutor();
+      var req = (CustomODataRequestCreate) requestExecutor.buildRequest(requestDetails, input);
 
       assertThat(req.getRelativeUri().toString()).isEqualTo(path + "/" + entityPath);
     }
 
     @ParameterizedTest
     @FieldSource({"v4_put"})
-    void for_PUT(
-        String entityPath, ODataConnectorRequest.HttpMethod method, Map<String, Object> payload) {
-      var input = new ODataConnectorRequest("notRelevant", path, entityPath, method, payload);
+    void for_PUT(String entityPath, HttpMethod method, Map<String, Object> payload) {
+      var requestDetails = new SimpleRequest(entityPath, method, payload);
+      var input = new ODataConnectorRequest("notRelevant", path, requestDetails);
       var context = OutboundConnectorContextBuilder.create().variables(input).build();
 
-      var function = new ODataConnector();
-      var req =
-          (CustomODataRequestUpdate)
-              function.buildRequest(context.bindVariables((ODataConnectorRequest.class)));
+      var requestExecutor = new ODataRequestExecutor();
+      var req = (CustomODataRequestUpdate) requestExecutor.buildRequest(requestDetails, input);
 
       assertThat(req.getRelativeUri().toString()).isEqualTo(path + "/" + entityPath);
     }
 
     @ParameterizedTest
     @FieldSource({"v4_delete"})
-    void for_DELETE(String entityPath, ODataConnectorRequest.HttpMethod method) {
-      var input = new ODataConnectorRequest("notRelevant", path, entityPath, method, null);
+    void for_DELETE(String entityPath, HttpMethod method) {
+      var requestDetails = new SimpleRequest(entityPath, method, null);
+      var input = new ODataConnectorRequest("notRelevant", path, requestDetails);
       var context = OutboundConnectorContextBuilder.create().variables(input).build();
 
-      var function = new ODataConnector();
-      var req =
-          (CustomODataRequestDelete)
-              function.buildRequest(context.bindVariables((ODataConnectorRequest.class)));
+      var requestExecutor = new ODataRequestExecutor();
+      var req = (CustomODataRequestDelete) requestExecutor.buildRequest(requestDetails, input);
 
       assertThat(req.getRelativeUri().toString()).isEqualTo(path + "/" + entityPath);
     }

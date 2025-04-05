@@ -9,18 +9,16 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 import com.sap.cloud.sdk.cloudplatform.connectivity.AuthenticationType;
 import com.sap.cloud.sdk.cloudplatform.connectivity.DefaultHttpDestination;
 import com.sap.cloud.sdk.cloudplatform.connectivity.DestinationAccessor;
+import io.camunda.connector.sap.odata.model.HttpMethod;
 import io.camunda.connector.sap.odata.model.ODataConnectorRequest;
-import io.camunda.connector.sap.odata.model.ODataConnectorRequest.HttpMethod.*;
-import io.camunda.connector.sap.odata.model.ODataConnectorRequest.HttpMethod.Get.ODataVersionGet;
-import io.camunda.connector.sap.odata.model.ODataConnectorRequest.HttpMethod.Get.ODataVersionGet.V2;
-import io.camunda.connector.sap.odata.model.ODataConnectorRequest.HttpMethod.Get.ODataVersionGet.V4;
-import io.camunda.connector.sap.odata.model.ODataConnectorRequest.ODataVersion;
 import io.camunda.connector.sap.odata.model.ODataConnectorResponse;
 import io.camunda.connector.sap.odata.model.ODataConnectorResponseWithCount;
+import io.camunda.connector.sap.odata.model.ODataRequestDetails.SimpleRequest;
 import io.camunda.connector.test.outbound.OutboundConnectorContextBuilder;
 import io.vavr.control.Try;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.*;
@@ -51,11 +49,11 @@ public class ODataStandardTest {
     return name.toString();
   }
 
-  static ODataVersionGet oDataVersionGet(String protocol) {
+  static HttpMethod.Get.ODataVersionGet oDataVersionGet(String protocol) {
     if (protocol.equals("V2")) {
-      return new V2(false);
+      return new HttpMethod.Get.ODataVersionGet.V2(false);
     } else if (protocol.equals("V4")) {
-      return new V4(null, null);
+      return new HttpMethod.Get.ODataVersionGet.V4(null, null);
     } else {
       throw new IllegalArgumentException("Unsupported protocol: " + protocol);
     }
@@ -130,14 +128,11 @@ public class ODataStandardTest {
     @ParameterizedTest(name = "{2} GET {1}")
     @FieldSource({"v2_get", "v4_get"})
     void entity(String path, String entity, String protocol, String expected) {
+      var httpMethod =
+          new HttpMethod.Get(null, null, null, null, null, null, oDataVersionGet(protocol));
+      var requestDetails = new SimpleRequest(entity, httpMethod, null);
 
-      var input =
-          new ODataConnectorRequest(
-              tpl_Destination,
-              path,
-              entity,
-              new Get(null, null, null, null, null, null, oDataVersionGet(protocol)),
-              null);
+      var input = new ODataConnectorRequest(tpl_Destination, path, requestDetails);
 
       var context = OutboundConnectorContextBuilder.create().variables(input).build();
 
@@ -153,13 +148,18 @@ public class ODataStandardTest {
     @Test
     @DisplayName("validate URL-safe encoding of $filter")
     void validate_encoded_filter() {
-      var input =
-          new ODataConnectorRequest(
-              tpl_Destination,
-              "/odata/v2/admin",
-              "Authors",
-              new Get("name eq 'Edgar Allen Poe'", null, null, null, null, null, new V2(false)),
-              null);
+      var httpMethod =
+          new HttpMethod.Get(
+              "name eq 'Edgar Allen Poe'",
+              null,
+              null,
+              null,
+              null,
+              null,
+              new HttpMethod.Get.ODataVersionGet.V2(false));
+      var requestDetails = new SimpleRequest("Authors", httpMethod, null);
+
+      var input = new ODataConnectorRequest(tpl_Destination, "/odata/v2/admin", requestDetails);
 
       var context = OutboundConnectorContextBuilder.create().variables(input).build();
 
@@ -176,37 +176,40 @@ public class ODataStandardTest {
     @ParameterizedTest(name = "{2} GET {1}")
     @FieldSource("get_with_count")
     void entity_count(String protocol, String path) {
+      var httpMethodWithCount =
+          protocol.equals("V2")
+              ? new HttpMethod.Get(
+                  null, null, null, null, null, null, new HttpMethod.Get.ODataVersionGet.V2(true))
+              : new HttpMethod.Get(
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  new HttpMethod.Get.ODataVersionGet.V4(null, true));
+
+      var requestDetailsWithCount = new SimpleRequest("Books", httpMethodWithCount, null);
       var inputWithCount =
-          new ODataConnectorRequest(
-              tpl_Destination,
-              path,
-              "Books",
-              new Get(
-                  null,
-                  null,
-                  null,
-                  null,
-                  null,
-                  null,
-                  protocol.equals("V2") ? new V2(true) : new V4(null, true)),
-              null);
+          new ODataConnectorRequest(tpl_Destination, path, requestDetailsWithCount);
       var contextWithCount =
           OutboundConnectorContextBuilder.create().variables(inputWithCount).build();
 
-      var input =
-          new ODataConnectorRequest(
-              tpl_Destination,
-              path,
-              "Books",
-              new Get(
+      var httpMethod =
+          protocol.equals("V2")
+              ? new HttpMethod.Get(
+                  null, null, null, null, null, null, new HttpMethod.Get.ODataVersionGet.V2(false))
+              : new HttpMethod.Get(
                   null,
                   null,
                   null,
                   null,
                   null,
                   null,
-                  protocol.equals("V2") ? new V2(false) : new V4(null, false)),
-              null);
+                  new HttpMethod.Get.ODataVersionGet.V4(null, false));
+
+      var requestDetails = new SimpleRequest("Books", httpMethod, null);
+      var input = new ODataConnectorRequest(tpl_Destination, path, requestDetails);
       var context = OutboundConnectorContextBuilder.create().variables(input).build();
 
       var function = new ODataConnector();
@@ -231,13 +234,11 @@ public class ODataStandardTest {
     @ParameterizedTest
     @FieldSource("get_set")
     void entity_set(String protocol, String path) {
-      var input =
-          new ODataConnectorRequest(
-              tpl_Destination,
-              path,
-              "Books",
-              new Get(null, null, null, null, null, null, oDataVersionGet(protocol)),
-              null);
+      var httpMethod =
+          new HttpMethod.Get(null, null, null, null, null, null, oDataVersionGet(protocol));
+      var requestDetails = new SimpleRequest("Books", httpMethod, null);
+
+      var input = new ODataConnectorRequest(tpl_Destination, path, requestDetails);
 
       var context = OutboundConnectorContextBuilder.create().variables(input).build();
 
@@ -256,20 +257,17 @@ public class ODataStandardTest {
     @ParameterizedTest(name = "{0}, GET {1}, entity {2}")
     @FieldSource("get_set_with_orderby")
     void entity_set_ordered(String protocol, String path, String entity) {
-      var input_sort_asc =
-          new ODataConnectorRequest(
-              tpl_Destination,
-              path,
-              entity,
-              new Get(null, null, null, "title", null, "title", oDataVersionGet(protocol)),
-              null);
+      var httpMethodSortAsc =
+          new HttpMethod.Get(null, null, null, "title", null, "title", oDataVersionGet(protocol));
+      var requestDetailsSortAsc = new SimpleRequest(entity, httpMethodSortAsc, null);
+      var input_sort_asc = new ODataConnectorRequest(tpl_Destination, path, requestDetailsSortAsc);
+
+      var httpMethodSortDesc =
+          new HttpMethod.Get(
+              null, null, null, "title desc", null, "title", oDataVersionGet(protocol));
+      var requestDetailsSortDesc = new SimpleRequest("Books", httpMethodSortDesc, null);
       var input_sort_desc =
-          new ODataConnectorRequest(
-              tpl_Destination,
-              path,
-              "Books",
-              new Get(null, null, null, "title desc", null, "title", oDataVersionGet(protocol)),
-              null);
+          new ODataConnectorRequest(tpl_Destination, path, requestDetailsSortDesc);
 
       var context_sort_asc =
           OutboundConnectorContextBuilder.create().variables(input_sort_asc).build();
@@ -302,13 +300,12 @@ public class ODataStandardTest {
     void create(String protocol, String path) {
       String name = randomString();
       int id = randomId();
-      var input =
-          new ODataConnectorRequest(
-              tpl_Destination,
-              path,
-              "Authors",
-              new Post(ODataVersion.valueOf(protocol)),
-              ofEntries(entry("ID", id), entry("name", name)));
+      Map<String, Object> payload = ofEntries(entry("ID", id), entry("name", name));
+
+      var httpMethod = new HttpMethod.Post(HttpMethod.ODataVersion.valueOf(protocol));
+      var requestDetails = new SimpleRequest("Authors", httpMethod, payload);
+
+      var input = new ODataConnectorRequest(tpl_Destination, path, requestDetails);
 
       var context = OutboundConnectorContextBuilder.create().variables(input).build();
 
@@ -321,13 +318,10 @@ public class ODataStandardTest {
 
     @Test
     void v4_bound_action() {
-      var input =
-          new ODataConnectorRequest(
-              tpl_Destination,
-              "/admin",
-              "Books(201)/SetStatusReject",
-              new Post(ODataVersion.valueOf("V4")),
-              null);
+      var httpMethod = new HttpMethod.Post(HttpMethod.ODataVersion.valueOf("V4"));
+      var requestDetails = new SimpleRequest("Books(201)/SetStatusReject", httpMethod, null);
+
+      var input = new ODataConnectorRequest(tpl_Destination, "/admin", requestDetails);
       var context = OutboundConnectorContextBuilder.create().variables(input).build();
 
       var function = new ODataConnector();
@@ -365,16 +359,12 @@ public class ODataStandardTest {
     @FieldSource({"v2_put", "v4_put"})
     void replace(String entity, String protocol, String path) {
       String name = randomString();
-      var input =
-          new ODataConnectorRequest(
-              tpl_Destination,
-              path,
-              entity,
-              new Put(ODataVersion.valueOf(protocol)),
-              ofEntries(entry("name", name))
-              //              new Put(ODataVersion.valueOf(protocol), ofEntries(entry("name",
-              // name)))
-              );
+      Map<String, Object> payload = ofEntries(entry("name", name));
+
+      var httpMethod = new HttpMethod.Put(HttpMethod.ODataVersion.valueOf(protocol));
+      var requestDetails = new SimpleRequest(entity, httpMethod, payload);
+
+      var input = new ODataConnectorRequest(tpl_Destination, path, requestDetails);
 
       var context = OutboundConnectorContextBuilder.create().variables(input).build();
 
@@ -390,13 +380,12 @@ public class ODataStandardTest {
     @FieldSource({"v2_put", "v4_put"})
     void update(String entity, String protocol, String path) {
       String name = randomString();
-      var input =
-          new ODataConnectorRequest(
-              tpl_Destination,
-              path,
-              entity,
-              new Patch(ODataVersion.valueOf(protocol)),
-              ofEntries(entry("name", name)));
+      Map<String, Object> payload = ofEntries(entry("name", name));
+
+      var httpMethod = new HttpMethod.Patch(HttpMethod.ODataVersion.valueOf(protocol));
+      var requestDetails = new SimpleRequest(entity, httpMethod, payload);
+
+      var input = new ODataConnectorRequest(tpl_Destination, path, requestDetails);
 
       var context = OutboundConnectorContextBuilder.create().variables(input).build();
 
@@ -421,25 +410,20 @@ public class ODataStandardTest {
       // first, create a new entity
       String name = randomString();
       int id = randomId();
-      var input =
-          new ODataConnectorRequest(
-              tpl_Destination,
-              path,
-              "Authors",
-              new Post(ODataVersion.valueOf(protocol)),
-              ofEntries(entry("ID", id), entry("name", name)));
+      Map<String, Object> payload = ofEntries(entry("ID", id), entry("name", name));
+
+      var httpMethodPost = new HttpMethod.Post(HttpMethod.ODataVersion.valueOf(protocol));
+      var requestDetailsPost = new SimpleRequest("Authors", httpMethodPost, payload);
+      var input = new ODataConnectorRequest(tpl_Destination, path, requestDetailsPost);
 
       var context = OutboundConnectorContextBuilder.create().variables(input).build();
       new ODataConnector().execute(context);
 
       // delete newly created entity
-      input =
-          new ODataConnectorRequest(
-              tpl_Destination,
-              path,
-              "Authors(" + id + ")",
-              new Delete(ODataVersion.valueOf(protocol)),
-              null);
+      var httpMethodDelete = new HttpMethod.Delete(HttpMethod.ODataVersion.valueOf(protocol));
+      var requestDetailsDelete = new SimpleRequest("Authors(" + id + ")", httpMethodDelete, null);
+      input = new ODataConnectorRequest(tpl_Destination, path, requestDetailsDelete);
+
       context = OutboundConnectorContextBuilder.create().variables(input).build();
       var function = new ODataConnector();
       var response = (ODataConnectorResponse) function.execute(context);
@@ -449,13 +433,10 @@ public class ODataStandardTest {
       assertThat(response).extracting("statusCode").isEqualTo(204);
 
       // make sure it's not there anymore
-      input =
-          new ODataConnectorRequest(
-              tpl_Destination,
-              path,
-              "Authors(" + id + ")",
-              new Get(null, null, null, null, null, null, oDataVersionGet(protocol)),
-              null);
+      var httpMethodGet =
+          new HttpMethod.Get(null, null, null, null, null, null, oDataVersionGet(protocol));
+      var requestDetailsGet = new SimpleRequest("Authors(" + id + ")", httpMethodGet, null);
+      input = new ODataConnectorRequest(tpl_Destination, path, requestDetailsGet);
 
       context = OutboundConnectorContextBuilder.create().variables(input).build();
       OutboundConnectorContextBuilder.TestConnectorContext finalContext = context;

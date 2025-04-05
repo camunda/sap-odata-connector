@@ -8,8 +8,9 @@ import com.sap.cloud.sdk.cloudplatform.connectivity.DefaultHttpDestination;
 import com.sap.cloud.sdk.cloudplatform.connectivity.DestinationAccessor;
 import io.camunda.connector.api.error.ConnectorException;
 import io.camunda.connector.sap.odata.model.ErrorCodes;
+import io.camunda.connector.sap.odata.model.HttpMethod;
 import io.camunda.connector.sap.odata.model.ODataConnectorRequest;
-import io.camunda.connector.sap.odata.model.ODataConnectorRequest.HttpMethod.Get;
+import io.camunda.connector.sap.odata.model.ODataRequestDetails.SimpleRequest;
 import io.camunda.connector.test.outbound.OutboundConnectorContextBuilder;
 import io.vavr.control.Try;
 import org.junit.jupiter.api.AfterEach;
@@ -23,13 +24,12 @@ import org.junit.jupiter.api.Test;
 public class ErrorCodesTest {
   @Test
   void destination_error() {
-    var input =
-        new ODataConnectorRequest(
-            "willthrow",
-            "/not/important",
-            "whocares",
-            new Get(null, null, null, null, null, null, new Get.ODataVersionGet.V2(false)),
-            null);
+    var httpMethod =
+        new HttpMethod.Get(
+            null, null, null, null, null, null, new HttpMethod.Get.ODataVersionGet.V2(false));
+    var requestDetails = new SimpleRequest("whocares", httpMethod, null);
+
+    var input = new ODataConnectorRequest("willthrow", "/not/important", requestDetails);
 
     var context = OutboundConnectorContextBuilder.create().variables(input).build();
 
@@ -62,13 +62,19 @@ public class ErrorCodesTest {
 
     @Test
     void response_error() {
+      var httpMethod =
+          new HttpMethod.Get(
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              new HttpMethod.Get.ODataVersionGet.V4(null, null));
+      var requestDetails = new SimpleRequest("fourohfour", httpMethod, null);
+
       var input =
-          new ODataConnectorRequest(
-              "willResolveToLocalhost4004",
-              "/will/cause",
-              "fourohfour",
-              new Get(null, null, null, null, null, null, new Get.ODataVersionGet.V4(null, null)),
-              null);
+          new ODataConnectorRequest("willResolveToLocalhost4004", "/will/cause", requestDetails);
 
       var context = OutboundConnectorContextBuilder.create().variables(input).build();
 
@@ -87,13 +93,20 @@ public class ErrorCodesTest {
                   "http://localhost:4005") //> :4004 is where the real mockserver listens
               .build();
       DestinationAccessor.prependDestinationLoader((name, options) -> Try.success(destination));
+
+      var httpMethod =
+          new HttpMethod.Get(
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              new HttpMethod.Get.ODataVersionGet.V4(null, null));
+      var requestDetails = new SimpleRequest("entity", httpMethod, null);
+
       var input =
-          new ODataConnectorRequest(
-              "resolvesToLocalhost4005",
-              "/doesnt/matter",
-              "entity",
-              new Get(null, null, null, null, null, null, new Get.ODataVersionGet.V4(null, null)),
-              null);
+          new ODataConnectorRequest("resolvesToLocalhost4005", "/doesnt/matter", requestDetails);
 
       var context = OutboundConnectorContextBuilder.create().variables(input).build();
 
