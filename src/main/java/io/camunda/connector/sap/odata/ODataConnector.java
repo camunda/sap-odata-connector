@@ -49,7 +49,7 @@ import org.slf4j.LoggerFactory;
     version = VERSION,
     description = "This connector allows you to interact with an SAP System via OData v2 + v4",
     icon = "sap-odata-connector-outbound.svg",
-    documentationRef = "https://docs.camunda.io/xxx",
+    documentationRef = "https://docs.camunda.io/docs/components/camunda-integrations/sap",
     propertyGroups = {
       @ElementTemplate.PropertyGroup(id = "sap", label = "SAP"),
       @ElementTemplate.PropertyGroup(id = "advanced", label = "Advanced")
