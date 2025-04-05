@@ -11,6 +11,7 @@ modules:
     ZEEBE_CLIENT_CLOUD_CLIENT-SECRET: <client-secret-credential-from-api-client>
     ZEEBE_CLIENT_CLOUD_REGION: <your-cluster-region>
     CAMUNDA_OPERATE_CLIENT_URL: https://<region>.operate.camunda.io/<cluster-id>
+    CAMUNDA_CONNECTOR_SECRETPROVIDER_CONSOLE_ENABLED: true
     LOGGING_LEVEL_ROOT: WARN # any of TRACE, DEBUG, INFO, WARN, ERROR, OFF
     LOGGING_LEVEL_IO_CAMUNDA_CONNECTOR_SAP: DEBUG # any of TRACE, DEBUG, INFO, WARN, ERROR, OFF
     CAMUNDA_CLIENT_MODE: saas
