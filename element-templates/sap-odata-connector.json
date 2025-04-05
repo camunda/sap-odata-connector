@@ -3,7 +3,7 @@
   "name" : "SAP OData Connector",
   "id" : "SAP_ODATA_CONNECTOR",
   "description" : "This connector allows you to interact with an SAP System via OData v2 + v4",
-  "documentationRef" : "https://docs.camunda.io/xxx",
+  "documentationRef" : "https://docs.camunda.io/docs/components/camunda-integrations/sap",
   "version" : 1,
   "category" : {
     "id" : "connectors",
