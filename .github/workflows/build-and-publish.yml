@@ -4,7 +4,7 @@ name: build-and-publish
 on:
   push:
     branches:
-      - release/8.6
+      - release/*
     paths:
       - pom.xml
 
@@ -107,7 +107,7 @@ jobs:
         with:
           context: .
           build-args: |
-            CAMUNDA_CONNECTORS_VERSION=8.6.4
+            CAMUNDA_CONNECTORS_VERSION=8.6.7
           push: true
           tags: |
             camunda/sap-odata-connector${{ needs.determine-connector-version.outputs.VERSION }}
