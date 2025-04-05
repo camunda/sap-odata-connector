@@ -6,7 +6,7 @@ It is distributed as [a Docker image](https://hub.docker.com/repository/docker/c
 ## development hints
 
 - c8.7, either locally or SaaS
-- have a `destinations` environment variable point to 
+- have a `destinations` environment variable point to
   - the local mockserver (see below)
   - the SAP system, including credentials
 ```shell
@@ -17,7 +17,7 @@ export destinations='[{"name":"localMockServer","url":"http://localhost:4004",Au
 - on PRs
   - always bump the patch version first in `pom.xml`
   - don't change major or minor, as they indicate the Camunda 8 release assocation
-  
+
 ### OData sample backend
 
 There's a Node.js-based OData v2 + v4 backend located in `/cap-bookshop`.
@@ -68,8 +68,8 @@ After the mockserver is up and running, `mvn test` can be run in the root direct
 
 ## Release cutting
 
-&rarr; will always 
-- publish a docker image 
+&rarr; will always
+- publish a docker image
 - do a GH release
 
 ### rolling 8.x release
@@ -87,4 +87,4 @@ After the mockserver is up and running, `mvn test` can be run in the root direct
 - in `.github/workflows/build-and-test.yml`:
     - adjust `on.pull_request.branches` to the release branch
 - adjust secrets in both GH secrets to point to the target 8.x cluster
-- adjust `secrets.C8x_...` in `.github/**/*.yml` to point the target cluster version 
+- adjust `secrets.C8x_...` in `.github/**/*.yml` to point the target cluster version
