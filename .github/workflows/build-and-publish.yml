@@ -1,5 +1,6 @@
 name: build-and-publish
 # - docker-image
+# - deployment to BTP
 
 on:
   push:
@@ -33,7 +34,6 @@ jobs:
         id: scope_version
         run: echo "VERSION=${{ env.VERSION }}" >> "$GITHUB_OUTPUT"
 
-
   build-and-test:
     needs: determine-connector-version
     uses: ./.github/workflows/reusable-build-and-test.yml
@@ -42,7 +42,6 @@ jobs:
       distribution: 'temurin'
       maven-options: '-PcheckFormat package'
     secrets: inherit
-
 
   gh_release:
     needs: [ build-and-test, determine-connector-version ]
@@ -63,10 +62,11 @@ jobs:
           allowUpdates: 'true'
           removeArtifacts: 'true'
 
-
   build-and-publish:
-    needs: [ build-and-test, determine-connector-version ]
+    needs: build-and-test
     runs-on: ubuntu-latest
+    outputs:
+      VERSION: ${{ steps.scope_version.outputs.VERSION }}
 
     steps:
       - uses: actions/checkout@v4
@@ -103,24 +103,24 @@ jobs:
           username: ${{ steps.secrets.outputs.DOCKERHUB_USER }}
           password: ${{ steps.secrets.outputs.DOCKERHUB_PASSWORD }}
 
-      - name: sap-odata-connector - build and push docker image tag ${{ needs.determine-connector-version.outputs.VERSION }}
+      - name: sap-odata-connector - build and push docker image tag ${{ env.VERSION }}
         uses: docker/build-push-action@v6
         with:
           context: .
           build-args: |
-            CAMUNDA_CONNECTORS_VERSION=8.5.10
+            CAMUNDA_CONNECTORS_VERSION=8.5.15
           push: true
           tags: |
-            camunda/sap-odata-connector:${{ needs.determine-connector-version.outputs.VERSION }}
+            camunda/sap-odata-connector${{ needs.determine-connector-version.outputs.VERSION }}
           #            camunda/sap-odata-connector:latest
           platforms: linux/amd64
           provenance: false
 
 #  deploy-to-btp:
-#    needs: [ build-and-publish, determine-connector-version ]
+#    needs: build-and-publish
 #    uses: ./.github/workflows/reusable-deploy.yml
 #    with:
-#      connector_version: ${{ needs.determine-connector-version.outputs.VERSION }}
+#      connector_version: ${{ needs.build-and-publish.outputs.VERSION }}
 #      region: 'bru-2'
 #      cf_api_endpoint: 'https://api.cf.eu10-004.hana.ondemand.com'
 #      cf_org: camunda-dev

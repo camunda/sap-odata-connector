@@ -5,10 +5,10 @@
 
   <name>sap-odata-connector</name>
   <description>Camunda SAP OData protocol outbound Connector</description>
-  <groupId>io.camunda.connector.sap</groupId>
+  <groupId>io.camunda.connector.sap.odata</groupId>
   <artifactId>odata</artifactId>
   <packaging>jar</packaging>
-  <version>8.5.1</version>
+  <version>8.5.2</version>
 
   <properties>
     <maven.compiler.release>21</maven.compiler.release>
@@ -16,7 +16,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
     <!-- connector SDK version -->
-    <version.connectors>8.5.10</version.connectors>
+    <version.connectors>8.5.15</version.connectors>
 
     <!-- external libraries -->
     <version.assertj>3.25.3</version.assertj>
@@ -281,7 +281,7 @@
         <configuration>
           <connectors>
             <connector>
-              <connectorClass>io.camunda.connector.sap.ODataConnector</connectorClass>
+              <connectorClass>io.camunda.connector.sap.odata.ODataConnector</connectorClass>
             </connector>
           </connectors>
         </configuration>
