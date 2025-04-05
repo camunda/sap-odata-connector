@@ -107,7 +107,7 @@ jobs:
         with:
           context: .
           build-args: |
-            CAMUNDA_CONNECTORS_VERSION=8.6.10
+            CAMUNDA_CONNECTORS_VERSION=8.6.7
           push: true
           tags: |
             camunda/sap-odata-connector${{ needs.determine-connector-version.outputs.VERSION }}
