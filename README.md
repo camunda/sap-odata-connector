@@ -86,5 +86,5 @@ After the mockserver is up and running, `mvn test` can be run in the root direct
     - adjust `CAMUNDA_CONNECTORS_VERSION`
 - in `.github/workflows/build-and-test.yml`:
     - adjust `on.pull_request.branches` to the release branch
-- (soon) (adjust secrets in both GH and .yaml to point to an 8.7 cluster)
-    - adjust `secrets.C8x_...` to the target cluster version (and eventually create those gh secrets)
+- adjust secrets in both GH secrets to point to the target 8.x cluster
+- adjust `secrets.C8x_...` in `.github/**/*.yml` to point the target cluster version 
