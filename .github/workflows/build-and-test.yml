@@ -3,7 +3,7 @@ name: test-pr
 on:
   pull_request:
     branches:
-      - release/8.7
+      - main
 
 jobs:
   build-and-test:
