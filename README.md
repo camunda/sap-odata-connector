@@ -1,17 +1,29 @@
 # Camunda-SAP integration: SAP OData protocol outbound Connector
 
 Camunda Connector to interact with an SAP S/4 and ECC system via OData v2 + v4.
+It is distributed as [a Docker image](https://hub.docker.com/repository/docker/camunda/sap-odata-connector) and needs deployment to BTP.
 
-## development
+## development hints
 
+- c8.7, either locally or SaaS
+- have a `destinations` environment variable point to
+  - the local mockserver (see below)
+  - the SAP system, including credentials
+```shell
+export destinations='[{"name":"localMockServer","url":"http://localhost:4004",Authentication:"BasicAuthentication","User":"alice","Password":"admin"}, {"name":"s4","url":"https:<sap-app-server>",Authentication:"BasicAuthentication","User":"<user>","Password":"<pwd>","sap-client":"<mandant>"}]'
+```
 - source code formatting is done with `maven-spotless-plugin` upon build/compile
+
+- on PRs
+  - always bump the patch version first in `pom.xml`
+  - don't change major or minor, as they indicate the Camunda 8 release assocation
 
 ### OData sample backend
 
 There's a Node.js-based OData v2 + v4 backend located in `/cap-bookshop`.
 It is intended for dev-time and mandatory for running the unit tests.
 
-First, get yourself [Node.js >= 20](https://nodejs.org/en/download/package-manager/current).
+First, get [Node.js >= 20](https://nodejs.org/en/download/package-manager/current).
 Then get going via
 
 ```shell
@@ -54,17 +66,25 @@ $> cds run
 
 After the mockserver is up and running, `mvn test` can be run in the root directory to execute the unit tests.
 
-=======
-
 ## Release cutting
 
+&rarr; will always
+- publish a docker image
+- do a GH release
+
+### rolling 8.x release
+:warning: GH releases is only done upon changes to `pom.xml` in a push to a `release/8.x` branch.
+- adjust version in `/src/pom.xml` (minor version)
+- generate the connector template w/ the respective maven task
+- push changes to `release/8.x` branch
+
+### new 8.x release
 - create release branch: `release/8.x`
 - adjust version in `/src/pom.xml`
-- in `.github/workflows/build-and-publish-docker-image.yml`:
+- in `.github/workflows/build-and-publish.yml`:
     - adjust `on.push.branches` to the release branch
     - adjust `CAMUNDA_CONNECTORS_VERSION`
 - in `.github/workflows/build-and-test.yml`:
     - adjust `on.pull_request.branches` to the release branch
-- in `.github/workflows/reusable-deploy.yml`:
-    - adjust `secrets.C8x_...` to the target cluster version (and eventually create those gh secrets)
-- adjust `baseBranches` in `.github/renovate.json5`
+- adjust secrets in both GH secrets to point to the target 8.x cluster
+- adjust `secrets.C8x_...` in `.github/**/*.yml` to point the target cluster version
