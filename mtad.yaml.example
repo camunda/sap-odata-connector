@@ -5,16 +5,23 @@ modules:
 - name: sap-odata-connector
   type: application
   properties:
+    ZEEBE_CLIENT_SECURITY_PLAINTEXT: false
+    ZEEBE_CLIENT_CLOUD_CLUSTER-ID: <your-cluster-id>
+    ZEEBE_CLIENT_CLOUD_CLIENT-ID: <client-id-credential-from-api-client>
+    ZEEBE_CLIENT_CLOUD_CLIENT-SECRET: <client-secret-credential-from-api-client>
+    ZEEBE_CLIENT_CLOUD_REGION: <your-cluster-region>
+    CAMUNDA_OPERATE_CLIENT_URL: https://<region>.operate.camunda.io/<cluster-id>
+    LOGGING_LEVEL_ROOT: WARN # any of TRACE, DEBUG, INFO, WARN, ERROR, OFF
+    LOGGING_LEVEL_IO_CAMUNDA_CONNECTOR_SAP: DEBUG # any of TRACE, DEBUG, INFO, WARN, ERROR, OFF
     CAMUNDA_CLIENT_MODE: saas
     CAMUNDA_CLIENT_CLUSTER-ID: <your-cluster-id>
     CAMUNDA_CLIENT_AUTH_CLIENT-ID: <client-id-credential-from-api-client>
     CAMUNDA_CLIENT_AUTH_CLIENT-SECRET: <client-secret-credential-from-api-client>
     CAMUNDA_CLIENT_REGION: <your-cluster-region>
+    CAMUNDA_CONNECTOR_SECRETPROVIDER_CONSOLE_ENABLED: true
     CAMUNDA_CLIENT_OPERATE_ENABLED: false
     CAMUNDA_CONNECTOR_POLLING_ENABLED: false
     CAMUNDA_CONNECTOR_WEBHOOK_ENABLED: false
-    LOGGING_LEVEL_ROOT: WARN # any of TRACE, DEBUG, INFO, WARN, ERROR, OFF
-    LOGGING_LEVEL_IO_CAMUNDA_CONNECTOR_SAP: DEBUG # any of TRACE, DEBUG, INFO, WARN, ERROR, OFF
   requires:
     - name: dest-camunda-odata-connector
     - name: conn-camunda-odata-connector
