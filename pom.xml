@@ -81,12 +81,6 @@
       <version>${version.slf4j}</version>
     </dependency>
 
-    <!-- com.fasterxml.jackson.databind.JsonMappingException: Scala module 2.17.2 requires Jackson Databind version >= 2.17.0 and < 2.18.0 -->
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
-      <version>2.17.3</version>
-    </dependency>
 
     <!-- Element template generator annotations (compile-time only) -->
     <dependency>
@@ -137,7 +131,7 @@
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
-      <version>2.17.3</version>
+      <version>2.18.3</version>
     </dependency>
 
     <!-- for testing connectors locally in bundle with runtime -->
