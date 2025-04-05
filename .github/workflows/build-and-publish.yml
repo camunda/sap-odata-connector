@@ -5,8 +5,8 @@ on:
   push:
     branches:
       - release/8.6
-    paths:
-      - pom.xml
+#    paths:
+#      - pom.xml
 
 jobs:
   determine-connector-version:
