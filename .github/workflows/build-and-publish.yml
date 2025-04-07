@@ -62,10 +62,10 @@ jobs:
           removeArtifacts: 'true'
 
   build-and-publish:
-    needs: build-and-test
+    needs: [ build-and-test, determine-connector-version ]
     runs-on: ubuntu-latest
-    outputs:
-      VERSION: ${{ steps.scope_version.outputs.VERSION }}
+#    outputs:
+#      VERSION: ${{ steps.scope_version.outputs.VERSION }}
 
     steps:
       - uses: actions/checkout@v4
@@ -102,7 +102,7 @@ jobs:
           username: ${{ steps.secrets.outputs.DOCKERHUB_USER }}
           password: ${{ steps.secrets.outputs.DOCKERHUB_PASSWORD }}
 
-      - name: sap-odata-connector - build and push docker image tag ${{ env.VERSION }}
+      - name: sap-odata-connector - build and push docker image tag ${{ needs.determine-connector-version.outputs.VERSION }}
         uses: docker/build-push-action@v6
         with:
           context: .
