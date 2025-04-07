@@ -48,6 +48,7 @@
 <!--      </dependency>-->
 <!--    </dependencies>-->
 <!--  </dependencyManagement>-->
+
   <dependencies>
     <!-- connector-specific -->
     <dependency>
