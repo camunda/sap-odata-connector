@@ -110,7 +110,7 @@ jobs:
             CAMUNDA_CONNECTORS_VERSION=8.6.7
           push: true
           tags: |
-            camunda/sap-odata-connector${{ needs.determine-connector-version.outputs.VERSION }}
+            camunda/sap-odata-connector:${{ needs.determine-connector-version.outputs.VERSION }}
           #            camunda/sap-odata-connector:latest
           platforms: linux/amd64
           provenance: false
