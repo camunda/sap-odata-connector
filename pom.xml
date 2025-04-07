@@ -419,7 +419,5 @@
       <name>Connectors Snapshot Repository</name>
       <url>https://artifacts.camunda.com/artifactory/connectors-snapshots/</url>
     </pluginRepository>
-
-
   </pluginRepositories>
 </project>
