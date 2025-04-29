@@ -382,6 +382,7 @@
         <enabled>false</enabled>
       </snapshots>
     </repository>
+           
   </repositories>
 
   <pluginRepositories>
