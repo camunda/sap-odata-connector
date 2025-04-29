@@ -21,13 +21,13 @@ modules:
     - name: dest-camunda-odata-connector
     - name: conn-camunda-odata-connector
   parameters:
-    disk-quota: 512M
+    disk-quota: 2G
     docker:
       image: camunda/sap-odata-connector:<pick your version according to Camunda release, e.g. 8.6.1>
     enable-ssh: true
     health-check-type: process
     instances: 1
-    memory: 2G
+    memory: 1G
 resources:
   - name: dest-camunda-odata-connector
     type: org.cloudfoundry.managed-service
