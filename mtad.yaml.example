@@ -6,7 +6,7 @@ modules:
   type: application
   properties:
     CAMUNDA_CLIENT_MODE: saas
-    CAMUNDA_CLIENT_CLUSTER-ID: <your-cluster-id>
+    CAMUNDA_CLIENT_CLUSTERID: <your-cluster-id>
     CAMUNDA_CLIENT_AUTH_CLIENTID: <client-id-credential-from-api-client>
     CAMUNDA_CLIENT_AUTH_CLIENTSECRET: <client-secret-credential-from-api-client>
     CAMUNDA_CLIENT_REGION: <your-cluster-region>
