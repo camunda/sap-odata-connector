@@ -7,7 +7,9 @@ import io.camunda.connector.api.annotation.OutboundConnector;
 import io.camunda.connector.api.outbound.OutboundConnectorContext;
 import io.camunda.connector.api.outbound.OutboundConnectorFunction;
 import io.camunda.connector.generator.java.annotation.ElementTemplate;
+import io.camunda.connector.sap.odata.model.FallbackODataConnectorRequest;
 import io.camunda.connector.sap.odata.model.ODataConnectorRequest;
+import java.util.logging.Logger;
 
 @OutboundConnector(
     name = NAME,
@@ -27,6 +29,8 @@ import io.camunda.connector.sap.odata.model.ODataConnectorRequest;
       @ElementTemplate.PropertyGroup(id = "advanced", label = "Advanced")
     })
 public class ODataConnector implements OutboundConnectorFunction {
+  private static final Logger LOG = Logger.getLogger(ODataConnector.class.getName());
+
   public static final String NAME = "SAP_ODATA_CONNECTOR";
   public static final int VERSION = 2;
   // the format "io.camunda:<type>:<version>" is important as this
@@ -36,6 +40,16 @@ public class ODataConnector implements OutboundConnectorFunction {
   @Override
   public Object execute(OutboundConnectorContext context) {
     ODataConnectorRequest request = context.bindVariables(ODataConnectorRequest.class);
+
+    // Fallback for older element templates (pre-v2) that don't include the
+    // requestDetails.requestType discriminator — binding silently produces requestDetails = null.
+    if (request.requestDetails() == null) {
+      LOG.info(
+          "requestDetails is null — attempting fallback binding for older element template variables");
+      var fallback = context.bindVariables(FallbackODataConnectorRequest.class);
+      request = fallback.toODataConnectorRequest();
+    }
+
     // check that request.requestDetails() is of type BatchRequest
     if (request.requestDetails() instanceof BatchRequest) {
       ODataBatchRequestExecutor batchExecutor = new ODataBatchRequestExecutor();

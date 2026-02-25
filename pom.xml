@@ -16,7 +16,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
     <!-- connector SDK version -->
-    <version.connectors>8.7.0</version.connectors>
+    <version.connectors>8.7.14</version.connectors>
 
     <!-- external libraries -->
     <version.assertj>3.25.3</version.assertj>
@@ -37,17 +37,17 @@
     <plugin.version.spotless-maven-plugin>2.43.0</plugin.version.spotless-maven-plugin>
   </properties>
 
-<!--  <dependencyManagement>-->
-<!--    <dependencies>-->
-<!--      <dependency>-->
-<!--        <groupId>com.fasterxml.jackson.core</groupId>-->
-<!--        <artifactId>jackson-bom</artifactId>-->
-<!--        <version>2.17.2</version>-->
-<!--        <type>pom</type>-->
-<!--        <scope>import</scope>-->
-<!--      </dependency>-->
-<!--    </dependencies>-->
-<!--  </dependencyManagement>-->
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>com.fasterxml.jackson</groupId>
+        <artifactId>jackson-bom</artifactId>
+        <version>2.20.1</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
   <dependencies>
     <!-- connector-specific -->
     <dependency>
@@ -124,14 +124,6 @@
       <artifactId>slf4j-jdk14</artifactId>
       <version>${version.slf4j}</version>
       <scope>test</scope>
-    </dependency>
-
-    <!-- com.fasterxml.jackson.databind.JsonMappingException: Scala module 2.17.2 requires Jackson Databind version >= 2.17.0 and < 2.18.0 -->
-
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
-      <version>2.18.3</version>
     </dependency>
 
     <!-- for testing connectors locally in bundle with runtime -->
