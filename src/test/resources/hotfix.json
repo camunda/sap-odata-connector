@@ -1,0 +1,14 @@
+{
+  "destination": "{{secrets.my_destination}}",
+  "oDataService": "/sap/api_my_obj/sap/my_obj",
+  "entityOrEntitySet": "MyEntity",
+  "httpMethod" : {
+    "httpMethod": "get",
+    "oDataVersionGet": {
+      "oDataVersionGet": "V4",
+      "count": false
+    },
+    "filter": "MyProperty eq '12345'",
+    "expand": "_MyNavProperty"
+  }
+}
